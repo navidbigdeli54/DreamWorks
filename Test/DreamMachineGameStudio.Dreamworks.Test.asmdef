@@ -1,0 +1,17 @@
+{
+    "name": "DreamMachineGameStudio.Dreamworks.Test",
+    "references": [
+        "GUID:f7f1960c3bffcec4cb440c2f128a380a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

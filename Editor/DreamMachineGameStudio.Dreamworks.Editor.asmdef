@@ -1,0 +1,16 @@
+{
+    "name": "DreamMachineGameStudio.Dreamworks.Editor",
+    "references": [
+        "GUID:f7f1960c3bffcec4cb440c2f128a380a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": []
+}
