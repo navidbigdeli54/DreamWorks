@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
-    [FScriptableObjectWizardAttribute("Dreamworks Configuration")]
+    [FScriptableObjectWizard("Dreamworks Configuration")]
     public class SDreamworksConfiguration : SScriptableObject
     {
         #region Field
