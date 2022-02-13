@@ -1,5 +1,6 @@
 ﻿/**Copyright 2016 - 2020, Dream Machine Game Studio. All Right Reserved.*/
 
+using System.IO;
 using UnityEngine;
 using UnityEditor;
 using DreamMachineGameStudio.Dreamworks.Core;
@@ -22,7 +23,21 @@ namespace DreamMachineGameStudio.Dreamworks.Editor
         [MenuItem(itemName: "DreamMachineGameStudio/DreamWork/Configuration", priority = 0)]
         private static void OpenConfigurationFile()
         {
-            Selection.activeObject = Resources.Load(nameof(SDreamworksConfiguration));
+            Object configObject = Resources.Load(nameof(SDreamworksConfiguration));
+            if (configObject == null)
+            {
+                string resourcesPath = $"{Directory.GetCurrentDirectory()}/Assets/Resources/";
+                if (Directory.Exists(resourcesPath) == false)
+                {
+                    Directory.CreateDirectory(resourcesPath);
+                }
+
+                configObject = CreateInstance<SDreamworksConfiguration>();
+
+                AssetDatabase.CreateAsset(configObject, $"Assets/Resources/{nameof(SDreamworksConfiguration)}.asset");
+            }
+
+            Selection.activeObject = configObject;
         }
         #endregion
 
