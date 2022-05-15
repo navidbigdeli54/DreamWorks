@@ -18,6 +18,10 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
         }
         #endregion
 
+        #region Operator Overloads
+        public static implicit operator bool(FJsonBool jsonBool) => jsonBool._value;
+        #endregion
+
         #region Public Methods
         public override string ToString()
         {
