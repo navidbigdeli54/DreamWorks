@@ -11,6 +11,16 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
         private readonly List<FJsonNode> _list = new List<FJsonNode>();
         #endregion
 
+        #region Properties
+        public int Count => _list.Count;
+
+        public FJsonNode this[int index]
+        {
+            get => _list[index];
+            set => _list[index] = value;
+        }
+        #endregion
+
         #region Public Methods
         public void Add(FJsonNode node)
         {
@@ -37,7 +47,14 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
                 stringBuilder.Append(_list[i].ToString(intentLevel + INTEND_SPACE_COUNT));
             }
 
-            stringBuilder.AppendLine().Append(intentLevel).Append("]");
+            stringBuilder.AppendLine();
+
+            for(int i = 0; i < intentLevel; ++i)
+            {
+                stringBuilder.Append(" ");
+            }
+
+            stringBuilder.Append("]"); 
 
             return stringBuilder.ToString();
         }
