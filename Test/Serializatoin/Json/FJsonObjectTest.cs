@@ -1,5 +1,6 @@
 /**Copyright 2016 - 2022, Dream Machine Game Studio. All Right Reserved.*/
 
+using System;
 using NUnit.Framework;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Serialization.Json;
@@ -24,7 +25,7 @@ namespace DreamMachineGameStudio.Dreamworks.Test
             FJsonObject jsonObject = new FJsonObject();
             jsonObject["Name"] = "DreamMachine";
             string jsonString = jsonObject.ToString();
-            FAssert.AreEqual("{\r\n    \"Name\" : \"DreamMachine\"\r\n}", jsonString);
+            FAssert.AreEqual($"{{{Environment.NewLine}    \"Name\" : \"DreamMachine\"{Environment.NewLine}}}", jsonString);
         }
 
         [Test]
@@ -43,7 +44,7 @@ namespace DreamMachineGameStudio.Dreamworks.Test
             FJsonObject jsonObject = new FJsonObject();
             jsonObject["Age"] = 10;
             string jsonString = jsonObject.ToString();
-            FAssert.AreEqual("{\r\n    \"Age\" : 10\r\n}", jsonString);
+            FAssert.AreEqual($"{{{Environment.NewLine}    \"Age\" : 10{Environment.NewLine}}}", jsonString);
         }
 
         [Test]
@@ -63,7 +64,7 @@ namespace DreamMachineGameStudio.Dreamworks.Test
             FJsonObject jsonObject = new FJsonObject();
             jsonObject["IsActive"] = true;
             string jsonString = jsonObject.ToString();
-            FAssert.AreEqual("{\r\n    \"IsActive\" : true\r\n}", jsonString);
+            FAssert.AreEqual($"{{{Environment.NewLine}    \"IsActive\" : true{Environment.NewLine}}}", jsonString);
         }
 
         [Test]
@@ -82,7 +83,7 @@ namespace DreamMachineGameStudio.Dreamworks.Test
             FJsonObject jsonObject = new FJsonObject();
             jsonObject["Owner"] = null;
             string jsonString = jsonObject.ToString();
-            FAssert.AreEqual("{\r\n    \"Owner\" : null\r\n}", jsonString);
+            FAssert.AreEqual($"{{{Environment.NewLine}    \"Owner\" : null{Environment.NewLine}}}", jsonString);
         }
 
         [Test]
@@ -108,7 +109,7 @@ namespace DreamMachineGameStudio.Dreamworks.Test
             FJsonObject jsonObject = new FJsonObject();
             jsonObject["Products"] = jsonArray;
             string jsonString = jsonObject.ToString();
-            FAssert.AreEqual("{\r\n    \"Products\" : [\r\n        \"DreamWorks\",\r\n        \"MiniDizi\"\r\n    ]\r\n}", jsonString);
+            FAssert.AreEqual($"{{{Environment.NewLine}    \"Products\" : [{Environment.NewLine}        \"DreamWorks\",{Environment.NewLine}        \"MiniDizi\"{Environment.NewLine}    ]{Environment.NewLine}}}", jsonString);
         }
     }
 }
