@@ -919,11 +919,11 @@ namespace DreamMachineGameStudio.Dreamworks.Debug
 
         private static string GetMessage(string failureMessage, string expected) => $"{failureMessage}{Environment.NewLine}, Expected: {expected}";
 
-        private static string NullFailureMessage(bool expectNull) => GetMessage($"Value was {(expectNull ? "not" : string.Empty)}Null.", $"Value was {(expectNull ? "" : "not")}Null");
+        private static string NullFailureMessage(bool expectNull) => GetMessage($"Value was {(expectNull ? "not" : string.Empty)} Null.", $"Value was {(expectNull ? "" : "not")} Null");
 
         private static string BooleanFailureMessage(bool expected) => GetMessage($"Value was {!expected}", $"{expected}");
 
-        private static string GetEqualityMessage(object actual, object expected, bool expectEqual) => GetMessage($"Values are {(expectEqual ? "not" : string.Empty)}equal.", $"{actual} {expected} {(expectEqual ? "==" : "!=")}");
+        private static string GetEqualityMessage(object actual, object expected, bool expectEqual) => GetMessage($"Values are {(expectEqual ? "not" : string.Empty)} equal.", $"{actual} {expected} {(expectEqual ? "==" : "!=")}");
         #endregion
 
         #region Obsolete Methods
