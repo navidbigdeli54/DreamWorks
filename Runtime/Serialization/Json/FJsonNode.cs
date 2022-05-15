@@ -13,6 +13,44 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
         protected const int INTEND_SPACE_COUNT = 4;
         #endregion
 
+        #region Operator Overloads
+        public static implicit operator FJsonNode(string s) => new FJsonString(s);
+
+        public static implicit operator FJsonNode(double d) => new FJsonNumber(d);
+
+        public static implicit operator FJsonNode(bool b) => new FJsonBool(b);
+
+        public static implicit operator string(FJsonNode jsonNode)
+        {
+            if (jsonNode is FJsonString jsonString)
+            {
+                return jsonString;
+            }
+
+            return string.Empty;
+        }
+
+        public static implicit operator double(FJsonNode jsonNode)
+        {
+            if (jsonNode is FJsonNumber jsonNumber)
+            {
+                return jsonNumber;
+            }
+
+            return 0;
+        }
+
+        public static implicit operator bool(FJsonNode jsonNode)
+        {
+            if (jsonNode is FJsonBool jsonBool)
+            {
+                return jsonBool;
+            }
+
+            return false;
+        }
+        #endregion
+
         #region Public Methods
         public override string ToString() => ToString();
 
@@ -182,9 +220,7 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
                                 case 'u':
                                     {
                                         string s = json.Substring(i + 1, 4);
-                                        token.Append((char)int.Parse(
-                                            s,
-                                            System.Globalization.NumberStyles.AllowHexSpecifier));
+                                        token.Append((char)int.Parse(s, NumberStyles.AllowHexSpecifier));
                                         i += 4;
                                         break;
                                     }
@@ -240,14 +276,6 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
 
             return token;
         }
-        #endregion
-
-        #region Operator Overloads
-        public static implicit operator FJsonNode(string s) => new FJsonString(s);
-
-        public static implicit operator FJsonNode(double d) => new FJsonNumber(d);
-
-        public static implicit operator FJsonNode(bool b) => new FJsonBool(b);
         #endregion
 
         #region Protected Methods
