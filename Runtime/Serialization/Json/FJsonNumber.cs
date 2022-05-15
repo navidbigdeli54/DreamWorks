@@ -15,6 +15,10 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
         }
         #endregion
 
+        #region Operator Overloads
+        public static implicit operator double(FJsonNumber jsonNumber) => jsonNumber._value;
+        #endregion
+
         #region Public Methods
         public override string ToString() => ToString();
 
