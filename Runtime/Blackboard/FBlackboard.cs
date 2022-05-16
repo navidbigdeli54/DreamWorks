@@ -33,11 +33,16 @@ namespace DreamMachineGameStudio.Dreamworks.Blackboard
 
         public bool TryGetValue<T>(FStringId key, out T value) where T : class, IVariant
         {
-            bool isSuccessful = _values.TryGetValue(key, out IVariant result);
+            value = null;
 
-            value = result as T;
+            if(_values.TryGetValue(key, out IVariant result))
+            {
+                value = result as T;
 
-            return isSuccessful;
+                return true;
+            }
+
+            return false;
         }
         #endregion
     }
