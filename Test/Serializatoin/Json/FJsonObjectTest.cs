@@ -5,7 +5,7 @@ using NUnit.Framework;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Serialization.Json;
 
-namespace DreamMachineGameStudio.Dreamworks.Test
+namespace DreamMachineGameStudio.Dreamworks.Test.Serialization.Json
 {
     public class FJsonObjectTest
     {
