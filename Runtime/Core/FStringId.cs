@@ -25,7 +25,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             Value = str;
 #endif
 
-            _id = UnityEngine.Animator.StringToHash(str);
+            _id = str.GetHashCode();
         }
 
         public static implicit operator FStringId(string str) => new FStringId(str);
