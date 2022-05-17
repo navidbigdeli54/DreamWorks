@@ -18,7 +18,7 @@ namespace DreamMachineGameStudio.Dreamworks.Blackboard
         #region Methods
         public void AddValue<T>(FStringId key, T value) where T : class, IVariant
         {
-            FAssert.IsFalse(string.IsNullOrWhiteSpace(key), $"Name can't be null or empty.");
+            FAssert.IsFalse(string.IsNullOrWhiteSpace(key.ToString()), $"Name can't be null or empty.");
             FAssert.IsFalse(_values.ContainsKey(key), $"A value with {key} key is already exist in blackboard.");
 
             _values.Add(key, value);
