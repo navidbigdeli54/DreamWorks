@@ -10,27 +10,19 @@ namespace DreamMachineGameStudio.Dreamworks.Core
     {
         #region Fields
         private readonly int _id;
-        #endregion
 
-        #region Properties
-#if UNITY_EDITOR
-        public string Value { get; }
-#endif
+        private readonly string _value;
         #endregion
 
         #region Constructors
         public FStringId(string str)
         {
-#if UNITY_EDITOR
-            Value = str;
-#endif
+            _value = str;
 
             _id = str.GetHashCode();
         }
 
         public static implicit operator FStringId(string str) => new FStringId(str);
-
-        public static implicit operator string(FStringId stringId) => stringId.Value;
         #endregion
 
         #region Methods
@@ -43,9 +35,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             return _id == ((FStringId)obj)._id;
         }
 
-#if UNITY_EDITOR
-        public override string ToString() => Value;
-#endif
+        public override string ToString() => _value;
 
         public override int GetHashCode() => _id;
         #endregion
