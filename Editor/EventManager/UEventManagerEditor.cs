@@ -31,7 +31,7 @@ namespace DreamMachineGameStudio.Dreamworks.Editor.EventManager
             foreach (KeyValuePair<FStringId, FEventManager.DEventSubscriber> item in FEventManager.Events)
             {
                 EditorGUILayout.BeginHorizontal(GUI.skin.box);
-                EditorGUILayout.LabelField(item.Key.Value, GUILayout.Width(position.width / 2));
+                EditorGUILayout.LabelField(item.Key.ToString(), GUILayout.Width(position.width / 2));
 
                 EditorGUILayout.BeginVertical();
                 foreach (Delegate subscriber in item.Value.GetInvocationList())
