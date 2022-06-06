@@ -153,8 +153,6 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             FEventManager.Subscribe(FEventManager.ON_GAME_MODE_LOADED, OnGameModeLoaded);
 
             FEventManager.Subscribe(FEventManager.ON_SCENE_UNLOADED, OnSceneUnloaded);
-
-            PublishFakeSceneLoadedEvent();
         }
 
         public void Register(IInitializableObject initializable)
@@ -316,7 +314,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         private async Task InitializeServicesAsync()
         {
             /*
-             * In registration process, if framework was not initialized yet, we only register IService instances and put all other instances to pending list.
+             * During registration process, if framework was not initialized yet, we only register IService instances and put all other instances to pending list.
              * So we safely assume that at this moment, only IService instances are in _registeredObjects list.
              */
 
@@ -382,11 +380,6 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                     FLog.Error(CLASS_TYPE.Name, exception);
                 }
             }
-        }
-
-        private void PublishFakeSceneLoadedEvent()
-        {
-            FEventManager.Publish(FEventManager.ON_SCENE_LOADED, new SceneManager.FSceneLoadedEventArg(SceneManager.FSceneManager.ActiveScene, UnityEngine.SceneManagement.LoadSceneMode.Single));
         }
 
         private async void OnGameModeLoaded(object arg)

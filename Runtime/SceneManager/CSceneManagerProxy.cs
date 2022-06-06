@@ -6,48 +6,33 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using DreamMachineGameStudio.Dreamworks.Core;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.EventManager;
 
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
-
 namespace DreamMachineGameStudio.Dreamworks.SceneManager
 {
-    public static class FSceneManager
+    public class CSceneManagerProxy : CComponent, ISceneManagerProxy
     {
-        #region Fields
-        public readonly static Type CLASS_TYPE = typeof(FSceneManager);
-        #endregion
-
-        #region Properties
-        public static Scene ActiveScene => USceneManager.GetActiveScene();
-        #endregion
-
-        #region Constructor
-        static FSceneManager()
+        #region CComponent Methods
+        protected override Task PreInitializeComponenetAsync()
         {
+            base.PreInitializeComponenetAsync();
+
             USceneManager.activeSceneChanged += ActiveSceneChanged;
             USceneManager.sceneLoaded += SceneLoaded;
             USceneManager.sceneUnloaded += SceneUnloaded;
+
+            return Task.CompletedTask;
         }
         #endregion
 
-        #region Method
-        public static async Task LoadSceneAsync(int sceneIndex, LoadSceneMode loadSceneMode)
-        {
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
+        #region ISceneManagerProxy Implementation
+        Scene ISceneManagerProxy.ActiveScene => USceneManager.GetActiveScene();
 
-            AsyncOperation asyncOperation = USceneManager.LoadSceneAsync(sceneIndex, loadSceneMode);
-
-            asyncOperation.completed += (AsyncOperation ao) => taskCompletionSource.SetResult(ao.isDone);
-
-            await taskCompletionSource.Task;
-
-            FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByBuildIndex(sceneIndex).name}` has been loaded.");
-        }
-
-        public static async Task LoadSceneAsync(string sceneName, LoadSceneMode loadSceneMode)
+        async Task ISceneManagerProxy.LoadSceneAsync(string sceneName, LoadSceneMode loadSceneMode)
         {
             TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
 
@@ -60,20 +45,7 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
             FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been loaded.");
         }
 
-        public static async Task UnloadSceneAsycn(int sceneIndex)
-        {
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
-
-            AsyncOperation asyncOperation = USceneManager.UnloadSceneAsync(sceneIndex);
-
-            asyncOperation.completed += (AsyncOperation ao) => taskCompletionSource.SetResult(ao.isDone);
-
-            await taskCompletionSource.Task;
-
-            FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByBuildIndex(sceneIndex).name}` has been unloaded.");
-        }
-
-        public static async Task UnloadSceneAsycn(string sceneName)
+        async Task ISceneManagerProxy.UnloadSceneAsycn(string sceneName)
         {
             TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
 
@@ -84,19 +56,6 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
             await taskCompletionSource.Task;
 
             FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been unloaded.");
-        }
-
-        public static async Task UnloadSceneAsycn(Scene scene)
-        {
-            TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
-
-            AsyncOperation asyncOperation = USceneManager.UnloadSceneAsync(scene);
-
-            asyncOperation.completed += (AsyncOperation ao) => taskCompletionSource.SetResult(ao.isDone);
-
-            await taskCompletionSource.Task;
-
-            FLog.Info(CLASS_TYPE.Name, $"Scene `{scene.name}` has been unloaded.");
         }
         #endregion
 

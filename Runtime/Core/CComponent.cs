@@ -23,6 +23,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// <summary>
         /// The type of CComponent
         /// </summary>
+        /// TODO: use nameof() instead of this!
         public static Type CLASS_TYPE { get; } = typeof(CComponent);
 
         /// <summary>

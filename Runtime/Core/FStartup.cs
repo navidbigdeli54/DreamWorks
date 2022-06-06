@@ -1,6 +1,8 @@
 ﻿/**Copyright 2016 - 2022, Dream Machine Game Studio. All Right Reserved.*/
 
 using UnityEngine;
+using DreamMachineGameStudio.Dreamworks.SceneManager;
+using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -27,7 +29,9 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             new GameObject().AddComponent<MDreamwork>();
 
-            new GameObject().AddComponent<CGameManagement>();
+            FServiceLocator.Register<IGameManagement>(new GameObject().AddComponent<CGameManagement>());
+
+            FServiceLocator.Register<ISceneManagerProxy>(new GameObject().AddComponent<CSceneManagerProxy>());
 
             Configuration();
 
