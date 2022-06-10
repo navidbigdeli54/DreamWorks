@@ -83,7 +83,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception.Message);
+                    FLog.Exception(CLASS_TYPE.Name, exception);
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception.Message);
+                    FLog.Exception(CLASS_TYPE.Name, exception);
                 }
 
                 InitializePendingObjects();
@@ -139,7 +139,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception.Message);
+                    FLog.Exception(CLASS_TYPE.Name, exception);
                 }
             }
         }
