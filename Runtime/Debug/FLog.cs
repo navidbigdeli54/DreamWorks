@@ -27,6 +27,12 @@ namespace DreamMachineGameStudio.Dreamworks.Debug
         {
             UDebug.LogError($"<color=red>{DateTime.Now} | {category} | {message}</color>");
         }
+
+        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        public static void Exception(string category, Exception exception)
+        {
+            UDebug.LogError($"<color=red>{DateTime.Now} | {category} | {exception}</color>");
+        }
         #endregion
     }
 }
