@@ -169,7 +169,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
             {
                 ITransition transaction = _transitions[i];
 
-                if (transaction.IsTriggered(trigger))
+                if (transaction.IsTriggered(Machine, trigger))
                 {
                     return transaction;
                 }

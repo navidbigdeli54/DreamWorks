@@ -17,9 +17,9 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         #endregion
 
         #region Methods
-        bool IsTriggered(FTrigger trigger);
+        bool IsTriggered(FHFSM machine, FTrigger trigger);
 
-        void PerformActions();
+        void PerformActions(FHFSM machine);
         #endregion
     }
 }

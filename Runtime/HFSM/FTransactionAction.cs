@@ -5,11 +5,11 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
     public abstract class FTransactionAction : ITransitionAction
     {
         #region Methods
-        protected abstract void Perform();
+        protected abstract void Perform(FHFSM machine);
         #endregion
 
         #region ITransactionAction Implementation
-        void ITransitionAction.Perform() => Perform();
+        void ITransitionAction.Perform(FHFSM machine) => Perform(machine);
         #endregion
     }
 }

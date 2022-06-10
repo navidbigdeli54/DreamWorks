@@ -5,7 +5,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
     public interface ICondition
     {
         #region Methods
-        bool Evaluate();
+        bool Evaluate(FHFSM machine);
         #endregion
     }
 }

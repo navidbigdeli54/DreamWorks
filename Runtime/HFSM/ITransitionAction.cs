@@ -5,7 +5,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
     public interface ITransitionAction
     {
         #region Methods
-        void Perform();
+        void Perform(FHFSM machine);
         #endregion
     }
 }

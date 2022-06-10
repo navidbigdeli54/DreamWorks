@@ -118,7 +118,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
             FAssert.IsTrue(_pooledStates.ContainsKey(transition.Target.Name), $"{transition.Target.Name} is not exist in this machine.");
 
             ExitHierarchyToClosestCommonAncestor(source, transition);
-            transition.PerformActions();
+            transition.PerformActions(this);
             EnterHierarhcyFromClosestCommonAncestor(source, transition);
         }
 

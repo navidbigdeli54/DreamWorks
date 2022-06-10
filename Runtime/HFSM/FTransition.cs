@@ -69,16 +69,16 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
 
         IReadOnlyList<ITransitionAction> ITransition.Actions => _actions;
 
-        bool ITransition.IsTriggered(FTrigger trigger)
+        bool ITransition.IsTriggered(FHFSM machine, FTrigger trigger)
         {
-            return this._trigger == trigger && (_condition == null || _condition.Evaluate());
+            return this._trigger == trigger && (_condition == null || _condition.Evaluate(machine));
         }
 
-        void ITransition.PerformActions()
+        void ITransition.PerformActions(FHFSM machine)
         {
             for (int i = 0; i < _actions.Count; ++i)
             {
-                _actions[i].Perform();
+                _actions[i].Perform(machine);
             }
         }
         #endregion
