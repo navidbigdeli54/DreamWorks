@@ -23,7 +23,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
 
         private readonly List<IState> _activeStatesThisFrame = new List<IState>();
 
-        private readonly Dictionary<FName, IState> _pooledStates = new Dictionary<FName, IState>();
+        private readonly List<IState> _registeredStates = new List<IState>();
 
         private readonly Queue<FTrigger> _pushedTriggers = new Queue<FTrigger>();
         #endregion
@@ -55,9 +55,9 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
 
         public void AddState(IState state)
         {
-            FAssert.IsFalse(_pooledStates.ContainsKey(state.Name), $"State `{state.Name}` is already exist in HFSM.");
+            FAssert.IsFalse(_registeredStates.Contains(state), $"State `{state.Name}` is already exist in HFSM.");
 
-            _pooledStates.Add(state.Name, state);
+            _registeredStates.Add(state);
             state.SetMachine(this);
 
             for (int i = 0; i < state.Children.Count; ++i)
@@ -115,7 +115,7 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
 
         private void FireTransition(IState source, ITransition transition)
         {
-            FAssert.IsTrue(_pooledStates.ContainsKey(transition.Target.Name), $"{transition.Target.Name} is not exist in this machine.");
+            FAssert.IsTrue(_registeredStates.Contains(transition.Target), $"{transition.Target.Name} is not exist in this machine.");
 
             ExitHierarchyToClosestCommonAncestor(source, transition);
             transition.PerformActions(this);
@@ -285,33 +285,33 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         #region IInitializable Implementation
         async Task IInitializable.PreInitializeAsync()
         {
-            foreach (KeyValuePair<FName, IState> statePair in _pooledStates)
+            for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await statePair.Value.PreInitializeAsync();
+                await _registeredStates[i].PreInitializeAsync();
             }
         }
 
         async Task IInitializable.InitializeAsync()
         {
-            foreach (KeyValuePair<FName, IState> statePair in _pooledStates)
+            for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await statePair.Value.InitializeAsync();
+                await _registeredStates[i].InitializeAsync();
             }
         }
 
         async Task IInitializable.BeginPlayAsync()
         {
-            foreach (KeyValuePair<FName, IState> statePair in _pooledStates)
+            for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await statePair.Value.BeginPlayAsync();
+                await _registeredStates[i].BeginPlayAsync();
             }
         }
 
         async Task IInitializable.UninitializeAsync()
         {
-            foreach (KeyValuePair<FName, IState> statePair in _pooledStates)
+            for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await statePair.Value.UninitializeAsync();
+                await _registeredStates[i].UninitializeAsync();
             }
         }
         #endregion
