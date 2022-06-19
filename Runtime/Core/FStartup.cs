@@ -29,9 +29,9 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             new GameObject().AddComponent<MDreamwork>();
 
-            FServiceLocator.Register<IGameManagement>(new GameObject().AddComponent<CGameManagement>());
+            FServiceLocator.Register<IGameManagement>(new GameObject(nameof(CGameManagement)).AddComponent<CGameManagement>());
 
-            FServiceLocator.Register<ISceneManagerProxy>(new GameObject().AddComponent<CSceneManagerProxy>());
+            FServiceLocator.Register<ISceneManagerProxy>(new GameObject(nameof(CSceneManagerProxy)).AddComponent<CSceneManagerProxy>());
 
             Configuration();
 
