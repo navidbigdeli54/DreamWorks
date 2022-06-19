@@ -21,6 +21,8 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
         {
             base.PreInitializeComponenetAsync();
 
+            MakePersistent();
+
             USceneManager.activeSceneChanged += ActiveSceneChanged;
             USceneManager.sceneLoaded += SceneLoaded;
             USceneManager.sceneUnloaded += SceneUnloaded;
