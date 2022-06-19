@@ -14,16 +14,10 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         private IGameMode _currentGameMode;
         #endregion
 
-        #region Property
-        public new static Type CLASS_TYPE => typeof(CGameManagement);
-        #endregion
-
         #region Method
         protected async override Task InitializeComponentAsync()
         {
             await base.InitializeComponentAsync();
-
-            name = CLASS_TYPE.Name;
 
             MakePersistent();
 
