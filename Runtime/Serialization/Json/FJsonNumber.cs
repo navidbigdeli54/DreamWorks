@@ -17,6 +17,8 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
 
         #region Operator Overloads
         public static implicit operator double(FJsonNumber jsonNumber) => jsonNumber._value;
+
+        public static implicit operator int(FJsonNumber jsonNumber) => (int)jsonNumber._value;
         #endregion
 
         #region Public Methods
