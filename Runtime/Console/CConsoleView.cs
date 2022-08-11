@@ -1,50 +1,29 @@
 using UnityEngine;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using DreamMachineGameStudio.Dreamworks.Core;
 
-namespace DreamMachineGameStudio.Dreamworks
+namespace DreamMachineGameStudio.Dreamworks.Console
 {
-    public class CConsole : CComponent
+    public class CConsoleView : CComponent
     {
         #region Fields
-        private Dictionary<string, FCommand> _commands = new Dictionary<string, FCommand>();
-
-        private bool _isActive;
-
         private const int CONSOLE_HEIGHT = 40;
 
-        private static CConsole _instance;
+        private bool _isActive;
 
         private string _inputText;
 
         private GUISkin _skin;
         #endregion
 
-        #region Properties
-        public static CConsole Instance
+        #region CComponent Methods
+        protected override async Task PreInitializeComponenetAsync()
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new GameObject(nameof(CConsole)).AddComponent<CConsole>();
-                }
+            await base.PreInitializeComponenetAsync();
 
-                return _instance;
-            }
-        }
-        #endregion
-
-        #region Public Methods
-        public void Startup()
-        {
             _skin = Resources.Load<GUISkin>("console_skin");
-        }
 
-        public void AddCommand(string name, FCommand command)
-        {
-            _commands.Add(name, command);
+            MakePersistent();
         }
         #endregion
 
@@ -58,17 +37,16 @@ namespace DreamMachineGameStudio.Dreamworks
                 {
                     _isActive = !_isActive;
                     _inputText = string.Empty;
-                    e.Use();
                 }
                 else if (_isActive && e.keyCode == KeyCode.Return)
                 {
                     _isActive = false;
+                    FConsole.Instance.ExecuteCommand(_inputText);
                     _inputText = string.Empty;
-                    e.Use();
                 }
             }
 
-            if (e.keyCode != KeyCode.BackQuote && _isActive)
+            if (_isActive)
             {
                 GUILayout.BeginVertical(GUILayout.Width(Screen.width), GUILayout.Height(CONSOLE_HEIGHT));
                 GUILayout.Space(Screen.height - CONSOLE_HEIGHT);
@@ -78,6 +56,11 @@ namespace DreamMachineGameStudio.Dreamworks
                 GUI.FocusControl(nameof(_inputText));
                 GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
+            }
+
+            if (e.keyCode == KeyCode.BackQuote)
+            {
+                _inputText = string.Empty;
             }
         }
         #endregion
