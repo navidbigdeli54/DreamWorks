@@ -1,6 +1,7 @@
 ﻿/**Copyright 2016 - 2022, Dream Machine Game Studio. All Right Reserved.*/
 
 using UnityEngine;
+using DreamMachineGameStudio.Dreamworks.Console;
 using DreamMachineGameStudio.Dreamworks.SceneManager;
 using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 
@@ -24,13 +25,11 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
             }
 
-            new GameObject().AddComponent<MDreamwork>();
+            new GameObject(nameof(MDreamwork)).AddComponent<MDreamwork>();
 
             FServiceLocator.Register<IGameManagement>(new GameObject(nameof(CGameManagement)).AddComponent<CGameManagement>());
 
             FServiceLocator.Register<ISceneManagerProxy>(new GameObject(nameof(CSceneManagerProxy)).AddComponent<CSceneManagerProxy>());
-
-            CConsole.Instance.Startup();
 
             Configuration();
 

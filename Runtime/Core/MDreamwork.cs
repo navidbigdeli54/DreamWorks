@@ -49,8 +49,6 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (Instance == null)
             {
-                name = nameof(MDreamwork);
-
                 CPersistent.MakePersistent(gameObject);
 
                 Instance = this;
