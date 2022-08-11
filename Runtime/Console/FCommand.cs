@@ -1,16 +1,24 @@
-﻿namespace DreamMachineGameStudio.Dreamworks
+﻿namespace DreamMachineGameStudio.Dreamworks.Console
 {
-    public class FCommand
+    public abstract class FCommand
     {
         #region Properties
         public string Name { get; }
+
+        public object Target { get; }
         #endregion
 
         #region Constructors
-        public FCommand(string name)
+        public FCommand(string name, object target)
         {
             Name = name;
+
+            Target = target;
         }
+        #endregion
+
+        #region Public Methods
+        public abstract void Execute(string[] parameters);
         #endregion
     }
 }
