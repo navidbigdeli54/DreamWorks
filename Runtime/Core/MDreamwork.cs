@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Persistent;
 using DreamMachineGameStudio.Dreamworks.EventManager;
+using DreamMachineGameStudio.Dreamworks.Console;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -204,6 +205,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 return;
             }
 
+            FConsoleUtility.TryRemoveCommands(initializable);
+
             await initializable.UninitializeAsync();
 
             _registeredObjects.Remove(initializable);
@@ -332,6 +335,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                     IInitializableObject initializable = list[i];
 
                     if (initializable.HasInitialized) continue;
+
+                    FConsoleUtility.TryAddCommands(initializable);
 
                     await initializable.PreInitializeAsync();
                 }
