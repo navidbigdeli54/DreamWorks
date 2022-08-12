@@ -5,14 +5,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
     public abstract class FSingleton<T> where T : class, new()
     {
         #region Fields
-        private static readonly T _instance;
-        #endregion
-
-        #region Constructors
-        static FSingleton()
-        {
-            _instance = new T();
-        }
+        private static T _instance;
         #endregion
 
         #region Properties
@@ -20,6 +13,11 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             get
             {
+                if (_instance == null)
+                {
+                    _instance = new T();
+                }
+
                 return _instance;
             }
         }
