@@ -39,6 +39,16 @@ namespace DreamMachineGameStudio.Dreamworks.Test.Serialization.Json
         }
 
         [Test]
+        public void ImplicitCastToFloat()
+        {
+            string jsonString = "{ \"Side\" : 0.5}";
+            FJsonNode jsonNode = FJsonNode.Parse(jsonString);
+            FJsonObject jsonObject = jsonNode as FJsonObject;
+            FAssert.IsNotNull(jsonObject);
+            FAssert.AreEqual<float>(0.5f, jsonObject["Side"]);
+        }
+
+        [Test]
         public void SerializeNumber()
         {
             FJsonObject jsonObject = new FJsonObject();
