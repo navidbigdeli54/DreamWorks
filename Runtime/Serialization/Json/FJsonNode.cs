@@ -40,6 +40,16 @@ namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
             return 0;
         }
 
+        public static implicit operator float(FJsonNode jsonNode)
+        {
+            if (jsonNode is FJsonNumber jsonNumber)
+            {
+                return (float)jsonNumber;
+            }
+
+            return 0;
+        }
+
         public static implicit operator int(FJsonNode jsonNode)
         {
             if (jsonNode is FJsonNumber jsonNumber)
