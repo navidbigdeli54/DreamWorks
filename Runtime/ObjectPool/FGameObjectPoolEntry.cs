@@ -16,6 +16,8 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
         {
             GameObject instance = UnityEngine.Object.Instantiate(_asset, Parent.transform);
 
+            instance.gameObject.SetActive(false);
+
             return instance.AddComponent<CPoolableGameObject>();
         }
         #endregion
