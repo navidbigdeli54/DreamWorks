@@ -15,7 +15,7 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
         [SerializeField]
         private int _count;
 
-        private List<IPoolableObject> _instances;
+        private List<IPoolableObject> _instances = new List<IPoolableObject>();
         #endregion
 
         #region Properties
