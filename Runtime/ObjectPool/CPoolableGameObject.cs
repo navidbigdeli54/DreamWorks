@@ -15,8 +15,16 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
         protected async override Task PreInitializeComponenetAsync()
         {
             await base.PreInitializeComponenetAsync();
+        }
 
-            MakePersistent();
+        protected override async Task BeginPlayAsync()
+        {
+            await base.BeginPlayAsync();
+
+            if(Parent == null)
+            {
+                MakePersistent();
+            }
         }
         #endregion
 
