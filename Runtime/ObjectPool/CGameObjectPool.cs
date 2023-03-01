@@ -37,6 +37,8 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
             FObjectPoolEntry entry = entries.Get(poolableObject.Owner.Name);
             if (entry != null)
             {
+                poolableObject.SetParent(this);
+
                 entry.Retrive(poolableObject);
             }
         }
