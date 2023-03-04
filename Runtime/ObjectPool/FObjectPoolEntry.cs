@@ -46,6 +46,9 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
             if (poolableGameObject == null)
             {
                 poolableGameObject = Instantiate();
+
+                poolableGameObject.Owner = new FPoolableInstanceOwner(_name);
+
                 _instances.Add(poolableGameObject);
             }
 
