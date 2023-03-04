@@ -1,3 +1,4 @@
+using DreamMachineGameStudio.Dreamworks.Debug;
 using System;
 using UnityEngine;
 
@@ -18,7 +19,14 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 
             instance.gameObject.SetActive(false);
 
-            return instance.AddComponent<CPoolableGameObject>();
+            if(instance.TryGetComponent(out CPoolableGameObject poolableGameObject) == false)
+            {
+                FLog.Warning(nameof(CGameObjectPool), $"{Name} prefab does not have poolableInstance component, adding it manually");
+
+                poolableGameObject = instance.AddComponent<CPoolableGameObject>();
+            }
+
+            return poolableGameObject;
         }
         #endregion
     }
