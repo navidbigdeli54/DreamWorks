@@ -39,6 +39,8 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
             {
                 poolableObject.SetParent(this);
 
+                poolableObject.SetActive(false);
+
                 entry.Retrive(poolableObject);
             }
         }
