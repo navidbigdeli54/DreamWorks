@@ -111,9 +111,9 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 {
                     FLog.Exception(CLASS_TYPE.Name, exception);
                 }
-
-                InitializePendingObjects();
             }
+
+            InitializePendingObjects();
         }
 
         private void FixedUpdate()
