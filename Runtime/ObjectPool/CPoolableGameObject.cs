@@ -6,17 +6,12 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
     public class CPoolableGameObject : CComponent, IPoolableObject
     {
         #region Properties
-        public bool IsFree { get; private set; }
+        public bool IsFree { get; private set; } = true;
 
         public FPoolableInstanceOwner Owner => ((IPoolableObject)this).Owner;
         #endregion
 
         #region Protected Methods
-        protected async override Task PreInitializeComponenetAsync()
-        {
-            await base.PreInitializeComponenetAsync();
-        }
-
         protected override async Task BeginPlayAsync()
         {
             await base.BeginPlayAsync();
