@@ -3,6 +3,8 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
+using System.IdentityModel.Tokens;
 
 namespace DreamMachineGameStudio.Dreamworks.Tween
 {
@@ -27,6 +29,11 @@ namespace DreamMachineGameStudio.Dreamworks.Tween
         public static void DoRotate(this Transform transform, Quaternion endRotation, float duration, Action callback)
         {
             _coroutine.Start(Rotate(transform, endRotation, duration, callback));
+        }
+
+        public static void DoScale(this Transform transform, Vector3 endScale, float duration)
+        {
+            _coroutine.Start(Scale(transform, endScale, duration));
         }
         #endregion
 
@@ -83,6 +90,24 @@ namespace DreamMachineGameStudio.Dreamworks.Tween
             transform.rotation = endRotation;
 
             callback?.Invoke();
+        }
+
+        private static IEnumerator Scale(Transform transform, Vector3 endScale, float duration)
+        {
+            Vector3 startScale = transform.localScale;
+
+            float elapsedTime = 0;
+
+            while (elapsedTime < duration)
+            {
+                transform.localScale = Vector3.Lerp(startScale, endScale, elapsedTime / duration);
+
+                yield return _waitForEndOfFrame;
+
+                elapsedTime += Time.deltaTime;
+            }
+
+            transform.localScale = endScale;
         }
         #endregion
     }
