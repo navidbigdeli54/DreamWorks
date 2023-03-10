@@ -3,8 +3,6 @@
 using System;
 using UnityEngine;
 using System.Collections;
-using UnityEditor;
-using System.IdentityModel.Tokens;
 
 namespace DreamMachineGameStudio.Dreamworks.Tween
 {
