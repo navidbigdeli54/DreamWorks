@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.Dreamworks.Core;
+using DreamMachineGameStudio.Dreamworks.Debug;
 
 namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 {
@@ -23,6 +24,8 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
         #region IGameObjectPool Implementation
         CPoolableGameObject IGameObjectPool.Get(string name)
         {
+            FAssert.IsFalse(string.IsNullOrEmpty(name), $"name parameter in IGameObjectPool.Get(string) should not be null!");
+
             FObjectPoolEntry entry = entries.Get(name);
             if (entry != null)
             {
@@ -34,7 +37,13 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 
         void IGameObjectPool.Retrive(CPoolableGameObject poolableObject)
         {
+            FAssert.IsNotNull(poolableObject, $"poolableObject parameter in IGameObjectPool.Retrive(CPoolableGameObject) should not be null!");
+            FAssert.IsFalse(string.IsNullOrEmpty(poolableObject.Owner.Name), $"The owner of the {poolableObject} should not be null!");
+
             FObjectPoolEntry entry = entries.Get(poolableObject.Owner.Name);
+
+            FAssert.IsNotNull(entry, $"Can't find the {poolableObject.Owner.Name} entry to retrive the {poolableObject} object to the pool!");
+
             if (entry != null)
             {
                 poolableObject.SetParent(this);
