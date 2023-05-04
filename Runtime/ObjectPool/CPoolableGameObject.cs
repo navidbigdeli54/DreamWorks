@@ -1,8 +1,10 @@
+using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.Dreamworks.Core;
 
 namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 {
+    [DisallowMultipleComponent]
     public class CPoolableGameObject : CComponent, IPoolableObject
     {
         #region Properties
