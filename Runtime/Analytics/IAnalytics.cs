@@ -4,8 +4,17 @@ using DreamMachineGameStudio.Dreamworks.Core;
 
 namespace DreamMachineGameStudio.Dreamworks.Analytics
 {
+    public enum EProgressionStatus : byte
+    {
+        Started,
+        Completed,
+        Failed
+    }
+
     public interface IAnalytics : IService
     {
+        void SendProgressionEvent(string name, EProgressionStatus status);
 
+        void SendProgressionEvent(string name, EProgressionStatus status, int value);
     }
 }
