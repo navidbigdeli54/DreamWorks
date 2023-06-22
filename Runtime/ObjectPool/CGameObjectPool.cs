@@ -27,12 +27,14 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
             FAssert.IsFalse(string.IsNullOrEmpty(name), $"name parameter in IGameObjectPool.Get(string) should not be null!");
 
             FObjectPoolEntry entry = entries.Get(name);
-            if (entry != null)
+            if(entry == null)
             {
-                return (CPoolableGameObject)entry.Get();
+                FLog.Error(nameof(CGameObjectPool), $"Can't find {name} game object pool entry.");
+
+                return null;
             }
 
-            return null;
+            return (CPoolableGameObject)entry.Get();
         }
 
         void IGameObjectPool.Retrive(CPoolableGameObject poolableObject)
