@@ -6,6 +6,7 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.Dreamworks.Persistent;
+using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -17,6 +18,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         private bool _canEverLateTick = false;
 
         private bool _canEverFixedTick = false;
+
+        private IGameManagement _gameManager;
         #endregion
 
         #region Property
@@ -98,7 +101,12 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// If you want to change execution order value, you should set it in here.
         /// PreInitialize is called once, just like the constructor.
         /// </summary>
-        protected virtual Task PreInitializeComponenetAsync() => Task.CompletedTask;
+        protected virtual Task PreInitializeComponenetAsync()
+        {
+            _gameManager = FServiceLocator.Get<IGameManagement>();
+
+            return Task.CompletedTask;
+        }
 
         /// <summary>
         /// Initialize is called on the frame when a script is enabled just before any of the Tick methods is called the first time.
@@ -150,6 +158,16 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// OnDisable will calls when Component become disable.
         /// </summary>
         protected virtual void OnDisableComponent() { }
+
+        protected IGameMode GetGameMode()
+        {
+            return _gameManager.CurrentGameMode;
+        }
+
+        protected T GetGameMode<T>() where T : class, IGameMode
+        {
+            return _gameManager.CurrentGameMode as T;
+        }
 
         public void SetActive(bool value) => gameObject.SetActive(value);
 
