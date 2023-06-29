@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
+using DreamMachineGameStudio.Dreamworks.Debug;
 
 namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 {
@@ -45,6 +46,8 @@ namespace DreamMachineGameStudio.Dreamworks.ObjectPool
 
             if (poolableGameObject == null)
             {
+                FLog.Warning(nameof(FObjectPoolEntry), $"No more free {_name} object, instantiating a new object.");
+
                 poolableGameObject = Instantiate();
 
                 poolableGameObject.Owner = new FPoolableInstanceOwner(_name);
