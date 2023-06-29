@@ -207,7 +207,14 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             FConsoleUtility.TryRemoveCommands(initializable);
 
-            await initializable.UninitializeAsync();
+            try
+            {
+                await initializable.UninitializeAsync();
+            }
+            catch (Exception exception)
+            {
+                FLog.Exception(nameof(MDreamwork), exception);
+            }
 
             _registeredObjects.Remove(initializable);
 
