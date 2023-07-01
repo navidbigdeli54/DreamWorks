@@ -1,15 +1,14 @@
 ﻿/**Copyright 2016 - 2023, Dream Machine Game Studio. All Right Reserved.*/
 
-#pragma warning disable IDE0051
 
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using DreamMachineGameStudio.Dreamworks.Debug;
+using DreamMachineGameStudio.Dreamworks.Console;
 using DreamMachineGameStudio.Dreamworks.Persistent;
 using DreamMachineGameStudio.Dreamworks.EventManager;
-using DreamMachineGameStudio.Dreamworks.Console;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -36,8 +35,6 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         #endregion
 
         #region Property
-        public Type CLASS_TYPE => typeof(MDreamwork);
-
         public static MDreamwork Instance { get; private set; }
 
         public bool HasInitialized { get; set; }
@@ -82,7 +79,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Exception(CLASS_TYPE.Name, exception);
+                    FLog.Exception(nameof(MDreamwork), exception);
                 }
             }
         }
@@ -109,7 +106,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Exception(CLASS_TYPE.Name, exception);
+                    FLog.Exception(nameof(MDreamwork), exception);
                 }
             }
 
@@ -138,7 +135,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Exception(CLASS_TYPE.Name, exception);
+                    FLog.Exception(nameof(MDreamwork), exception);
                 }
             }
         }
@@ -160,7 +157,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             {
                 if (_initializablesHolder.Contains(initializable))
                 {
-                    FLog.Warning(CLASS_TYPE.Name, $"{initializable.Name} has already registered");
+                    FLog.Warning(nameof(MDreamwork), $"{initializable.Name} has already registered");
 
                     return;
                 }
@@ -180,7 +177,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 {
                     if (initializable is IService && (initializable is IGameService) == false)
                     {
-                        FLog.Error(CLASS_TYPE.Name, $"{initializable.Name} is a service and should not be registered during game play, use GameStartup to register them. Registration aborted.");
+                        FLog.Error(nameof(MDreamwork), $"{initializable.Name} is a service and should not be registered during game play, use GameStartup to register them. Registration aborted.");
 
                         return;
                     }
@@ -200,7 +197,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_initializablesHolder.Contains(initializable) == false)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{initializable.Name} has not registered but wants to unregister itself.");
+                FLog.Warning(nameof(MDreamwork), $"{initializable.Name} has not registered but wants to unregister itself.");
 
                 return;
             }
@@ -237,7 +234,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_ticksHolder.Contains(tickable))
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} already registered for tick.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} already registered for tick.");
 
                 return;
             }
@@ -251,7 +248,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_ticksHolder.Contains(tickable) == false)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} has not registered for tick but wants to unregister.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} has not registered for tick but wants to unregister.");
 
                 return;
             }
@@ -265,7 +262,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_lateTicksHolder.Contains(tickable))
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} already registered for late tick.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} already registered for late tick.");
 
                 return;
             }
@@ -279,7 +276,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_lateTicksHolder.Contains(tickable) == false)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} has not registered for late tick but wants to unregister.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} has not registered for late tick but wants to unregister.");
 
                 return;
             }
@@ -293,7 +290,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_fixedTicksHolder.Contains(tickable))
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} already registered for fixed tick.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} already registered for fixed tick.");
 
                 return;
             }
@@ -307,7 +304,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             if (_fixedTicksHolder.Contains(tickable) == false)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"{tickable.Name} has not registered for fixed tick but wants to unregister.");
+                FLog.Warning(nameof(MDreamwork), $"{tickable.Name} has not registered for fixed tick but wants to unregister.");
 
                 return;
             }
@@ -349,7 +346,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception);
+                    FLog.Error(nameof(MDreamwork), exception);
                 }
             }
         }
@@ -368,7 +365,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception);
+                    FLog.Error(nameof(MDreamwork), exception);
                 }
             }
         }
@@ -387,7 +384,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
                 }
                 catch (Exception exception)
                 {
-                    FLog.Error(CLASS_TYPE.Name, exception);
+                    FLog.Error(nameof(MDreamwork), exception);
                 }
             }
         }
