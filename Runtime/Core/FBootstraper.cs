@@ -8,10 +8,6 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 {
     internal static class FBootstraper
     {
-        #region Property
-        private static Type CLASS_TYPE => typeof(FBootstraper);
-        #endregion
-
         #region Method
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void StartUp()
@@ -20,14 +16,14 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             if (configuration == null)
             {
-                FLog.Error(CLASS_TYPE.Name, "Can't read framework configuration.");
+                FLog.Error(nameof(FBootstraper), "Dreamwork configuration dose not exist at the `Assets/Resources/SDreamworksConfiguration` path.");
 
                 return;
             }
 
             if (configuration.DontLoadFramework)
             {
-                FLog.Info(CLASS_TYPE.Name, "DontLoadFramework is true.");
+                FLog.Info(nameof(FBootstraper), "Starting the Dreamwork has beem cancelled because DontLoadFramework is true.");
 
                 return;
             }
@@ -36,14 +32,14 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             if (startupType == null)
             {
-                FLog.Error(CLASS_TYPE.Name, "Startup type has not been selected, Please select a startup type in framework's configuration.");
+                FLog.Error(nameof(FBootstraper), "Startup class has not assigned to the configuration, Please assign one in framework's configuration.");
 
                 return;
             }
 
             if (startupType.IsSubclassOf(typeof(FStartup)) == false)
             {
-                FLog.Error(CLASS_TYPE.Name, "Startup class should be a subclass of `SStartup`.");
+                FLog.Error(nameof(FBootstraper), "Startup class should be a subclass of `SStartup`.");
 
                 return;
             }

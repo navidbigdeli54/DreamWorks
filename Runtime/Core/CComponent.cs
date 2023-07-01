@@ -19,16 +19,10 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         private bool _canEverFixedTick = false;
 
-        private IGameManagement _gameManager;
+        private IGameController _gameController;
         #endregion
 
         #region Property
-        /// <summary>
-        /// The type of CComponent
-        /// </summary>
-        /// TODO: use nameof() instead of this!
-        public static Type CLASS_TYPE { get; } = typeof(CComponent);
-
         /// <summary>
         /// If true, object has registered to the framework otherwise not.
         /// </summary>
@@ -43,6 +37,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// If true, component's BeginPlay has been called, otherwise not.
         /// </summary>
         protected bool HasBeganPlay { get; private set; } = false;
+
+        protected bool HasEndedPlay { get; private set; } = false;
 
         /// <summary>
         /// If true, this component will get Tick after all objects have been initialized.
@@ -103,7 +99,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// </summary>
         protected virtual Task PreInitializeComponenetAsync()
         {
-            _gameManager = FServiceLocator.Get<IGameManagement>();
+            _gameController = FServiceLocator.Get<IGameController>();
 
             return Task.CompletedTask;
         }
@@ -123,6 +119,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// Tick callbacks can be set to invoke before BeginPlay.
         /// </summary>
         protected virtual Task BeginPlayAsync() => Task.CompletedTask;
+
+        protected virtual Task EndPlayAsync() => Task.CompletedTask;
 
         protected virtual Task UninitializeCompoonentAsync() => Task.CompletedTask;
 
@@ -161,12 +159,12 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         protected IGameMode GetGameMode()
         {
-            return _gameManager.CurrentGameMode;
+            return _gameController.CurrentGameMode;
         }
 
         protected T GetGameMode<T>() where T : class, IGameMode
         {
-            return _gameManager.CurrentGameMode as T;
+            return _gameController.CurrentGameMode as T;
         }
 
         public void SetActive(bool value) => gameObject.SetActive(value);
@@ -225,7 +223,11 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         bool IInitializableObject.HasInitialized => HasInitialized;
 
-        bool IInitializableObject.HasBeganPlay => HasBeganPlay;
+        bool IInitializableObject.HasBegunPlay => HasBeganPlay;
+
+        bool IInitializableObject.HasEndedPlay => HasEndedPlay;
+
+        bool IInitializableObject.IsTransient => gameObject.scene.name.Equals("DontDestroyOnLoad", StringComparison.OrdinalIgnoreCase) == false;
 
         bool ITickableObject.CanEverTick => CanEverTick;
 
@@ -255,6 +257,13 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             await BeginPlayAsync();
 
             HasBeganPlay = true;
+        }
+
+        async Task IInitializable.EndPlayAsync()
+        {
+            await EndPlayAsync();
+
+            HasEndedPlay = true;
         }
 
         async Task IInitializable.UninitializeAsync() => await UninitializeCompoonentAsync();

@@ -18,7 +18,11 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// <summary>
         /// If true, object's BeginPlay has been called, otherwise not.
         /// </summary>
-        bool HasBeganPlay { get; }
+        bool HasBegunPlay { get; }
+
+        bool HasEndedPlay { get; }
+
+        bool IsTransient { get; }
         #endregion
     }
 }

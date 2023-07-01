@@ -11,7 +11,9 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         protected bool HasInitialized { get; private set; }
 
-        protected bool HasBeganPlay { get; private set; }
+        protected bool HasBegunPlay { get; private set; }
+
+        protected bool HasEndedPlay { get; private set; }
 
         protected bool CanEverTick { get; set; }
 
@@ -33,6 +35,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         protected virtual Task BeginPlayAsync() => Task.CompletedTask;
 
+        protected virtual Task EndPlayAsync() => Task.CompletedTask;
+
         protected virtual Task UninitializeAsync() => Task.CompletedTask;
 
         protected virtual void Tick(float deltaTime) { }
@@ -50,7 +54,11 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         bool IInitializableObject.HasInitialized => HasInitialized;
 
-        bool IInitializableObject.HasBeganPlay => HasBeganPlay;
+        bool IInitializableObject.HasBegunPlay => HasBegunPlay;
+
+        bool IInitializableObject.HasEndedPlay => HasEndedPlay;
+
+        bool IInitializableObject.IsTransient => true;
 
         bool ITickableObject.CanEverTick => CanEverTick;
 
@@ -77,7 +85,14 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             await BeginPlayAsync();
 
-            HasBeganPlay = true;
+            HasBegunPlay = true;
+        }
+
+        async Task IInitializable.EndPlayAsync()
+        {
+            await EndPlayAsync();
+
+            HasEndedPlay = true;
         }
 
         async Task IInitializable.UninitializeAsync() => await UninitializeAsync();

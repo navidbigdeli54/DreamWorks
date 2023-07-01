@@ -1,6 +1,5 @@
 ﻿/**Copyright 2016 - 2023, Dream Machine Game Studio. All Right Reserved.*/
 
-using System;
 using UnityEngine;
 using DreamMachineGameStudio.Dreamworks.Debug;
 
@@ -9,10 +8,6 @@ namespace DreamMachineGameStudio.Dreamworks.Persistent
     [DisallowMultipleComponent]
     public class CPersistent : MonoBehaviour
     {
-        #region Fields
-        public readonly static Type CLASS_TYPE = typeof(CPersistent);
-        #endregion
-
         #region MonoBehaviours
         private void Awake()
         {
@@ -36,13 +31,13 @@ namespace DreamMachineGameStudio.Dreamworks.Persistent
         {
             if (gameObject == null)
             {
-                FLog.Error(CLASS_TYPE.Name, $"Given game object to making it persistent is null. it is not accepted.");
+                FLog.Error(nameof(CPersistent), $"Given game object to making it persistent is null. it is not accepted.");
                 return;
             }
 
             if (gameObject.GetComponent<CPersistent>() != null)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"`{gameObject.name}` has marked as persistent already.");
+                FLog.Warning(nameof(CPersistent), $"`{gameObject.name}` has marked as persistent already.");
                 return;
             }
 
@@ -57,7 +52,7 @@ namespace DreamMachineGameStudio.Dreamworks.Persistent
         {
             if (gameObject == null)
             {
-                FLog.Error(CLASS_TYPE.Name, $"Given game object to making it persistent is null. it is not accepted.");
+                FLog.Error(nameof(CPersistent), $"Given game object to making it persistent is null. it is not accepted.");
                 return;
             }
 
@@ -65,7 +60,7 @@ namespace DreamMachineGameStudio.Dreamworks.Persistent
 
             if (component == null)
             {
-                FLog.Warning(CLASS_TYPE.Name, $"`{gameObject.name}` has marked as transient already.");
+                FLog.Warning(nameof(CPersistent), $"`{gameObject.name}` has marked as transient already.");
                 return;
             }
 

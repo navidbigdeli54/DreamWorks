@@ -9,6 +9,9 @@ using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Console;
 using DreamMachineGameStudio.Dreamworks.Persistent;
 using DreamMachineGameStudio.Dreamworks.EventManager;
+using DreamMachineGameStudio.Dreamworks.ServiceLocator;
+using DreamMachineGameStudio.Dreamworks.SceneManager;
+using UnityEngine.SceneManagement;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -92,7 +95,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
                 if (tickable == null) continue;
 
-                if (this.HasInitialized == false) continue;
+                if (HasInitialized == false) continue;
 
                 if (tickable is IInitializableObject initializable && initializable.HasInitialized == false) continue;
 
@@ -143,12 +146,12 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
         #region Method
         public async void StartUp()
-        {
+        { 
+            FServiceLocator.Get<ISceneManagerProxy>().OnSceneUnloaded += OnSceneUnloaded;
+            FServiceLocator.Get<IGameController>().OnGameModeBegunPlay += OnGameModeBegunPlay;
+            FServiceLocator.Get<IGameController>().OnGameModeEnded += OnGameModeEnded;
+
             await InitializeServicesAsync();
-
-            FEventManager.Subscribe(FEventManager.ON_GAME_MODE_LOADED, OnGameModeLoaded);
-
-            FEventManager.Subscribe(FEventManager.ON_SCENE_UNLOADED, OnSceneUnloaded);
         }
 
         public void Register(IInitializableObject initializable)
@@ -220,13 +223,19 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             if (initializable is ITickableObject tickable)
             {
                 if (_ticksHolder.Contains(tickable))
+                {
                     UnregisterTick(tickable);
+                }
 
                 if (_lateTicksHolder.Contains(tickable))
+                {
                     UnregisterLateTick(tickable);
+                }
 
                 if (_fixedTicksHolder.Contains(tickable))
+                {
                     UnregisterFixedTick(tickable);
+                }
             }
         }
 
@@ -334,14 +343,14 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             for (int i = 0; i < list.Count; i++)
             {
+                IInitializableObject initializable = list[i];
+
+                if (initializable.HasInitialized) continue;
+
+                FConsoleUtility.TryAddCommands(initializable);
+
                 try
                 {
-                    IInitializableObject initializable = list[i];
-
-                    if (initializable.HasInitialized) continue;
-
-                    FConsoleUtility.TryAddCommands(initializable);
-
                     await initializable.PreInitializeAsync();
                 }
                 catch (Exception exception)
@@ -355,12 +364,12 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             for (int i = 0; i < list.Count; i++)
             {
+                IInitializableObject initializable = list[i];
+
+                if (initializable.HasInitialized) continue;
+
                 try
                 {
-                    IInitializableObject initializable = list[i];
-
-                    if (initializable.HasInitialized) continue;
-
                     await initializable.InitializeAsync();
                 }
                 catch (Exception exception)
@@ -374,12 +383,12 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             for (int i = 0; i < list.Count; i++)
             {
+                IInitializableObject initializable = list[i];
+
+                if (initializable.HasBegunPlay) continue;
+
                 try
                 {
-                    IInitializableObject initializable = list[i];
-
-                    if (initializable.HasBeganPlay) continue;
-
                     await initializable.BeginPlayAsync();
                 }
                 catch (Exception exception)
@@ -389,7 +398,31 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             }
         }
 
-        private async void OnGameModeLoaded(object arg)
+        private async void OnGameModeEnded()
+        {
+            for (int i = 0; i < _registeredObjects.Count; ++i)
+            {
+                IInitializableObject initializableObject = _registeredObjects[i];
+
+                if (initializableObject == null) continue;
+
+                if (initializableObject.HasEndedPlay) continue;
+
+                if (initializableObject.IsTransient == false) continue;
+
+                try
+                {
+                    await initializableObject.EndPlayAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Error(nameof(MDreamwork), exception);
+                }
+
+            }
+        }
+
+        private async void OnGameModeBegunPlay()
         {
             HasInitialized = true;
 
@@ -419,7 +452,7 @@ namespace DreamMachineGameStudio.Dreamworks.Core
             }
         }
 
-        private void OnSceneUnloaded(object arg)
+        private void OnSceneUnloaded(Scene _)
         {
             HasBeganPlay = false;
         }

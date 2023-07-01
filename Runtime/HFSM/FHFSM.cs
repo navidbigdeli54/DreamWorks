@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using DreamMachineGameStudio.Dreamworks.Core;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Blackboard;
+using System;
 
 namespace DreamMachineGameStudio.Dreamworks.HFSM
 {
@@ -287,7 +288,14 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         {
             for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await _registeredStates[i].PreInitializeAsync();
+                try
+                {
+                    await _registeredStates[i].PreInitializeAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Exception(nameof(FHFSM), exception);
+                }
             }
         }
 
@@ -295,15 +303,46 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         {
             for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await _registeredStates[i].InitializeAsync();
+                try
+                {
+                    await _registeredStates[i].InitializeAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Exception(nameof(FHFSM), exception);
+                }
             }
+
+
         }
 
         async Task IInitializable.BeginPlayAsync()
         {
             for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await _registeredStates[i].BeginPlayAsync();
+                try
+                {
+                    await _registeredStates[i].BeginPlayAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Exception(nameof(FHFSM), exception);
+                }
+            }
+        }
+
+        async Task IInitializable.EndPlayAsync()
+        {
+            for (int i = 0; i < _registeredStates.Count; ++i)
+            {
+                try
+                {
+                    await _registeredStates[i].EndPlayAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Exception(nameof(FHFSM), exception);
+                }
             }
         }
 
@@ -311,7 +350,14 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         {
             for (int i = 0; i < _registeredStates.Count; ++i)
             {
-                await _registeredStates[i].UninitializeAsync();
+                try
+                {
+                    await _registeredStates[i].UninitializeAsync();
+                }
+                catch (Exception exception)
+                {
+                    FLog.Exception(nameof(FHFSM), exception);
+                }
             }
         }
         #endregion
@@ -327,7 +373,14 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
                 IState state = _activeStatesThisFrame[i];
                 if (state.IsActive)
                 {
-                    state.Tick(deltaTime);
+                    try
+                    {
+                        state.Tick(deltaTime);
+                    }
+                    catch (Exception exception)
+                    {
+                        FLog.Exception(nameof(FHFSM), exception);
+                    }
                 }
             }
         }
@@ -339,7 +392,15 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
                 IState state = _activeStatesThisFrame[i];
                 if (state.IsActive)
                 {
-                    state.LateTick(deltaTime);
+                    try
+                    {
+                        state.LateTick(deltaTime);
+                    }
+                    catch (Exception exception)
+                    {
+                        FLog.Exception(nameof(FHFSM), exception);
+                    }
+
                 }
             }
         }
@@ -351,7 +412,14 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
                 IState state = _activeStatesThisFrame[i];
                 if (state.IsActive)
                 {
-                    state.FixedTick(fixedDeltaTime);
+                    try
+                    {
+                        state.FixedTick(fixedDeltaTime);
+                    }
+                    catch (Exception exception)
+                    {
+                        FLog.Exception(nameof(FHFSM), exception);
+                    }
                 }
             }
         }

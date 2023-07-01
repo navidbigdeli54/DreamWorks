@@ -1,6 +1,5 @@
 ﻿/**Copyright 2016 - 2023, Dream Machine Game Studio. All Right Reserved.*/
 
-#pragma warning disable IDE0002
 
 using System;
 using UnityEngine;
@@ -8,7 +7,6 @@ using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.Dreamworks.Core;
 using DreamMachineGameStudio.Dreamworks.Debug;
-using DreamMachineGameStudio.Dreamworks.EventManager;
 
 using USceneManager = UnityEngine.SceneManagement.SceneManager;
 
@@ -34,8 +32,18 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
         #region ISceneManagerProxy Implementation
         Scene ISceneManagerProxy.ActiveScene => USceneManager.GetActiveScene();
 
+        Action<Scene, Scene> ISceneManagerProxy.OnActiveSceneChanged { get; set; }
+
+        Action<Scene, LoadSceneMode> ISceneManagerProxy.OnSceneLoaded { get; set; }
+
+        Action<Scene> ISceneManagerProxy.OnSceneAboutToUnload { get; set; }
+
+        Action<Scene> ISceneManagerProxy.OnSceneUnloaded { get; set; }
+
         async Task ISceneManagerProxy.LoadSceneAsync(string sceneName, LoadSceneMode loadSceneMode)
         {
+            ((ISceneManagerProxy)this).OnSceneAboutToUnload?.Invoke(USceneManager.GetActiveScene());
+
             TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
 
             AsyncOperation asyncOperation = USceneManager.LoadSceneAsync(sceneName, loadSceneMode);
@@ -44,11 +52,13 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
 
             await taskCompletionSource.Task;
 
-            FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been loaded.");
+            FLog.Info(nameof(CSceneManagerProxy), $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been loaded.");
         }
 
         async Task ISceneManagerProxy.UnloadSceneAsycn(string sceneName)
         {
+            ((ISceneManagerProxy)this).OnSceneAboutToUnload?.Invoke(USceneManager.GetSceneByName(sceneName));
+
             TaskCompletionSource<bool> taskCompletionSource = new TaskCompletionSource<bool>();
 
             AsyncOperation asyncOperation = USceneManager.UnloadSceneAsync(sceneName);
@@ -57,24 +67,24 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
 
             await taskCompletionSource.Task;
 
-            FLog.Info(CLASS_TYPE.Name, $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been unloaded.");
+            FLog.Info(nameof(CSceneManagerProxy), $"Scene `{USceneManager.GetSceneByName(sceneName).name}` has been unloaded.");
         }
         #endregion
 
         #region Private Methods
-        private static void ActiveSceneChanged(Scene replacedScene, Scene nextScene)
+        private void ActiveSceneChanged(Scene replacedScene, Scene nextScene)
         {
-            FEventManager.Publish(FEventManager.ON_ACTIVE_SCENE_CHANGED, new FActiveSceneChangedEventArg(replacedScene, nextScene));
+            ((ISceneManagerProxy)this).OnActiveSceneChanged?.Invoke(replacedScene, nextScene);
         }
 
-        private static void SceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        private void SceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
-            FEventManager.Publish(FEventManager.ON_SCENE_LOADED, new FSceneLoadedEventArg(scene, loadSceneMode));
+            ((ISceneManagerProxy)this).OnSceneLoaded?.Invoke(scene, loadSceneMode);
         }
 
-        private static void SceneUnloaded(Scene scene)
+        private void SceneUnloaded(Scene scene)
         {
-            FEventManager.Publish(FEventManager.ON_SCENE_UNLOADED, new FSceneUnloadedEventArg(scene));
+            ((ISceneManagerProxy)this).OnSceneUnloaded?.Invoke(scene);
         }
         #endregion
     }

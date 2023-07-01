@@ -35,6 +35,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         /// </summary>
         Task BeginPlayAsync();
 
+        Task EndPlayAsync();
+
         Task UninitializeAsync();
         #endregion
     }

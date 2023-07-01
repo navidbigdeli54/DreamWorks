@@ -1,7 +1,6 @@
 ﻿/**Copyright 2016 - 2023, Dream Machine Game Studio. All Right Reserved.*/
 
-#pragma warning disable IDE0002
-
+using System;
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.Dreamworks.Core;
@@ -12,6 +11,14 @@ namespace DreamMachineGameStudio.Dreamworks.SceneManager
     {
         #region Properties
         public Scene ActiveScene { get; }
+
+        public Action<Scene, Scene> OnActiveSceneChanged { get; set; }
+
+        public Action<Scene, LoadSceneMode> OnSceneLoaded { get; set; }
+
+        public Action<Scene> OnSceneAboutToUnload { get; set; }
+
+        public Action<Scene> OnSceneUnloaded { get; set; }
         #endregion
 
         #region Methods

@@ -126,6 +126,8 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
 
         protected virtual Task BeginPlayAsync() => Task.CompletedTask;
 
+        protected virtual Task EndPlayAsync() => Task.CompletedTask;
+
         protected virtual Task UninitializeAsync() => Task.CompletedTask;
 
         protected virtual void Tick(float deltaTime) { }
@@ -243,6 +245,8 @@ namespace DreamMachineGameStudio.Dreamworks.HFSM
         Task IInitializable.InitializeAsync() => InitializeAsync();
 
         Task IInitializable.BeginPlayAsync() => BeginPlayAsync();
+
+        Task IInitializable.EndPlayAsync() => EndPlayAsync();
 
         Task IInitializable.UninitializeAsync() => UninitializeAsync();
         #endregion
