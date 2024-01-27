@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.SceneManager;
 using DreamMachineGameStudio.Dreamworks.ServiceLocator;
+using DreamMachineGameStudio.Dreamworks.Console;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
@@ -90,6 +91,8 @@ namespace DreamMachineGameStudio.Dreamworks.Core
 
             _currentGameMode = Activator.CreateInstance(levelConfiguration.GameMode.Type) as IGameMode;
 
+            FConsoleUtility.TryAddCommands(_currentGameMode);
+
             await _currentGameMode?.PreInitializeAsync();
 
             await _currentGameMode?.InitializeAsync();
@@ -103,7 +106,9 @@ namespace DreamMachineGameStudio.Dreamworks.Core
         {
             await _currentGameMode.EndPlayAsync();
 
-            ((IGameController)this).OnGameModeEnded?.Invoke();
+			FConsoleUtility.TryRemoveCommands(_currentGameMode);
+
+			((IGameController)this).OnGameModeEnded?.Invoke();
         }
 
         private async void OnSceneUnloaded(Scene scene)
