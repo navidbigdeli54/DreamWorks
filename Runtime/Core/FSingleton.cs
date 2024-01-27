@@ -1,26 +1,11 @@
 ﻿/**Copyright 2016 - 2023, Dream Machine Game Studio. All Right Reserved.*/
 
+using System;
+
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
-    public abstract class FSingleton<T> where T : class, new()
+    public abstract class FSingleton<TDerived> where TDerived : class
     {
-        #region Fields
-        private static T _instance;
-        #endregion
-
-        #region Properties
-        public static T Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new T();
-                }
-
-                return _instance;
-            }
-        }
-        #endregion
-    }
+		public static TDerived Instance { get; } = (TDerived)Activator.CreateInstance(typeof(TDerived), true);
+	}
 }
