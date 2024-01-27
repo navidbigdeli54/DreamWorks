@@ -6,6 +6,7 @@ using DreamMachineGameStudio.Dreamworks.Console;
 using DreamMachineGameStudio.Dreamworks.Extension;
 using DreamMachineGameStudio.Dreamworks.SceneManager;
 using DreamMachineGameStudio.Dreamworks.ServiceLocator;
+using DreamMachineGameStudio.Dreamworks.TaskScheduler;
 
 namespace DreamMachineGameStudio.Dreamworks
 {
@@ -26,6 +27,8 @@ namespace DreamMachineGameStudio.Dreamworks
             new GameObject(nameof(CConsoleView)).AddComponent<CConsoleView>();
 
             FServiceLocator.Register<ISceneManagerProxy>(new GameObject(nameof(CSceneManagerProxy)).AddComponent<CSceneManagerProxy>());
+
+            FServiceLocator.Register<ITaskScheduler>(new GameObject(nameof(CTaskScheduler)).AddComponent<CTaskScheduler>());
 
             FServiceLocator.Register<IGameController>(new GameObject(nameof(CGameController)).AddComponent<CGameController>());
 
