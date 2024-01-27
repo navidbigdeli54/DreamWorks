@@ -5,17 +5,16 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.Dreamworks.Debug;
 using DreamMachineGameStudio.Dreamworks.Console;
 using DreamMachineGameStudio.Dreamworks.Persistent;
-using DreamMachineGameStudio.Dreamworks.EventManager;
-using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 using DreamMachineGameStudio.Dreamworks.SceneManager;
-using UnityEngine.SceneManagement;
+using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 
 namespace DreamMachineGameStudio.Dreamworks.Core
 {
-    public sealed class MDreamwork : MonoBehaviour
+	public sealed class MDreamwork : MonoBehaviour
     {
         #region Field
         private readonly List<IInitializableObject> _registeredObjects = new List<IInitializableObject>();
