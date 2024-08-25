@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DreamMachineGameStudio.Dreamworks.Extension
+namespace DreamMachineGameStudio.Dreamworks.Extension.ReadOnlyCollection
 {
     public static class FIReadOnlyListExtension
     {

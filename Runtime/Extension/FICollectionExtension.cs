@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace DreamMachineGameStudio.Dreamworks.Extension
+namespace DreamMachineGameStudio.Dreamworks.Extension.Collection
 {
-    public static class FICollectionExtension
+	public static class FICollectionExtension
     {
         public static bool IsEmpty<T>(this ICollection<T> collection)
         {

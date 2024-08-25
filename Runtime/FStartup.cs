@@ -3,14 +3,14 @@
 using UnityEngine;
 using DreamMachineGameStudio.Dreamworks.Core;
 using DreamMachineGameStudio.Dreamworks.Console;
-using DreamMachineGameStudio.Dreamworks.Extension;
 using DreamMachineGameStudio.Dreamworks.SceneManager;
-using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 using DreamMachineGameStudio.Dreamworks.TaskScheduler;
+using DreamMachineGameStudio.Dreamworks.ServiceLocator;
+using DreamMachineGameStudio.Dreamworks.Extension.Collection;
 
 namespace DreamMachineGameStudio.Dreamworks
 {
-    public class FStartup : IStartup
+	public class FStartup : IStartup
     {
         #region Method
         protected virtual void Configuration() { }
