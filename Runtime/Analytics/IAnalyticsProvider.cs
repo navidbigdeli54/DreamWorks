@@ -6,15 +6,25 @@ namespace DreamMachineGameStudio.Dreamworks.Analytics
 {
     public enum EProgressionStatus : byte
     {
-        Started,
-        Completed,
-        Failed
+        None = 0,
+        Started = 1,
+        Completed = 2,
+        Failed = 3
     }
 
-    public interface IAnalytics : IService
+    public enum EResourceOperation : byte
+    {
+        None = 0,
+        Gain = 1,
+        Consume = 2
+    }
+
+    public interface IAnalyticsProvider : IService
     {
         void SendProgressionEvent(string name, EProgressionStatus status);
 
         void SendProgressionEvent(string name, EProgressionStatus status, int value);
+
+        void SendResouceEvent(EResourceOperation operation, string currency, float amount, string itemType, string itemId);
     }
 }
