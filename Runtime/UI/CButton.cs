@@ -8,7 +8,7 @@ using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 namespace DreamMachineGameStudio.Dreamworks.UI
 {
 	[RequireComponent(typeof(Button))]
-	public class CButton : CUIBase, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+	public class CButton : CUIWidget, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 	{
 		#region Fields
 		[SerializeField]
@@ -27,6 +27,13 @@ namespace DreamMachineGameStudio.Dreamworks.UI
 		public Action OnHover { get; set; }
 
 		public Action OnUnhover { get; set; }
+		#endregion
+
+		#region Public Methods
+		public void SetInteractible(bool isInteractible)
+		{
+			GetComponent<Button>().interactable = isInteractible;
+		}
 		#endregion
 
 		#region Protected Methods
