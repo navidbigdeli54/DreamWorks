@@ -26,5 +26,7 @@ namespace DreamMachineGameStudio.Dreamworks.Analytics
         void SendProgressionEvent(string name, EProgressionStatus status, int value);
 
         void SendResouceEvent(EResourceOperation operation, string currency, float amount, string itemType, string itemId);
+
+        void SendPurchaseEvent(string itemType, string itemId, string currency, int amount, string origin);
     }
 }
