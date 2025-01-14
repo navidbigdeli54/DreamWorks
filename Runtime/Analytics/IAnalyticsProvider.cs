@@ -21,6 +21,10 @@ namespace DreamMachineGameStudio.Dreamworks.Analytics
 
     public interface IAnalyticsProvider : IService
     {
+        void SendDesignEvent(string designEvent);
+
+        void SendDesignEvent(string designEvent, float value);
+
         void SendProgressionEvent(string name, EProgressionStatus status);
 
         void SendProgressionEvent(string name, EProgressionStatus status, int value);
