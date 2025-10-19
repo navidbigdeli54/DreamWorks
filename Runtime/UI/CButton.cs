@@ -7,83 +7,92 @@ using DreamMachineGameStudio.Dreamworks.ServiceLocator;
 
 namespace DreamMachineGameStudio.Dreamworks.UI
 {
-	[RequireComponent(typeof(Button))]
-	public class CButton : CUIWidget, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
-	{
-		#region Fields
-		[SerializeField]
-		protected AudioClip _clickSound;
+    [RequireComponent(typeof(Button))]
+    public class CButton : CUIWidget, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    {
+        #region Fields
+        [SerializeField]
+        protected AudioClip _clickSound;
 
-		[SerializeField]
-		protected AudioClip _hoverSound;
+        [SerializeField]
+        protected AudioClip _hoverSound;
 
-		[SerializeField]
-		protected AudioClip _unhoverSound;
-		#endregion
+        [SerializeField]
+        protected AudioClip _unhoverSound;
+        #endregion
 
-		#region Properties
-		public Action OnClick { get; set; }
+        #region Properties
+        public Action OnClick { get; set; }
 
-		public Action OnHover { get; set; }
+        public Action OnHover { get; set; }
 
-		public Action OnUnhover { get; set; }
-		#endregion
+        public Action OnUnhover { get; set; }
+        #endregion
 
-		#region Public Methods
-		public void SetInteractible(bool isInteractible)
-		{
-			GetComponent<Button>().interactable = isInteractible;
-		}
-		#endregion
+        #region Public Methods
+        public void SetInteractible(bool isInteractible)
+        {
+            GetComponent<Button>().interactable = isInteractible;
+        }
+        #endregion
 
-		#region Protected Methods
-		protected virtual void OnButtonClick()
-		{
-		}
+        #region Protected Methods
+        protected virtual void OnButtonClick()
+        {
+        }
 
-		protected virtual void OnButtonHover()
-		{
-		}
+        protected virtual void OnButtonHover()
+        {
+        }
 
-		protected virtual void OnButtonUnhover()
-		{
-		}
-		#endregion
+        protected virtual void OnButtonUnhover()
+        {
+        }
+        #endregion
 
-		#region IPointerClick Implementation
-		void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
-		{
-			IAudioController audioController = FServiceLocator.Get<IAudioController>();
-			audioController?.PlayAudio(_clickSound);
+        #region IPointerClick Implementation
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            if (GetComponent<Button>().interactable)
+            {
+                IAudioController audioController = FServiceLocator.Get<IAudioController>();
+                audioController?.PlayAudio(_clickSound);
 
-			OnClick?.Invoke();
+                OnClick?.Invoke();
 
-			OnButtonClick();
-		}
-		#endregion
+                OnButtonClick();
+            }
+        }
+        #endregion
 
-		#region IPoinerEnterHandler Implementation
-		void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
-		{
-			IAudioController audioController = FServiceLocator.Get<IAudioController>();
-			audioController?.PlayAudio(_hoverSound);
+        #region IPoinerEnterHandler Implementation
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+        {
+            if (GetComponent<Button>().interactable)
+            {
+                IAudioController audioController = FServiceLocator.Get<IAudioController>();
+                audioController?.PlayAudio(_hoverSound);
 
-			OnHover?.Invoke();
+                OnHover?.Invoke();
 
-			OnButtonHover();
-		}
-		#endregion
+                OnButtonHover();
+            }
+        }
+        #endregion
 
-		#region IPointerExitHandler Implementation
-		void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
-		{
-			IAudioController audioController = FServiceLocator.Get<IAudioController>();
-			audioController?.PlayAudio(_unhoverSound);
+        #region IPointerExitHandler Implementation
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
+        {
+            if (GetComponent<Button>().interactable)
+            {
+                IAudioController audioController = FServiceLocator.Get<IAudioController>();
+                audioController?.PlayAudio(_unhoverSound);
 
-			OnUnhover?.Invoke();
+                OnUnhover?.Invoke();
 
-			OnButtonUnhover();
-		}
-		#endregion
-	}
+                OnButtonUnhover();
+            }
+        }
+        #endregion
+    }
 }
