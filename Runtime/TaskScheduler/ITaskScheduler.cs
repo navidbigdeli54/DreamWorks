@@ -7,7 +7,9 @@ namespace DreamMachineGameStudio.Dreamworks.TaskScheduler
 	public interface ITaskScheduler
 	{
 		#region Public Methods
-		void ScheduleTask(float seconds, Action task);
+		FTaskHandle ScheduleTask(float seconds, Action task);
+
+		void RemoveTask(FTaskHandle handle);
 		#endregion
 	}
 }

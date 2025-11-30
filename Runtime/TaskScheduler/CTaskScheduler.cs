@@ -8,71 +8,99 @@ using DreamMachineGameStudio.Dreamworks.Debug;
 
 namespace DreamMachineGameStudio.Dreamworks.TaskScheduler
 {
-	public class CTaskScheduler : CComponent, ITaskScheduler
-	{
-		#region Fields
-		private List<TaskDefinition> _taskDefinitions = new List<TaskDefinition>(50);
+    public class CTaskScheduler : CComponent, ITaskScheduler
+    {
+        #region Fields
+        private List<FTaskDefinition> _taskDefinitions = new List<FTaskDefinition>(50);
 
-		private List<int> _taskToRemove = new List<int>(50);
-		#endregion
+        private List<int> _taskToRemove = new List<int>(50);
+        #endregion
 
-		#region CComponent Methods
-		protected override async Task PreInitializeComponenetAsync()
-		{
-			await base.PreInitializeComponenetAsync();
+        #region CComponent Methods
+        protected override async Task PreInitializeComponenetAsync()
+        {
+            await base.PreInitializeComponenetAsync();
 
-			MakePersistent();
-		}
+            MakePersistent();
+        }
 
-		protected override async Task InitializeComponentAsync()
-		{
-			await base.InitializeComponentAsync();
+        protected override async Task InitializeComponentAsync()
+        {
+            await base.InitializeComponentAsync();
 
-			CanEverTick = true;
-		}
+            CanEverTick = true;
+        }
 
-		protected override void TickComponent(float deltaTime)
-		{
-			base.TickComponent(deltaTime);
+        protected override void TickComponent(float deltaTime)
+        {
+            base.TickComponent(deltaTime);
 
-			_taskToRemove.Clear();
+            RemoveDepricatedTasks();
 
-			for (int i = 0; i < _taskDefinitions.Count; ++i)
-			{
-				TaskDefinition definition = _taskDefinitions[i];
+            for (int i = 0; i < _taskDefinitions.Count; ++i)
+            {
+                FTaskDefinition taskDefinition = _taskDefinitions[i];
 
-				definition.RemainingTime -= deltaTime;
+                taskDefinition.Tick(deltaTime);
 
-				if (definition.RemainingTime <= 0)
-				{
-					try
-					{
-						definition.Task?.Invoke();
+                if (taskDefinition.IsReadyToPerform())
+                {
+                    try
+                    {
+                        AddTaskToRemove(i);
 
-						_taskToRemove.Add(i);
-					}
-					catch (Exception exception)
-					{
+                        taskDefinition.PerformTask();
+                    }
+                    catch (Exception exception)
+                    {
+                        FLog.Error(nameof(CTaskScheduler), exception);
+                    }
+                }
+            }
 
-						FLog.Error(nameof(CTaskScheduler), exception);
-					}
-				}
-			}
+            RemoveDepricatedTasks();
+        }
+        #endregion
 
-			for (int i = 0; i < _taskToRemove.Count; ++i)
-			{
-				int index = _taskToRemove[i];
+        #region Private Methods
+        private void AddTaskToRemove(int index)
+        {
+            _taskToRemove.Add(index);
+        }
 
-				_taskDefinitions.RemoveAt(index);
-			}
-		}
-		#endregion
+        private void RemoveDepricatedTasks()
+        {
+            for (int i = 0; i < _taskToRemove.Count; ++i)
+            {
+                int index = _taskToRemove[i];
 
-		#region ITaskScheduler Implementation
-		void ITaskScheduler.ScheduleTask(float seconds, Action task)
-		{
-			_taskDefinitions.Add(new TaskDefinition { RemainingTime = seconds, Task = task });
-		}
-		#endregion
-	}
+                _taskDefinitions.RemoveAt(index);
+            }
+
+            _taskToRemove.Clear();
+        }
+        #endregion
+
+        #region ITaskScheduler Implementation
+        FTaskHandle ITaskScheduler.ScheduleTask(float seconds, Action task)
+        {
+            FTaskDefinition createdTask = new FTaskDefinition(task, seconds);
+            _taskDefinitions.Add(createdTask);
+            return createdTask.Handle;
+        }
+
+        void ITaskScheduler.RemoveTask(FTaskHandle handle)
+        {
+            for (int i = 0; i < _taskDefinitions.Count; ++i)
+            {
+                if (_taskDefinitions[i].Handle == handle)
+                {
+                    AddTaskToRemove(i);
+
+                    break;
+                }
+            }
+        }
+        #endregion
+    }
 }
