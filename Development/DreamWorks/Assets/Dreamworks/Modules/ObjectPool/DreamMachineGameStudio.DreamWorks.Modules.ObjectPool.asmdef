@@ -1,0 +1,16 @@
+{
+    "name": "DreamMachineGameStudio.DreamWorks.Modules.ObjectPool",
+    "rootNamespace": "DreamMachineGameStudio.DreamWorks.Modules.ObjectPool",
+    "references": [
+        "GUID:95606d2fbf1694357ae5d55220d7c74c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

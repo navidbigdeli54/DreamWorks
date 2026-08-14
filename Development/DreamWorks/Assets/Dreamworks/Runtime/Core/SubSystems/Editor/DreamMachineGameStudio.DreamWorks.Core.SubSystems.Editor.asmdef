@@ -1,0 +1,19 @@
+{
+    "name": "DreamMachineGameStudio.DreamWorks.Core.SubSystems.Editor",
+    "rootNamespace": "DreamMachineGameStudio.DreamWorks.Core.SubSystems.Editor",
+    "references": [
+        "GUID:95606d2fbf1694357ae5d55220d7c74c",
+        "GUID:e2afc8f2c0ee24ec38350ee9f8b473c7"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

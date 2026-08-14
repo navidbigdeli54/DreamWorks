@@ -1,0 +1,17 @@
+{
+    "name": "DreamMachineGameStudio.DreamWorks.Modules.AbilitySystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:95606d2fbf1694357ae5d55220d7c74c",
+        "GUID:e0b16e9153cc2964d91447ece7215a1e"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
