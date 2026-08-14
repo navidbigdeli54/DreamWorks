@@ -363,12 +363,12 @@ MigrationBackup/
 FodyWeavers.xsd
 
 #Project specific
-/Development/DreamWorks/.vsconfig
-/Development/DreamWorks/Library
-/Development/DreamWorks/Logs
-/Development/DreamWorks/objs
-/Development/DreamWorks/Temp
-/Development/DreamWorks/UserSettings
-/Development/DreamWorks/*.csproj
-/Development/DreamWorks/*.sln
+/.vsconfig
+/Library
+/Logs
+/objs
+/Temp
+/UserSettings
+/*.csproj
+/*.sln
 
