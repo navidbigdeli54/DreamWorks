@@ -58,6 +58,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
 
         void IDreamWorksObject.Tick(FFrameContext frameContext)
         {
+            TickSubSystems(frameContext);
+
             TickWorldManager(frameContext);
         }
 
@@ -107,14 +109,19 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
             await subSystems.InitializeAsync();
         }
 
-        private void TickWorldManager(FFrameContext context)
+        private void TickSubSystems(FFrameContext frameContext)
+        {
+            subSystems.Tick(frameContext);
+        }
+
+        private void TickWorldManager(FFrameContext frameContext)
         {
             if (gameWorldManager == null)
             {
                 return;
             }
 
-            gameWorldManager.Tick(context);
+            gameWorldManager.Tick(frameContext);
         }
 
         private async Task ShutDownWorldManagerAsync()

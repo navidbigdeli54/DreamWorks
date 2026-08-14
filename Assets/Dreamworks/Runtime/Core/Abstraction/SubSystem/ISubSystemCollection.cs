@@ -7,6 +7,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
         #region Methods
         Task InitializeAsync();
 
+        void Tick(FFrameContext context);
+
         Task ShutDownAsync();
 
         TSystem GetSubSystem<TSystem>();

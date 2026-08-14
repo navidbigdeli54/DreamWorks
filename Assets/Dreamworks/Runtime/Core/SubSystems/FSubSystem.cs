@@ -1,6 +1,6 @@
-﻿using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 {
@@ -9,12 +9,19 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
     {
         #region Properties
         public virtual Type RegistrationType => GetType();
+
+        public virtual bool CanTick => false;
         #endregion
 
         #region ISubSystem Implementation
         async Task ISubSystem.InitializeAsync()
         {
             await InitializeAsync();
+        }
+
+        void ISubSystem.Tick(float delatTime)
+        {
+            Tick(delatTime);
         }
 
         async Task ISubSystem.ShutDownAsync()
@@ -27,6 +34,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         protected virtual Task InitializeAsync()
         {
             return Task.CompletedTask;
+        }
+
+        protected virtual void Tick(float deltaTime)
+        {
+
         }
 
         protected virtual Task ShutDownAsync()

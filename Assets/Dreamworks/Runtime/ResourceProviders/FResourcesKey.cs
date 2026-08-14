@@ -18,6 +18,13 @@ namespace DreamMachineGameStudio.DreamWorks.ResourceProvider
             ResourcesPath = resourcesPath;
         }
         #endregion
+
+        #region Public Methods
+        public override string ToString()
+        {
+            return ResourcesPath;
+        }
+        #endregion
     }
 
     [Serializable]

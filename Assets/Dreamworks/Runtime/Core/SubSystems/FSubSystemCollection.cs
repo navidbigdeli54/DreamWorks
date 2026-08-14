@@ -14,6 +14,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         protected readonly ISubSystemFactory factory;
 
         protected readonly Dictionary<Type, ISubSystem> registeredSubSystems = new Dictionary<Type, ISubSystem>();
+
+        protected readonly List<ISubSystem> tickableSubSystems = new List<ISubSystem>();
         #endregion
 
         #region Constructors
@@ -36,6 +38,21 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
                 if (subSystem != null)
                 {
                     await subSystem.InitializeAsync();
+                }
+            }
+        }
+
+        void ISubSystemCollection<T>.Tick(FFrameContext frameContext)
+        {
+            for (int i = 0; i < tickableSubSystems.Count; i++)
+            {
+                try
+                {
+                    tickableSubSystems[i].Tick(frameContext.DeltaTime);
+                }
+                catch (Exception exception)
+                {
+                    logProvider.LogError($"Encounter an error while ticking {tickableSubSystems[i].RegistrationType.Name}: {exception}");
                 }
             }
         }
@@ -83,6 +100,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         {
             registeredSubSystems.Add(subSystem.RegistrationType, subSystem);
 
+            if (subSystem.CanTick)
+            {
+                tickableSubSystems.Add(subSystem);
+            }
+
             logProvider.Log($"{subSystem.RegistrationType.Name} SubSystem is registered as {subSystem.GetType().Name}.");
         }
 
@@ -104,8 +126,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 
                 subSystem.ShutDownAsync().GetAwaiter().GetResult();
             }
-
             registeredSubSystems.Clear();
+
+            tickableSubSystems.Clear();
         }
         #endregion
     }

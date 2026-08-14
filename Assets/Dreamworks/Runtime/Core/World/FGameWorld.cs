@@ -7,9 +7,9 @@ using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.World.SubSystems;
 using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {
@@ -112,6 +112,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             {
                 return;
             }
+
+            TickSubSystems(frameContext);
 
             InternalTick(frameContext);
         }
@@ -381,6 +383,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         private async Task BeginPlayComponentManagerAsync()
         {
             await ComponentManager.BeginPlayAsync();
+        }
+
+        private void TickSubSystems(FFrameContext frameContext)
+        {
+            SubSystems.Tick(frameContext);
         }
 
         private void InternalTick(FFrameContext frameContext)

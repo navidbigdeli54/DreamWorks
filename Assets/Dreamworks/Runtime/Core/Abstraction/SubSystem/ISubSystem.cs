@@ -7,10 +7,14 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
     {
         #region Properties
         Type RegistrationType { get; }
+
+        bool CanTick { get; }
         #endregion
 
         #region Methods
         Task InitializeAsync();
+
+        void Tick(float deltaTime);
 
         Task ShutDownAsync();
         #endregion
