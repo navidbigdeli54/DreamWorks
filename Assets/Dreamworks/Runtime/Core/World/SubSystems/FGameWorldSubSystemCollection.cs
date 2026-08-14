@@ -1,6 +1,6 @@
 ﻿using DreamMachineGameStudio.DreamWorks.Core.SubSystems;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Log;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World.SubSystems
 {

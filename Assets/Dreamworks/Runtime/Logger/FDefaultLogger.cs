@@ -1,5 +1,4 @@
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Log;
-
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using UDebug = UnityEngine.Debug;
 
 namespace DreamMachineGameStudio.DreamWorks.Log

@@ -1,5 +1,5 @@
 using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Log;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 
 namespace DreamMachineGameStudio.DreamWorks.Log
 {

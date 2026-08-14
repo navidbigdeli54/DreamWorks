@@ -2,8 +2,8 @@ using UnityEngine;
 using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Assets;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Log;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {

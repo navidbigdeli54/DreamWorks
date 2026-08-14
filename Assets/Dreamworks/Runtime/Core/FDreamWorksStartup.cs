@@ -1,4 +1,4 @@
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Log;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Log;
 using UnityEngine;
 
