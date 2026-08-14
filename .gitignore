@@ -361,3 +361,14 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+#Project specific
+/Development/DreamWorks/.vsconfig
+/Development/DreamWorks/Library
+/Development/DreamWorks/Logs
+/Development/DreamWorks/objs
+/Development/DreamWorks/Temp
+/Development/DreamWorks/UserSettings
+/Development/DreamWorks/*.csproj
+/Development/DreamWorks/*.sln
+
