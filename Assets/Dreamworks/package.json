@@ -6,7 +6,7 @@
     "url": "https://github.com/navidbigdeli54/DreamWorks"
   },
   "version": "0.0.1",
-  "unity": "6000.5.1f1",
+  "unity": "6000.5",
   "description": "A generic Unity3D framework to address common game development problems.",
   "keywords": [],
   "dependencies": {
