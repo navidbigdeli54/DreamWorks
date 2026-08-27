@@ -67,6 +67,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #endregion
 
         #region IGameWorld Implementation
+        TSubSystem IGameWorld.GetSubSystem<TSubSystem>()
+        {
+            return SubSystems.GetSubSystem<TSubSystem>();
+        }
+
         GameObject IGameWorld.SpawnGameObject(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             return SpawnManager.SpawnGameObject(prefab, position, rotation);
