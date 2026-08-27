@@ -1,4 +1,4 @@
-﻿namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
+﻿namespace DreamMachineGameStudio.DreamWorks.Serialization.Json
 {
     public class FJsonBool : FJsonNode
     {

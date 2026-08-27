@@ -1,4 +1,4 @@
-﻿namespace DreamMachineGameStudio.Dreamworks.Serialization.Json.Abstraction
+﻿namespace DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction
 {
     public interface IJsonSerializable
     {

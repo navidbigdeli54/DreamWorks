@@ -3,7 +3,7 @@ using System.Text;
 using System.Globalization;
 using System.Collections.Generic;
 
-namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
+namespace DreamMachineGameStudio.DreamWorks.Serialization.Json
 {
     public abstract class FJsonNode
     {

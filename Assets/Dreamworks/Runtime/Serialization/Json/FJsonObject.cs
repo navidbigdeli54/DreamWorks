@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 
-namespace DreamMachineGameStudio.Dreamworks.Serialization.Json
+namespace DreamMachineGameStudio.DreamWorks.Serialization.Json
 {
     public class FJsonObject : FJsonNode
     {
