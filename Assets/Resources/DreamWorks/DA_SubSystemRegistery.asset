@@ -16,24 +16,29 @@ MonoBehaviour:
   - <SubSystem>k__BackingField:
       assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Developer.Console.FConsoleSubSystem,
         DreamMachineGameStudio.DreamWorks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    <IsEnable>k__BackingField: 0
+    <IsEnable>k__BackingField: 1
   - <SubSystem>k__BackingField:
       assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.GameplayTags.FGameplayTagManagerSubSystem,
         DreamMachineGameStudio.DreamWorks.Modules.GameplayTags, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
-    <IsEnable>k__BackingField: 0
+    <IsEnable>k__BackingField: 1
   - <SubSystem>k__BackingField:
       assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.ObjectPool.FObjectPoolSubSystem,
         DreamMachineGameStudio.DreamWorks.Modules.ObjectPool, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-    <IsEnable>k__BackingField: 0
+    <IsEnable>k__BackingField: 1
   - <SubSystem>k__BackingField:
       assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.ResourceProvider.AddressableAssets.FAddressablesSubSystem,
         DreamMachineGameStudio.DreamWorks.Modules.ResourceProvider.Addressables,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-    <IsEnable>k__BackingField: 0
+    <IsEnable>k__BackingField: 1
   - <SubSystem>k__BackingField:
       assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.TaskScheduler.FTaskSchdulerSubSystem,
         DreamMachineGameStudio.DreamWorks.Modules.TaskSchduler, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    <IsEnable>k__BackingField: 1
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage.FGameplayMessageSubsystem,
+        DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
     <IsEnable>k__BackingField: 1

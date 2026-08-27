@@ -25,6 +25,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         private readonly List<Scene> pendingScenes = new();
 
         private TSubclassOf<IGameMode> gameModeOverrideClass;
+
+        private ISubSystemCollection<FGameWorldSubSystem> subSystems;
         #endregion
 
         #region Properties
@@ -45,8 +47,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         public FSpawnManager SpawnManager { get; private set; }
 
         public FComponentManager ComponentManager { get; private set; }
-
-        public ISubSystemCollection<FGameWorldSubSystem> SubSystems { get; private set; }
         #endregion
 
         #region Constructors
@@ -69,7 +69,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #region IGameWorld Implementation
         TSubSystem IGameWorld.GetSubSystem<TSubSystem>()
         {
-            return SubSystems.GetSubSystem<TSubSystem>();
+            return subSystems.GetSubSystem<TSubSystem>();
         }
 
         GameObject IGameWorld.SpawnGameObject(GameObject prefab, Vector3 position, Quaternion rotation)
@@ -107,6 +107,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             {
                 throw new InvalidOperationException("GameWorld is already initialized.");
             }
+
+            await InitializeSubSystemsAsync();
 
             await InternalInitializeAsync();
         }
@@ -259,12 +261,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         {
             FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory("GameWorldSubSystem", ELogVerbosity.Display));
 
-            SubSystems = new FGameWorldSubSystemCollection(this, scopedLogger);
+            subSystems = new FGameWorldSubSystemCollection(this, scopedLogger);
         }
 
         private void ClearGameWorldSubSystemCollection()
         {
-            SubSystems.ClearSubSystems();
+            subSystems.ClearSubSystems();
+        }
+
+        private async Task InitializeSubSystemsAsync()
+        {
+            await subSystems.InitializeAsync();
         }
 
         private async Task InternalInitializeAsync()
@@ -392,7 +399,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         private void TickSubSystems(FFrameContext frameContext)
         {
-            SubSystems.Tick(frameContext);
+            subSystems.Tick(frameContext);
         }
 
         private void InternalTick(FFrameContext frameContext)
@@ -408,11 +415,18 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             IsShuttingDown = true;
 
+            await ShutDownSubSystemsAsync();
+
             await InternalUninitializeAsync();
 
             ClearGameWorldSubSystemCollection();
 
             IsShuttingDown = false;
+        }
+
+        private async Task ShutDownSubSystemsAsync()
+        {
+            await subSystems.ShutDownAsync();
         }
 
         private async Task InternalUninitializeAsync()
