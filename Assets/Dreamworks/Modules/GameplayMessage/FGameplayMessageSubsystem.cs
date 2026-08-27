@@ -4,6 +4,7 @@ using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Modules.GameplayTags;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.Modules.GameplayTags.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage
@@ -18,8 +19,12 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage
         Keywords = "gameplay message messaging event bus channel broadcast listener communication")]
     public sealed class FGameplayMessageSubsystem : FGameInstanceSubSystem, IGameplayMessageSubSystem
     {
+        #region Fields
+        private readonly FGameplayMessageRouter MessageRouter = new();
+        #endregion
+
         #region Properties
-        private FGameplayMessageRouter MessageRouter { get; } = new();
+        public override Type RegistrationType => typeof(IGameplayTagManagerSubSystem);
         #endregion
 
         #region Constructors
@@ -53,5 +58,5 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage
             MessageRouter.BroadcastMessage(channel, in message);
         }
         #endregion
-    } 
+    }
 }
