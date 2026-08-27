@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f61925fda1e7bd4cba34a82667a1209, type: 3}
+  m_Name: DA_SubSystemRegistery
+  m_EditorClassIdentifier: DreamMachineGameStudio.DreamWorks::DreamMachineGameStudio.DreamWorks.Core.USubSystemRegistery
+  <SubSystemSettings>k__BackingField:
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Developer.Console.FConsoleSubSystem,
+        DreamMachineGameStudio.DreamWorks, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    <IsEnable>k__BackingField: 0
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.GameplayTags.FGameplayTagManagerSubSystem,
+        DreamMachineGameStudio.DreamWorks.Modules.GameplayTags, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    <IsEnable>k__BackingField: 0
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.ObjectPool.FObjectPoolSubSystem,
+        DreamMachineGameStudio.DreamWorks.Modules.ObjectPool, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+    <IsEnable>k__BackingField: 0
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.ResourceProvider.AddressableAssets.FAddressablesSubSystem,
+        DreamMachineGameStudio.DreamWorks.Modules.ResourceProvider.Addressables,
+        Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    <IsEnable>k__BackingField: 0
+  - <SubSystem>k__BackingField:
+      assemblyQualifiedTypeName: DreamMachineGameStudio.DreamWorks.Modules.TaskScheduler.FTaskSchdulerSubSystem,
+        DreamMachineGameStudio.DreamWorks.Modules.TaskSchduler, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+    <IsEnable>k__BackingField: 1
