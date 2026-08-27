@@ -4,7 +4,6 @@ using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Modules.GameplayTags;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
-using DreamMachineGameStudio.DreamWorks.Modules.GameplayTags.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage
@@ -24,7 +23,7 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.GameplayMessage
         #endregion
 
         #region Properties
-        public override Type RegistrationType => typeof(IGameplayTagManagerSubSystem);
+        public override Type RegistrationType => typeof(IGameplayMessageSubSystem);
         #endregion
 
         #region Constructors
