@@ -21,6 +21,8 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
 
         public IGameWorld GameWorld { get; private set; }
 
+        public IGameInstance GameInstance { get; private set; }
+
         public ILogProvider LogProvider { get; private set; } = FGameplayLogProvider.Instance;
         #endregion
 
@@ -35,6 +37,8 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
             }
 
             GameWorld = gameWorld;
+
+            GameInstance = gameWorld.GameInstance;
         }
         #endregion
 
@@ -123,6 +127,11 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
         protected virtual Task UninitializeAsync()
         {
             return Task.CompletedTask;
+        }
+
+        protected virtual TGameMode GetGameMode<TGameMode>() where TGameMode : class, IGameMode
+        {
+            return GameWorld.GameMode as TGameMode;
         }
         #endregion
     }

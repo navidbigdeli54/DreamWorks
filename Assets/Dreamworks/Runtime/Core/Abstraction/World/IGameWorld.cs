@@ -14,6 +14,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction
 
         bool HasBegunPlay { get; }
 
+        IGameMode GameMode { get; }
+
         IGameInstance GameInstance { get; }
         #endregion
 
