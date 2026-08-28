@@ -30,6 +30,8 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.TaskScheduler
 
         #region Properties
         public override bool CanTick => true;
+
+        public override Type RegistrationType => typeof(ITaskSchedulerSubSystem);
         #endregion
 
         #region Constructors
