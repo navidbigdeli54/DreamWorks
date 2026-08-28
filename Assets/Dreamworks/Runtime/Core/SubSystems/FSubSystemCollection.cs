@@ -120,12 +120,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 
         private void ClearSubSystems()
         {
-            foreach (KeyValuePair<Type, ISubSystem> pair in registeredSubSystems)
-            {
-                ISubSystem subSystem = pair.Value;
-
-                subSystem.ShutDownAsync().GetAwaiter().GetResult();
-            }
             registeredSubSystems.Clear();
 
             tickableSubSystems.Clear();
