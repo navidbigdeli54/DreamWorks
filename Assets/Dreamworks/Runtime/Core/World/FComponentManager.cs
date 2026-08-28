@@ -310,7 +310,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             tickManager.Unregister(component);
 
-            ShutdownComponentAsync(component, endPlay).GetAwaiter().GetResult();
+            Task shutdownTask = ShutdownComponentAsync(component, endPlay);
+            if (!shutdownTask.IsCompleted)
+            {
+                shutdownTask.RunSynchronously();
+            }
         }
 
         private async Task ShutdownComponentAsync(IGameFrameworkComponent component, bool endPlay)
