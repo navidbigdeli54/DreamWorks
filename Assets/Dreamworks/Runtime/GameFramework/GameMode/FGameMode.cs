@@ -51,7 +51,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception.Message);
+                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(InitGameAsync)}. exception: {exception}");
             }
         }
 
@@ -63,11 +63,11 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
 
             try
             {
-                await StartPlay();
+                await StartPlayAsync();
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception.Message);
+                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(StartPlayAsync)}. exception: {exception}");
             }
         }
 
@@ -79,7 +79,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception.Message);
+                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(Tick)}. exception: {exception}");
             }
         }
 
@@ -93,7 +93,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception.Message);
+                
             }
         }
         #endregion
@@ -104,7 +104,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             return Task.CompletedTask;
         }
 
-        protected virtual Task StartPlay()
+        protected virtual Task StartPlayAsync()
         {
             return Task.CompletedTask;
         }

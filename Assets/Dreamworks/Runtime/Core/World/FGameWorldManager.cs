@@ -188,7 +188,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 }
                 catch (Exception exception)
                 {
-                    logProvider.LogError(exception.ToString());
+                    logProvider.LogError($"An exception thrown when ticking {existedGameWorlds[i].PrimaryScene} world. Exception: {exception}");
                 }
             }
         }

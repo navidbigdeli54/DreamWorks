@@ -139,7 +139,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PreInitializeAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -159,7 +159,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.InitializeAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -179,7 +179,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PostInitializeAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -199,7 +199,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.BeginPlayAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -219,7 +219,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.EndPlayAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -239,7 +239,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError(exception.Message);
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.UninitializeAsync)}. exception: {exception}");
                     }
                 }
             }
@@ -326,7 +326,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             }
             catch (Exception exception)
             {
-                logProvider.LogError(exception.ToString());
+                logProvider.LogError($"An exception thrown when calling {component.GameObject.name}:{nameof(IGameFrameworkInitializable.EndPlayAsync)}. exception: {exception}");
             }
         }
         #endregion

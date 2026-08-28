@@ -1,12 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
+﻿using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Commands;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Variables;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
@@ -184,7 +185,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             }
             catch (Exception exception)
             {
-                logProvider.LogError(exception.ToString());
+                logProvider.LogError($"An exception thrown when executing {command}. exception: {exception}");
 
                 return new(false, exception.Message);
             }
