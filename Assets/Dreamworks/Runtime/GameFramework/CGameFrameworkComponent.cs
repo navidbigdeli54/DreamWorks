@@ -31,9 +31,16 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
 
         void IGameFrameworkComponent.SetGameWorld(IGameWorld gameWorld)
         {
+            if (GameWorld == gameWorld)
+            {
+                return;
+            }
+
             if (GameWorld != null)
             {
-                throw new InvalidOperationException($"{name}:{this.GetType()} already blong to a world!");
+                LogProvider.LogError($"{name}:{GetType().Name} already blong to a world!");
+
+                return;
             }
 
             GameWorld = gameWorld;
