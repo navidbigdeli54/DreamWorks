@@ -270,7 +270,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             tickManager.Register(component);
 
-            InitializeComponentAsync(component, beginPlay).GetAwaiter().GetResult();
+            Task initializatoinTask = InitializeComponentAsync(component, beginPlay);
+            if (!initializatoinTask.IsCompleted)
+            {
+                initializatoinTask.RunSynchronously();
+            }
         }
 
         private async Task InitializeComponentAsync(IGameFrameworkComponent component, bool beginPlay)
