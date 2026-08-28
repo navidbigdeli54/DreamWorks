@@ -6,6 +6,8 @@ using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
 using DreamMachineGameStudio.DreamWorks.Modules.ObjectPool.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Log;
 
 namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
 {
@@ -21,6 +23,8 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
     {
         #region Fields
         private CObjectPoolSubSystem rootComponent;
+
+        private readonly ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(FObjectPoolSubSystem), ELogVerbosity.Verbose));
 
         private readonly Dictionary<string, Transform> categoryParents = new(StringComparer.Ordinal);
         #endregion
@@ -65,7 +69,9 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
         {
             if (prefab == null)
             {
-                throw new ArgumentNullException(nameof(prefab));
+                logProvider.LogError($"The given prefab should not be null!");
+
+                return null;
             }
 
             FObjectPool pool = GetPool(prefab);
