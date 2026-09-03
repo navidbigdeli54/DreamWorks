@@ -36,6 +36,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         public bool IsShuttingDown { get; private set; } = false;
 
+        public bool IsDisposed { get; private set; } = false;
+
         public Scene PrimaryScene { get; private set; }
 
         public IGameInstance GameInstance { get; }
@@ -149,6 +151,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         void IGameWorld.AddScene(Scene scene)
         {
+            if (IsDisposed)
+            {
+                logProvider.LogError("Trying to add a scene to a disposed world!");
+
+                return;
+            }
+
             if (!scene.IsValid())
             {
                 throw new ArgumentException("Invalid scene.", nameof(scene));
@@ -182,6 +191,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         void IGameWorld.RemoveScene(Scene scene)
         {
+            if (IsDisposed)
+            {
+                logProvider.LogError("Trying to add a scene to a disposed world!");
+
+                return;
+            }
+
             if (!scenes.Remove(scene))
             {
                 return;
@@ -240,21 +256,21 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         {
             FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FTickManager), ELogVerbosity.Display));
 
-            TickManager = new FTickManager(scopedLogger);
+            TickManager = new FTickManager(this, scopedLogger);
         }
 
         private void CreateComponentManager(FTickManager tickManager)
         {
             FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FComponentManager), ELogVerbosity.Display));
 
-            ComponentManager = new FComponentManager(this, tickManager, logProvider);
+            ComponentManager = new FComponentManager(this, tickManager, scopedLogger);
         }
 
         private void CreateSpawnManager(FComponentManager componentManager)
         {
             FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FSpawnManager), ELogVerbosity.Display));
 
-            SpawnManager = new FSpawnManager(this, componentManager);
+            SpawnManager = new FSpawnManager(this, componentManager, scopedLogger);
         }
 
         private void CreateGameWorldSubSystemCollection()
@@ -456,6 +472,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             IsInitialized = false;
 
             HasBegunPlay = false;
+
+            IsDisposed = true;
         }
 
         private void ProcessPendingScenes()

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {
@@ -58,6 +58,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         public void RegisterScene(Scene scene)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Registering a scene in a disposed world!");
+
+                return;
+            }
+
             if (!sceneToComponents.ContainsKey(scene))
             {
                 List<IGameFrameworkComponent> sceneComponents = new List<IGameFrameworkComponent>();
@@ -82,6 +89,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         public void UnregisterScene(Scene scene)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Unregistering a scene in a disposed world!");
+
+                return;
+            }
+
             if (!sceneToComponents.TryGetValue(scene, out List<IGameFrameworkComponent> sceneComponents))
             {
                 logProvider.LogWarning($"Trying to unregister {scene.name} from FComponentManager but it does not exist!");
@@ -89,9 +103,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 return;
             }
 
-            for (int i = 0; i < sceneComponents.Count; ++i)
+            while (sceneComponents.Count > 0)
             {
-                UnregisterComponent(sceneComponents[i], scene, gameWorld.HasBegunPlay);
+                UnregisterComponent(sceneComponents[0], scene, gameWorld.HasBegunPlay);
             }
 
             sceneToComponents.Remove(scene);
@@ -99,11 +113,25 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         public void RegisterSpawnedComponent(IGameFrameworkComponent component, Scene scene)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Registering a component in a disposed world!");
+
+                return;
+            }
+
             RegisterComponent(component, scene, gameWorld.HasBegunPlay);
         }
 
         public void UnregisterSpawnedComponent(IGameFrameworkComponent component, Scene scene)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Unregistering a component in a disposed world!");
+
+                return;
+            }
+
             UnregisterComponent(component, scene, gameWorld.HasBegunPlay);
         }
 

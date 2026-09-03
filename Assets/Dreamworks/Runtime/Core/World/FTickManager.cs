@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {
@@ -10,12 +11,16 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #region Fields
         private readonly ILogProvider logProvider;
 
+        private readonly IGameWorld gameWorld;
+
         private List<IGameFrameworkTickable>[] tickGroups;
         #endregion
 
         #region Constructors
-        public FTickManager(ILogProvider logProvider)
+        public FTickManager(IGameWorld gameWorld, ILogProvider logProvider)
         {
+            this.gameWorld = gameWorld;
+
             this.logProvider = logProvider;
 
             InitializeTickGroups();
@@ -25,6 +30,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #region Public Methods
         public void Register(IGameFrameworkTickable tickable)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Registering a tickable in a disposed world!");
+
+                return;
+            }
+
             if (tickable == null)
             {
                 return;
@@ -37,6 +49,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         public void Unregister(IGameFrameworkTickable tickable)
         {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Unregistering a tickable in a disposed world!");
+
+                return;
+            }
+
             if (tickable == null)
             {
                 return;

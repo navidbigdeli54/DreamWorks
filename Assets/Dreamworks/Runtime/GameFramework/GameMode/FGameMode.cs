@@ -93,7 +93,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                
+                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(EndPlayAsync)}. exception: {exception}");
             }
         }
         #endregion

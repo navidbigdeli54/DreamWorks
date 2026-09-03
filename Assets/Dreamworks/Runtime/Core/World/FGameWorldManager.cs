@@ -75,8 +75,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #region Private Methods
         private void SubscribeToSceneManager()
         {
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            SceneManager.sceneUnloaded += OnSceneUnloaded;
+            DreamWorkSceneManagerAPI.OnSceneLoaded += OnSceneLoaded;
+            DreamWorkSceneManagerAPI.OnSceneAboutToUnload += OnSceneAboutToUnload;
 
             if (SceneManager.GetActiveScene().isLoaded)
             {
@@ -116,9 +116,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             if (isNewWorld)
             {
-                OnWorldInitialized?.Invoke(gameWorld);
-
                 await ((IDreamWorksObject)gameWorld).InitializeAsync();
+
+                OnWorldInitialized?.Invoke(gameWorld);
             }
         }
 
@@ -150,7 +150,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             return gameWorld;
         }
 
-        private async void OnSceneUnloaded(Scene scene)
+        private async void OnSceneAboutToUnload(Scene scene)
         {
             logProvider.Log($"Scene {scene.name} is unloaded.");
 
@@ -166,16 +166,16 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             {
                 existedGameWorlds.Remove(gameWorld);
 
-                await ((IDreamWorksObject)gameWorld).ShutDownAsync();
-
                 OnWorldShutDown?.Invoke(gameWorld);
+
+                await ((IDreamWorksObject)gameWorld).ShutDownAsync();
             }
         }
 
         private void UnsubscribeToSceneManager()
         {
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneUnloaded -= OnSceneUnloaded;
+            DreamWorkSceneManagerAPI.OnSceneLoaded -= OnSceneLoaded;
+            DreamWorkSceneManagerAPI.OnSceneAboutToUnload -= OnSceneAboutToUnload;
         }
 
         private void TickGameWorlds(FFrameContext context)
