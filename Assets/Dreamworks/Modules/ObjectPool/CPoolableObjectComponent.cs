@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using DreamMachineGameStudio.DreamWorks.GameFramework;
 using DreamMachineGameStudio.DreamWorks.Modules.ObjectPool.Abstraction;
@@ -25,6 +26,12 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
         public bool IsActive { get; private set; }
         #endregion
 
+        #region Events
+        public event Action<CPoolableObjectComponent> OnAcquired;
+
+        public event Action<CPoolableObjectComponent> OnReleased;
+        #endregion
+
         #region IPoolableObject Implementation
         string IPoolableObject.Category => Category;
 
@@ -46,6 +53,8 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
             IsActive = true;
 
             OnAcquire();
+
+            OnAcquired?.Invoke(this);
         }
 
         void IPoolableObject.OnRelease()
@@ -53,6 +62,8 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
             IsActive = false;
 
             OnRelease();
+
+            OnReleased?.Invoke(this);
         }
         #endregion
 
