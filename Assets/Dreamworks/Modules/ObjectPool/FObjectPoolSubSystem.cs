@@ -47,14 +47,14 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
         {
             await base.InitializeAsync();
 
-            GameInstance.WorldManager.OnWorldInitialized += OnWorldShutDown;
+            GameInstance.WorldManager.OnWorldShutDown += OnWorldShutDown;
 
             rootComponent = new GameObject(nameof(FObjectPoolSubSystem)).AddComponent<CObjectPoolSubSystem>();
         }
 
         protected override async Task ShutDownAsync()
         {
-            GameInstance.WorldManager.OnWorldInitialized -= OnWorldShutDown;
+            GameInstance.WorldManager.OnWorldShutDown -= OnWorldShutDown;
 
             ClearPools();
 
@@ -93,6 +93,8 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
         #region Private Methods
         private void OnWorldShutDown(IGameWorld world)
         {
+            List<EntityId> poolsToRemove = new List<EntityId>();
+
             foreach (KeyValuePair<EntityId, FObjectPool> pair in ObjectPools)
             {
                 FObjectPool pool = pair.Value;
@@ -100,7 +102,14 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool
                 if (pool.Prefab.DestoryOnWorldShutdown)
                 {
                     pool.ClearAll();
+
+                    poolsToRemove.Add(pair.Key);
                 }
+            }
+
+            foreach (EntityId pool in poolsToRemove)
+            {
+                ObjectPools.Remove(pool);
             }
         }
 
