@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
-using UnityEditor.Search;
+using System.Linq;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 {
@@ -20,6 +20,12 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
         private bool autoScroll = true;
 
         private int selectedSuggestionIndex = -1;
+
+        private readonly List<string> historySearchResults = new();
+
+        private string historyDraftBuffer = string.Empty;
+
+        private int historySearchIndex = -1;
 
         private FConsoleGUIStyle consoleStyle;
 
@@ -126,8 +132,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
             DrawInput();
 
-            DrawSuggestions();
-
             GUILayout.EndArea();
         }
 
@@ -153,6 +157,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             {
                 inputBuffer = newValue;
                 selectedSuggestionIndex = -1;
+                ResetHistorySearch();
             }
 
             if (requestFocus)
@@ -190,27 +195,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
                     break;
 
                 case KeyCode.UpArrow:
-                    if (HandleSuggestionUp())
-                    {
-                        currentEvent.Use();
-                    }
-                    else
-                    {
-                        NavigateHistoryUp();
-                        currentEvent.Use();
-                    }
+                    NavigateHistoryUp();
+                    currentEvent.Use();
                     break;
 
                 case KeyCode.DownArrow:
-                    if (HandleSuggestionDown())
-                    {
-                        currentEvent.Use();
-                    }
-                    else
-                    {
-                        NavigateHistoryDown();
-                        currentEvent.Use();
-                    }
+                    NavigateHistoryDown();
+                    currentEvent.Use();
                     break;
 
                 case KeyCode.Tab:
@@ -234,6 +225,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             inputBuffer = string.Empty;
 
             selectedSuggestionIndex = -1;
+            ResetHistorySearch();
 
             requestFocus = true;
 
@@ -298,22 +290,60 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
         private void NavigateHistoryUp()
         {
-            string value = consoleSubSystem.History.GetPrevious();
+            InitializeHistorySearch();
 
-            if (!string.IsNullOrEmpty(value))
+            if (historySearchResults.Count == 0)
             {
-                inputBuffer = value;
+                return;
             }
+
+            historySearchIndex = Mathf.Min(historySearchIndex + 1, historySearchResults.Count - 1);
+            inputBuffer = historySearchResults[historySearchIndex];
+            selectedSuggestionIndex = -1;
+            requestFocus = true;
         }
 
         private void NavigateHistoryDown()
         {
-            string value = consoleSubSystem.History.GetNext();
-
-            if (!string.IsNullOrEmpty(value))
+            if (historySearchIndex < 0)
             {
-                inputBuffer = value;
+                return;
             }
+
+            historySearchIndex--;
+
+            if (historySearchIndex < 0)
+            {
+                inputBuffer = historyDraftBuffer;
+                ResetHistorySearch();
+            }
+            else
+            {
+                inputBuffer = historySearchResults[historySearchIndex];
+            }
+
+            selectedSuggestionIndex = -1;
+            requestFocus = true;
+        }
+
+        private void InitializeHistorySearch()
+        {
+            if (historySearchIndex >= 0)
+            {
+                return;
+            }
+
+            historyDraftBuffer = inputBuffer;
+            historySearchResults.Clear();
+            historySearchResults.AddRange(consoleSubSystem.History.Search(historyDraftBuffer).Reverse());
+            historySearchIndex = -1;
+        }
+
+        private void ResetHistorySearch()
+        {
+            historySearchResults.Clear();
+            historyDraftBuffer = string.Empty;
+            historySearchIndex = -1;
         }
 
         private void AutoComplete()
@@ -360,6 +390,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
             DrawInput();
 
+            DrawHistorySearchResults();
             DrawSuggestions();
 
             GUILayout.EndArea();
@@ -390,6 +421,35 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             {
                 outputScrollPosition.y = float.MaxValue;
             }
+        }
+
+        private void DrawHistorySearchResults()
+        {
+            if (string.IsNullOrWhiteSpace(inputBuffer))
+            {
+                return;
+            }
+
+            List<string> matchingEntries = consoleSubSystem.History.Search(inputBuffer)
+                .Reverse()
+                .Take(8)
+                .ToList();
+
+            if (matchingEntries.Count == 0)
+            {
+                return;
+            }
+
+            GUILayout.Space(4);
+            GUILayout.BeginVertical(GUI.skin.box);
+            GUILayout.Label("History", consoleStyle.SuggestionStyle);
+
+            foreach (string entry in matchingEntries)
+            {
+                GUILayout.Label(entry, consoleStyle.SuggestionStyle);
+            }
+
+            GUILayout.EndVertical();
         }
 
         private void DrawSuggestions()
