@@ -1,8 +1,9 @@
-using UnityEngine;
-using System.Threading.Tasks;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Log;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
@@ -23,6 +24,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core
 
             DontDestroyOnLoad(gameObject);
 
+            OverrideSceneManagerAPI();
+
             LoadDreamWorkSettings();
 
             LoadSubSystemRegistry();
@@ -42,6 +45,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #endregion
 
         #region Private Methods
+        private void OverrideSceneManagerAPI()
+        {
+            SceneManagerAPI.overrideAPI = new DreamWorkSceneManagerAPI();
+        }
+
         private void LoadDreamWorkSettings()
         {
             FDreamWorkSettingsProvider.Load();
