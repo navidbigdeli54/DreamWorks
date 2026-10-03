@@ -1,8 +1,8 @@
-﻿using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+﻿using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
-
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using UnityEngine;
+using UnityEngine.UIElements;
 using UObject = UnityEngine.Object;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
@@ -43,6 +43,20 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             return SpawnGameObject(resolvedGameObject, position, rotation);
         }
 
+        public GameObject SpawnGameObject(UObject prefab, Transform transform)
+        {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Spawnning a GameObject in a disposed world!");
+
+                return null;
+            }
+
+            GameObject resolvedGameObject = prefab is IGameFrameworkComponent component ? component.GameObject : prefab as GameObject;
+
+            return SpawnGameObject(resolvedGameObject, transform);
+        }
+
         public GameObject SpawnGameObject(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             if (gameWorld.IsDisposed)
@@ -53,6 +67,22 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             }
 
             GameObject spawnedGameObject = UObject.Instantiate(prefab, position, rotation);
+
+            RegisterGameObject(spawnedGameObject);
+
+            return spawnedGameObject;
+        }
+
+        public GameObject SpawnGameObject(GameObject prefab, Transform transform)
+        {
+            if (gameWorld.IsDisposed)
+            {
+                logProvider.LogError("Spawnning a GameObject in a disposed world!");
+
+                return null;
+            }
+
+            GameObject spawnedGameObject = UObject.Instantiate(prefab, transform);
 
             RegisterGameObject(spawnedGameObject);
 

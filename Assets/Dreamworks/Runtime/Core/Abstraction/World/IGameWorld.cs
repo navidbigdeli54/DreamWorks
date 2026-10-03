@@ -26,6 +26,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction
         #endregion
 
         #region Object API
+        TComponent SpawnGameObject<TComponent>(TComponent prefab, Transform transform) where TComponent : UObject;
+
         TComponent SpawnGameObject<TComponent>(TComponent prefab, Vector3 position, Quaternion rotation) where TComponent : UObject;
 
         GameObject SpawnGameObject(GameObject prefab, Vector3 position, Quaternion rotation);

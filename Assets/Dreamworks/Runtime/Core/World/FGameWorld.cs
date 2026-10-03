@@ -79,6 +79,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             return SpawnManager.SpawnGameObject(prefab, position, rotation);
         }
 
+        TComponent IGameWorld.SpawnGameObject<TComponent>(TComponent prefab, Transform transform)
+        {
+            GameObject spawnedGameObject = SpawnManager.SpawnGameObject(prefab, transform);
+
+            return spawnedGameObject.GetComponent<TComponent>();
+        }
+
         TComponent IGameWorld.SpawnGameObject<TComponent>(TComponent prefab, Vector3 position, Quaternion rotation)
         {
             GameObject spawnedGameObject = SpawnManager.SpawnGameObject(prefab, position, rotation);
