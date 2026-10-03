@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
-    public sealed class FGame : IGame, IDreamWorksObject
+    public sealed partial class FGame : IGame, IDreamWorksObject
     {
         #region Fields
         private readonly ILogProvider logProvider;
@@ -14,6 +15,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #endregion
 
         #region Properties
+        [AutoStaticsCleanup]
         public static FGame Instance { get; private set; }
 
         public IGameInstance GameInstance { get; private set; }
