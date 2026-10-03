@@ -31,7 +31,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistenc
 
             this.repository = repository;
 
-            this.filePath = Path.Combine(UnityEngine.Application.persistentDataPath, fileName);
+            this.filePath = Path.Combine(UnityEngine.Application.persistentDataPath, "DreamWorks", "Console", fileName); ;
         }
         #endregion
 

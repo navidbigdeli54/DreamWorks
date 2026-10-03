@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
 {
     /// <summary>
@@ -26,7 +28,9 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
         /// <param name="name">The unique name of the variable. Cannot be null or empty.</param>
         /// <param name="defaultValue">The default value assigned to the variable.</param>
         /// <param name="description">A brief description of the variable's purpose. Cannot be null or empty.</param>
-        void RegisterVariable<TVariableType>(string name, TVariableType defaultValue, string description);
+        /// <param name="isPersistent">Whether changes to this variable should be saved across runs.</param>
+        /// <returns>The registered variable instance, or <see langword="null"/> if registration failed.</returns>
+        IConsoleVariable RegisterVariable<TVariableType>(string name, TVariableType defaultValue, string description, bool isPersistent = false);
 
         /// <summary>
         /// Unregisters a variable by its name, removing it from the system.
@@ -58,7 +62,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
         /// This parameter is passed uninitialized.</param>
         /// <returns><see langword="true"/> if the variable with the specified name exists and its value can be cast to 
         /// <typeparamref name="TVariableType"/>; otherwise, <see langword="false"/>.</returns>
+        /// <summary>Attempts to retrieve a variable value of the requested type.</summary>
         bool TryGetVariableValue<TVariableType>(string name, out TVariableType value);
+
+        /// <summary>
+        /// Returns a snapshot of the currently registered variables.
+        /// </summary>
+        IReadOnlyList<IConsoleVariable> GetRegisteredVariables();
         #endregion
     }
 }

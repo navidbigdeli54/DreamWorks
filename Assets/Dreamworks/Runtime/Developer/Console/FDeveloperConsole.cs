@@ -1,26 +1,23 @@
-﻿using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using System.Collections.Generic;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
     /// <summary>
-    /// Provides a centralized implementation of a developer console, enabling the registration, management, and
-    /// retrieval of console methods and variables.
+    /// Provides unified access to console methods and variables through one gameplay-facing interface.
     /// </summary>
-    /// <remarks>This class serves as a sealed implementation of the <see cref="IDeveloperConsole"/> and <see
-    /// cref="IDeveloperConsoleInitializer"/> interfaces. It delegates the management of console methods and variables
-    /// to the provided repositories, which must implement <see cref="IConsoleMethodRepository"/> and <see
-    /// cref="IConsoleVariableRepository"/>, respectively.  The <see cref="FDeveloperConsole"/> is designed to be
-    /// initialized and shut down via the <see cref="IDeveloperConsoleInitializer"/> interface, ensuring proper setup
-    /// and teardown of its underlying repositories.</remarks>
     public sealed class FDeveloperConsole : IDeveloperConsole, IDeveloperConsoleInitializer
     {
-        #region Properties
+        #region Fields
         private readonly IConsoleMethodRepository methodRepository;
 
         private readonly IConsoleVariableRepository variableRepository;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Creates the developer console facade from its method and variable repositories.
+        /// </summary>
         public FDeveloperConsole(IConsoleMethodRepository methodRepository, IConsoleVariableRepository variableRepository)
         {
             this.methodRepository = methodRepository;
@@ -29,7 +26,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         }
         #endregion
 
-        #region IDeveloperConsoleMethodRepository Implementation
+        #region IConsoleMethodRepository Implementation
         void IConsoleMethodRepository.RegisterMethod(IConsoleMethod method)
         {
             methodRepository.RegisterMethod(method);
@@ -46,15 +43,15 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         }
         #endregion
 
-        #region IDeveloperConsoleVariableRepository Implementation
+        #region IConsoleVariableRepository Implementation
         void IConsoleVariableRepository.RegisterVariable(IConsoleVariable variable)
         {
             variableRepository.RegisterVariable(variable);
         }
 
-        void IConsoleVariableRepository.RegisterVariable<TVariableType>(string name, TVariableType defaultValue, string description)
+        IConsoleVariable IConsoleVariableRepository.RegisterVariable<TVariableType>(string name, TVariableType defaultValue, string description, bool isPersistent)
         {
-            variableRepository.RegisterVariable<TVariableType>(name, defaultValue, description);
+            return variableRepository.RegisterVariable(name, defaultValue, description, isPersistent);
         }
 
         void IConsoleVariableRepository.UnregisterVariable(string variableName)
@@ -69,11 +66,16 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 
         bool IConsoleVariableRepository.TryGetVariableValue<TVariableType>(string name, out TVariableType value)
         {
-            return variableRepository.TryGetVariableValue<TVariableType>(name, out value);
+            return variableRepository.TryGetVariableValue(name, out value);
+        }
+
+        IReadOnlyList<IConsoleVariable> IConsoleVariableRepository.GetRegisteredVariables()
+        {
+            return variableRepository.GetRegisteredVariables();
         }
         #endregion
 
-        #region Public Methods
+        #region IDeveloperConsoleInitializer Implementation
         void IDeveloperConsoleInitializer.Initialize()
         {
             if (methodRepository is IDeveloperConsoleInitializer methodRepositoryInitializer)

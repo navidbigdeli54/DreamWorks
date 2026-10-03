@@ -1,4 +1,3 @@
-using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
@@ -9,12 +8,14 @@ using DreamMachineGameStudio.DreamWorks.Developer.Console.History;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Definitions;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
     [ADreamWorksSubSystem(
         displayName: "Console",
-        description: "Provides in-game developer console with cvars, commands, and runtime debugging tools.",
+        description: "Provides in-game developer console with vars, commands, and runtime debugging tools.",
         category: "Developer",
         order: 0,
         Experimental = false,
@@ -39,20 +40,32 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Gets the gameplay-facing developer console API.
+        /// </summary>
         public IDeveloperConsole DeveloperConsole { get; }
 
+        /// <summary>
+        /// Indicates that this subsystem receives per-frame updates.
+        /// </summary>
         public override bool CanTick => true;
         #endregion
 
         #region Constructors
-        public FConsoleSubSystem(IGameInstance gameInstance)
-            : base(gameInstance)
+        /// <summary>
+        /// Creates the console subsystem and its runtime services.
+        /// </summary>
+        public FConsoleSubSystem(IGameInstance gameInstance) : base(gameInstance)
         {
-            var scopedLogger = new FScopedLogger(new FLogCategory(nameof(FConsoleSubSystem), ELogVerbosity.Verbose));
+            FScopedLogger scopedLogger = new(new FLogCategory(nameof(FConsoleSubSystem), ELogVerbosity.Verbose));
 
             methodRepository = new FConsoleMethodRepository(scopedLogger);
 
-            variableRepository = new FConsoleVariableRepository(scopedLogger);
+            IConsoleVariablePersistence variablePersistence = new FConsoleVariablePersistence(scopedLogger, "variables.bin");
+
+            IConsoleVariableDefinitionProvider definitionProvider = new FConsoleVariableDefinitionResourcesProvider();
+
+            variableRepository = new FConsoleVariableRepository(scopedLogger, definitionProvider, variablePersistence);
 
             DeveloperConsole = new FDeveloperConsole(methodRepository, variableRepository);
 
@@ -60,7 +73,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 
             commandQuery = new FConsoleCommandQuery(methodRepository as IConsoleCommandQuery, variableRepository as IConsoleCommandQuery);
 
-            commandHistory = new FConsoleCommandHistory(scopedLogger, commandActivator);
+            commandHistory = new FConsoleCommandHistory(scopedLogger, commandActivator, 255, "commands.bin");
 
             commandOutputBuffer = new FConsoleCommandOutputBuffer(scopedLogger, commandActivator);
 
@@ -101,6 +114,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             widgetBootstrapper.Tick(deltaTime);
         }
 
+
         protected override Task ShutDownAsync()
         {
             widgetBootstrapper.ConsoleWidget.OnCommandEntered -= OnCommandEntered;
@@ -124,7 +138,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             {
                 developerConsoleInitializer.ShutDown();
             }
-
 
             return Task.CompletedTask;
         }
