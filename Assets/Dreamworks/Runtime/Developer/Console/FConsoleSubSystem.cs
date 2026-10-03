@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.UI;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Output;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.History;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
@@ -18,68 +22,118 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         Keywords = "console cvar command debug runtime shell")]
     public sealed class FConsoleSubSystem : FGameInstanceSubSystem
     {
+        #region Fields
+        private readonly IConsoleMethodRepository methodRepository;
+
+        private readonly IConsoleVariableRepository variableRepository;
+
+        private readonly IConsoleCommandActivator commandActivator;
+
+        private readonly IConsoleCommandQuery commandQuery;
+
+        private readonly IConsoleCommandHistory commandHistory;
+
+        private readonly IConsoleCommandOutputBuffer commandOutputBuffer;
+
+        private readonly FConsoleWidgetBootstrapper widgetBootstrapper;
+        #endregion
+
         #region Properties
+        public IDeveloperConsole DeveloperConsole { get; }
 
-        public FConsoleHistory History { get; }
-
-        public FConsoleOutputBuffer OutputBuffer { get; }
-
-        public FConsoleManager ConsoleManager { get; }
-
-        public UConsoleWidgetBootstrapper WidgetBootstrapper { get; }
+        public override bool CanTick => true;
         #endregion
 
         #region Constructors
         public FConsoleSubSystem(IGameInstance gameInstance)
             : base(gameInstance)
         {
-            History = new FConsoleHistory(FDefaultLogger.Instance);
+            var scopedLogger = new FScopedLogger(new FLogCategory(nameof(FConsoleSubSystem), ELogVerbosity.Verbose));
 
-            OutputBuffer = new FConsoleOutputBuffer();
+            methodRepository = new FConsoleMethodRepository(scopedLogger);
 
-            ConsoleManager = new FConsoleManager(FDefaultLogger.Instance);
+            variableRepository = new FConsoleVariableRepository(scopedLogger);
 
-            WidgetBootstrapper = new GameObject(nameof(UConsoleWidgetBootstrapper)).AddComponent<UConsoleWidgetBootstrapper>();
+            DeveloperConsole = new FDeveloperConsole(methodRepository, variableRepository);
+
+            commandActivator = new FConsoleCommandActivator(methodRepository, variableRepository);
+
+            commandQuery = new FConsoleCommandQuery(methodRepository as IConsoleCommandQuery, variableRepository as IConsoleCommandQuery);
+
+            commandHistory = new FConsoleCommandHistory(scopedLogger, commandActivator);
+
+            commandOutputBuffer = new FConsoleCommandOutputBuffer(scopedLogger, commandActivator);
+
+            widgetBootstrapper = new FConsoleWidgetBootstrapper(commandQuery, commandOutputBuffer, commandHistory);
         }
         #endregion
 
         #region Protected Methods
         protected override Task InitializeAsync()
         {
-            History.Load();
+            if (DeveloperConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
+            {
+                developerConsoleInitializer.Initialize();
+            }
 
-            ConsoleManager.Initialize();
-            ConsoleManager.OnCommandEntered += HandleCommandEntered;
-            ConsoleManager.OnCommandExecuted += HandleCommandExecuted;
+            if (commandOutputBuffer is IDeveloperConsoleInitializer commandOutputBufferInitializer)
+            {
+                commandOutputBufferInitializer.Initialize();
+            }
 
-            WidgetBootstrapper.Initialize(this);
+            if (commandHistory is IDeveloperConsoleInitializer commandHistoryInitializer)
+            {
+                commandHistoryInitializer.Initialize();
+            }
+
+            if (widgetBootstrapper is IDeveloperConsoleInitializer widgetBootstrapperInitializer)
+            {
+                widgetBootstrapperInitializer.Initialize();
+            }
+
+            widgetBootstrapper.ConsoleWidget.OnCommandEntered += OnCommandEntered;
 
             return Task.CompletedTask;
         }
 
+        protected override void Tick(float deltaTime)
+        {
+            widgetBootstrapper.Tick(deltaTime);
+        }
+
         protected override Task ShutDownAsync()
         {
-            History.Save();
+            widgetBootstrapper.ConsoleWidget.OnCommandEntered -= OnCommandEntered;
 
-            ConsoleManager.OnCommandEntered -= HandleCommandEntered;
-            ConsoleManager.OnCommandExecuted -= HandleCommandExecuted;
-            ConsoleManager.ShutDown();
+            if (widgetBootstrapper is IDeveloperConsoleInitializer widgetBootstrapperInitializer)
+            {
+                widgetBootstrapperInitializer.ShutDown();
+            }
 
-            WidgetBootstrapper.ShutDown();
+            if (commandOutputBuffer is IDeveloperConsoleInitializer commandOutputBufferInitializer)
+            {
+                commandOutputBufferInitializer.ShutDown();
+            }
+
+            if (commandHistory is IDeveloperConsoleInitializer commandHistoryInitializer)
+            {
+                commandHistoryInitializer.ShutDown();
+            }
+
+            if (DeveloperConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
+            {
+                developerConsoleInitializer.ShutDown();
+            }
+
 
             return Task.CompletedTask;
         }
         #endregion
 
         #region Private Methods
-        private void HandleCommandEntered(string command)
+        private void OnCommandEntered(string command)
         {
-            History.Add(command);
-        }
-
-        private void HandleCommandExecuted(FConsoleExecutionResult result)
-        {
-            OutputBuffer.Add(result.Message, result.WasSuccessful ? EConsoleOutputType.Log : EConsoleOutputType.Error);
+            commandActivator.ExecuteCommand(command);
         }
         #endregion
     }

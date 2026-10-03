@@ -2,8 +2,10 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
 {
     public enum EConsoleObjectType : byte
     {
-        Command,
+        None = 0,
 
-        Variable
+        Method = 1,
+
+        Variable = 2
     }
 }

@@ -10,7 +10,7 @@ namespace DreamMachineGameStudio.DreamWorks.Modules.ObjectPool.Console
 {
     public static class FObjectPoolSubSystemConsoleCommands
     {
-        [AConsoleCommand("PrintObjectPoolStat")]
+        [AConsoleMethod("PrintObjectPoolStat")]
         public static string GetObjectPoolStat()
         {
             FObjectPoolSubSystem objectPoolSubSystem = (FObjectPoolSubSystem)FGame.Instance.GameInstance.GetSubSystem<IObjectPoolSubSystem>();
