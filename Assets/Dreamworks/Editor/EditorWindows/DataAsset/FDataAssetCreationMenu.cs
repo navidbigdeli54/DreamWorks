@@ -1,14 +1,14 @@
 using System.IO;
 using UnityEditor;
 
-namespace DreamMachineGameStudio.DreamWorks.Editor.Wizard.DataAsset
+namespace DreamMachineGameStudio.DreamWorks.Editor.DataAsset
 {
-    public static class DataAssetCreationMenu
+    public static class FDataAssetCreationMenu
     {
-        [MenuItem("Assets/Create/DreamWorks/Data Asset...", false, 1000)]
+        [MenuItem("Assets/Create/DreamWorks/Data Asset...", false, int.MinValue)]
         private static void CreateDataAsset()
         {
-            UDataAssetCreationWizard.Open(GetSelectedFolder());
+            UDataAssetCreationEditorWindow.Open(GetSelectedFolder());
         }
 
         private static string GetSelectedFolder()

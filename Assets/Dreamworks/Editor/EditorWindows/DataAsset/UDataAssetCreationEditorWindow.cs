@@ -4,12 +4,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.IMGUI.Controls;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core;
 using DreamMachineGameStudio.DreamWorks.Core.Assets;
 
-namespace DreamMachineGameStudio.DreamWorks.Editor.Wizard.DataAsset
+namespace DreamMachineGameStudio.DreamWorks.Editor.DataAsset
 {
-    public sealed class UDataAssetCreationWizard : EditorWindow
+    public sealed class UDataAssetCreationEditorWindow : EditorWindow
     {
         #region Fields
         private Type selectedType;
@@ -21,7 +20,7 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.Wizard.DataAsset
         #region Public Methods
         public static void Open(string targetFolder)
         {
-            UDataAssetCreationWizard window = GetWindow<UDataAssetCreationWizard>(true, "Create Data Asset");
+            UDataAssetCreationEditorWindow window = GetWindow<UDataAssetCreationEditorWindow>(true, "Create Data Asset");
 
             window.targetFolder = targetFolder;
 
