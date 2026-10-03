@@ -2,10 +2,17 @@ using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Exceptions;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
-namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
+namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions
 {
-
+    /// <summary>
+    /// Represents a repository for storing and managing a history of console command records.
+    /// </summary>
+    /// <remarks>This repository maintains a fixed maximum number of entries, specified at construction. When
+    /// the maximum capacity is reached, the oldest record is removed to make room for new entries. The repository
+    /// supports serialization to and deserialization from JSON, enabling persistence and restoration of the command
+    /// history.</remarks>
     internal class FConsoleCommandHistoryRepository : IJsonSerializable, IJsonDeserializable
     {
         #region Fields

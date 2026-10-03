@@ -1,5 +1,5 @@
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.History;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -210,13 +210,19 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
             Label promptPrefix = CreateLabel(">", 16, ConsoleGreen);
             promptPrefix.style.height = 34;
+            promptPrefix.style.unityTextAlign = TextAnchor.MiddleLeft;
             promptPrefix.style.unityFontStyleAndWeight = FontStyle.Bold;
-            promptPrefix.style.marginRight = 8;
+            promptPrefix.style.marginTop = 0;
+            promptPrefix.style.marginBottom = 0;
+            promptPrefix.style.marginRight = 4;
             prompt.Add(promptPrefix);
 
             inputField = new TextField { name = "console-command-input", isDelayed = false };
             inputField.style.flexGrow = 1;
+            inputField.style.flexDirection = FlexDirection.Row;
             inputField.style.height = 34;
+            inputField.style.marginLeft = 0;
+            inputField.style.paddingLeft = 0;
             inputField.style.fontSize = 16;
             inputField.style.color = ConsoleGreen;
             inputField.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
@@ -227,9 +233,27 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             inputField.RegisterValueChangedCallback(HandleInputChanged);
             inputField.RegisterCallback<KeyDownEvent>(HandleInputKeyDown, TrickleDown.TrickleDown);
             prompt.Add(inputField);
+            VisualElement inputLabel = inputField.Q<VisualElement>(className: "unity-base-field__label");
+
+            if (inputLabel != null)
+            {
+                inputLabel.style.display = DisplayStyle.None;
+            }
+
             VisualElement textInputContainer = inputField.Q<VisualElement>(className: "unity-base-field__input");
             if (textInputContainer != null)
             {
+                textInputContainer.style.flexGrow = 1;
+                textInputContainer.style.minWidth = 0;
+                textInputContainer.style.marginLeft = 0;
+                textInputContainer.style.paddingLeft = 0;
+                textInputContainer.style.marginRight = 0;
+                textInputContainer.style.paddingRight = 0;
+                textInputContainer.style.alignItems = Align.Center;
+                textInputContainer.style.paddingTop = 0;
+                textInputContainer.style.paddingBottom = 0;
+                textInputContainer.style.marginTop = 0;
+                textInputContainer.style.marginBottom = 0;
                 textInputContainer.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
                 textInputContainer.style.borderLeftWidth = 0;
                 textInputContainer.style.borderRightWidth = 0;
@@ -241,6 +265,15 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             if (inputText != null)
             {
                 inputText.style.color = ConsoleGreen;
+                inputText.style.unityTextAlign = TextAnchor.MiddleLeft;
+                inputText.style.paddingLeft = 0;
+                inputText.style.marginLeft = 0;
+                inputText.style.paddingRight = 0;
+                inputText.style.marginRight = 0;
+                inputText.style.paddingTop = 0;
+                inputText.style.paddingBottom = 0;
+                inputText.style.marginTop = 0;
+                inputText.style.marginBottom = 0;
                 inputText.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
             }
 

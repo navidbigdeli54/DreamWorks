@@ -2,7 +2,7 @@ using System;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
 {
-    public interface IConsoleVariable : IConsoleObject
+    public interface IConsoleVariable : IConsoleCommand
     {
 
         #region Events

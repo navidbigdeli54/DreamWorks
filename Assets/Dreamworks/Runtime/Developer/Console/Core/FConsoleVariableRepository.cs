@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 {
+    /// <summary>
+    /// Provides a repository for managing console variables and their associated metadata.
+    /// </summary>
+    /// <remarks>This class implements <see cref="IConsoleVariableRepository"/>, <see
+    /// cref="IDeveloperConsoleInitializer"/>,  and <see cref="IConsoleCommandQuery"/> to support the registration,
+    /// retrieval, and management of console variables,  as well as initialization and shutdown of the developer
+    /// console. It also provides functionality for querying  console command suggestions based on user input.</remarks>
     internal sealed class FConsoleVariableRepository : IConsoleVariableRepository, IDeveloperConsoleInitializer, IConsoleCommandQuery
     {
         #region Fields

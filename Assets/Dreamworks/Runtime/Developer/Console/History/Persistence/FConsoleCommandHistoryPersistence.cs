@@ -4,10 +4,17 @@ using DreamMachineGameStudio.DreamWorks.Serialization.Json;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions;
 
-namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
+namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistence
 {
-    internal class FConsoleCommandHistoryFileStream : IDeveloperConsoleInitializer
+    /// <summary>
+    /// Manages the persistence of console command history to and from a file.
+    /// </summary>
+    /// <remarks>This class implements <see cref="IDeveloperConsoleInitializer"/> to handle the initialization
+    /// and shutdown of the developer console's command history. During initialization, it loads the command history
+    /// from the specified file. During shutdown, it saves the current command history back to the file.</remarks>
+    internal class FConsoleCommandHistoryPersistence : IDeveloperConsoleInitializer
     {
         #region Fields
         private readonly ILogProvider logProvider;
@@ -18,12 +25,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
         #endregion
 
         #region Constructors
-        public FConsoleCommandHistoryFileStream(ILogProvider logProvider, FConsoleCommandHistoryRepository repository, string filePath)
+        public FConsoleCommandHistoryPersistence(ILogProvider logProvider, FConsoleCommandHistoryRepository repository, string fileName)
         {
             this.logProvider = logProvider;
 
             this.repository = repository;
-            this.filePath = filePath;
+
+            this.filePath = Path.Combine(UnityEngine.Application.persistentDataPath, fileName);
         }
         #endregion
 

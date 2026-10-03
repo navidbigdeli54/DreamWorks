@@ -2,9 +2,15 @@
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Exceptions;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
 
-namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
+namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions
 {
-
+    /// <summary>
+    /// Represents a record of a console command, including its associated data,  and provides functionality for JSON
+    /// serialization and deserialization.
+    /// </summary>
+    /// <remarks>This class is used to store and manage information about a single console command,  including
+    /// its text representation. It supports serialization to and deserialization  from JSON, enabling persistence or
+    /// transfer of command history data.</remarks>
     internal class FConsoleCommandHistoryRecord : IJsonSerializable, IJsonDeserializable
     {
         #region Properties

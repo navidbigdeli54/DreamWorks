@@ -1,11 +1,20 @@
-using System;
 using System.Collections.Generic;
-using System.IO;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistence;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
 {
+    /// <summary>
+    /// Manages the history of console commands entered by the user, providing access to past commands and persisting
+    /// the history to a file for future sessions.
+    /// </summary>
+    /// <remarks>This class implements <see cref="IConsoleCommandHistory"/> to expose the history of commands
+    /// and <see cref="IDeveloperConsoleInitializer"/> to handle initialization and shutdown tasks related to the
+    /// developer console. It maintains an in-memory repository of command history and persists it to a file for
+    /// durability.</remarks>
     internal sealed class FConsoleCommandHistory : IConsoleCommandHistory, IDeveloperConsoleInitializer
     {
         #region Fields
@@ -15,7 +24,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
 
         private readonly FConsoleCommandHistoryRepository repository;
 
-        private readonly FConsoleCommandHistoryFileStream fileStream;
+        private readonly FConsoleCommandHistoryPersistence fileStream;
         #endregion
 
         #region Constructors
@@ -27,7 +36,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
 
             repository = new FConsoleCommandHistoryRepository(maxEntries);
 
-            fileStream = new FConsoleCommandHistoryFileStream(logProvider, repository, Path.Combine(UnityEngine.Application.persistentDataPath, fileName));
+            fileStream = new FConsoleCommandHistoryPersistence(logProvider, repository, fileName);
         }
         #endregion
 

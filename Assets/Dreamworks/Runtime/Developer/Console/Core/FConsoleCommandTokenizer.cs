@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using System.Collections.Generic;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 {
-    public static class FCommandTokenizer
+    /// <summary>
+    /// Splits a command-line string into an array of tokens, respecting quoted substrings.
+    /// </summary>
+    /// <remarks>This method handles quoted substrings by treating them as single tokens, even if they contain
+    /// spaces. Quotation marks themselves are not included in the resulting tokens. For example, the input <c>"arg1
+    /// \"arg 2\" arg3"</c> will produce the tokens <c>{"arg1", "arg 2", "arg3"}</c>.</remarks>
+    internal static class FConsoleCommandTokenizer
     {
-        public static string[] Tokenize(string commandLine)
+        internal static string[] Tokenize(string commandLine)
         {
             List<string> tokens = new();
 

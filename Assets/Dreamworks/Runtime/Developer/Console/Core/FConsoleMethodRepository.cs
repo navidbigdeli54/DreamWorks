@@ -5,9 +5,18 @@ using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 {
+    /// <summary>
+    /// Provides a repository for managing console methods, including registration, unregistration,  and querying of
+    /// available commands. This class also supports initialization and discovery  of static console commands.
+    /// </summary>
+    /// <remarks>This class is designed to be used as part of a developer console system. It allows for the 
+    /// dynamic registration and unregistration of console methods, as well as querying for command  suggestions based
+    /// on user input. Static commands are automatically discovered during  initialization by scanning loaded assemblies
+    /// for methods annotated with the appropriate  attributes.</remarks>
     internal sealed class FConsoleMethodRepository : IConsoleMethodRepository, IDeveloperConsoleInitializer, IConsoleCommandQuery
     {
         #region Fields

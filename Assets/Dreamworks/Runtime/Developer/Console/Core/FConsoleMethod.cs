@@ -3,9 +3,16 @@ using System.Reflection;
 using System.Globalization;
 using System.Linq;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 {
+    /// <summary>
+    /// Represents a console command that invokes a method with specified arguments.
+    /// </summary>
+    /// <remarks>This class encapsulates the metadata and execution logic for a console command that maps to a
+    /// method.  It supports methods with optional parameters, parameter arrays, and type conversion for
+    /// arguments.</remarks>
     public sealed class FConsoleMethod : IConsoleMethod
     {
         #region Properties
@@ -17,7 +24,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
         public MethodInfo MethodInfo { get; }
 
-        public EConsoleObjectType ObjectType => EConsoleObjectType.Method;
+        public EConsoleCommandType CommandType => EConsoleCommandType.Method;
         #endregion
 
         #region Constructors
@@ -41,17 +48,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         public object Execute(string[] arguments)
         {
             ParameterInfo[] parameterInfos = MethodInfo.GetParameters();
-            int requiredParameterCount = parameterInfos.Count(parameterInfo => !parameterInfo.IsOptional && !Attribute.IsDefined(parameterInfo, typeof(ParamArrayAttribute)));
-            bool hasParameterArray = parameterInfos.Length > 0 && Attribute.IsDefined(parameterInfos[^1], typeof(ParamArrayAttribute));
-            int maximumParameterCount = hasParameterArray ? int.MaxValue : parameterInfos.Length;
 
-            if (arguments.Length < requiredParameterCount || arguments.Length > maximumParameterCount)
-            {
-                string expectedArgumentCount = requiredParameterCount == maximumParameterCount
-                    ? requiredParameterCount.ToString(CultureInfo.InvariantCulture)
-                    : $"{requiredParameterCount} to {(hasParameterArray ? "any number of" : maximumParameterCount.ToString(CultureInfo.InvariantCulture))}";
-                throw new ArgumentException($"Command '{Name}' expects {expectedArgumentCount} arguments but received {arguments.Length}.");
-            }
+            EnsureArguments(arguments, parameterInfos);
 
             object[] parameterValues = new object[parameterInfos.Length];
             for (int i = 0; i < parameterInfos.Length; ++i)
@@ -80,6 +78,24 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         #endregion
 
         #region Private Methods
+        private void EnsureArguments(string[] arguments, ParameterInfo[] parameterInfos)
+        {
+            int requiredParameterCount = parameterInfos.Count(parameterInfo => !parameterInfo.IsOptional && !Attribute.IsDefined(parameterInfo, typeof(ParamArrayAttribute)));
+
+            bool hasParameterArray = parameterInfos.Length > 0 && Attribute.IsDefined(parameterInfos[^1], typeof(ParamArrayAttribute));
+
+            int maximumParameterCount = hasParameterArray ? int.MaxValue : parameterInfos.Length;
+
+            if (arguments.Length < requiredParameterCount || arguments.Length > maximumParameterCount)
+            {
+                string expectedArgumentCount = requiredParameterCount == maximumParameterCount ?
+                    requiredParameterCount.ToString(CultureInfo.InvariantCulture) :
+                    $"{requiredParameterCount} to {(hasParameterArray ? "any number of" : maximumParameterCount.ToString(CultureInfo.InvariantCulture))}";
+
+                throw new ArgumentException($"Command '{Name}' expects {expectedArgumentCount} arguments but received {arguments.Length}.");
+            }
+        }
+
         private object ConvertParameter(string value, Type type)
         {
             Type conversionType = Nullable.GetUnderlyingType(type) ?? type;

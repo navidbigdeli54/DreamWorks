@@ -2,6 +2,16 @@
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
+    /// <summary>
+    /// Provides a centralized implementation of a developer console, enabling the registration, management, and
+    /// retrieval of console methods and variables.
+    /// </summary>
+    /// <remarks>This class serves as a sealed implementation of the <see cref="IDeveloperConsole"/> and <see
+    /// cref="IDeveloperConsoleInitializer"/> interfaces. It delegates the management of console methods and variables
+    /// to the provided repositories, which must implement <see cref="IConsoleMethodRepository"/> and <see
+    /// cref="IConsoleVariableRepository"/>, respectively.  The <see cref="FDeveloperConsole"/> is designed to be
+    /// initialized and shut down via the <see cref="IDeveloperConsoleInitializer"/> interface, ensuring proper setup
+    /// and teardown of its underlying repositories.</remarks>
     public sealed class FDeveloperConsole : IDeveloperConsole, IDeveloperConsoleInitializer
     {
         #region Properties

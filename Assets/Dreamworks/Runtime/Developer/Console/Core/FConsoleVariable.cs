@@ -1,19 +1,28 @@
 ﻿using System;
 using System.Globalization;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 {
-    public class FConsoleVariable<T> : IConsoleVariable
+    /// <summary>
+    /// Represents a console variable with a specified type, allowing dynamic configuration and runtime updates.
+    /// </summary>
+    /// <remarks>This class provides functionality to define a console variable with a name, description, and
+    /// default value. The value can be retrieved or updated dynamically, and changes to the value trigger the <see
+    /// cref="OnValueChanged"/> event. The class implements the <see cref="IConsoleVariable"/> interface, enabling
+    /// integration with a console command system.</remarks>
+    /// <typeparam name="TVariableType">The type of the value stored by the console variable, such as int, float, bool, and string.</typeparam>
+    public class FConsoleVariable<TVariableType> : IConsoleVariable
     {
         #region Properties
         public string Name { get; protected set; }
 
         public string Description { get; protected set; }
 
-        public T Value { get; private set; }
+        public TVariableType Value { get; private set; }
 
-        public EConsoleObjectType ObjectType => EConsoleObjectType.Variable;
+        public EConsoleCommandType CommandType => EConsoleCommandType.Variable;
         #endregion
 
         #region Events
@@ -21,7 +30,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         #endregion
 
         #region Constrcutors
-        public FConsoleVariable(string name, string description, T defaultValue)
+        public FConsoleVariable(string name, string description, TVariableType defaultValue)
         {
             Name = name;
 
@@ -39,7 +48,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
         void IConsoleVariable.SetValue(object value)
         {
-            if (value is not T typedValue)
+            if (value is not TVariableType typedValue)
             {
                 throw new InvalidCastException();
             }
@@ -53,7 +62,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         {
             try
             {
-                Value = (T)ParseValue(value);
+                Value = (TVariableType)ParseValue(value);
 
                 OnValueChanged?.Invoke(Value);
 
@@ -69,7 +78,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         #region Private Methods
         private object ParseValue(string value)
         {
-            Type conversionType = Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T);
+            Type conversionType = Nullable.GetUnderlyingType(typeof(TVariableType)) ?? typeof(TVariableType);
 
             if (conversionType == typeof(string))
             {
