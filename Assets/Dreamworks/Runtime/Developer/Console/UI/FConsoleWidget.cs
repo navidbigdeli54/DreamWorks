@@ -78,6 +78,17 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             root = null;
         }
 
+        public void CycleVisibility()
+        {
+            EConsoleVisibility newVisibility = currentVisibility switch
+            {
+                EConsoleVisibility.Hidden => EConsoleVisibility.Mini,
+                EConsoleVisibility.Mini => EConsoleVisibility.Full,
+                _ => EConsoleVisibility.Hidden
+            };
+            SetVisibility(newVisibility);
+        }
+
         public void SetVisibility(EConsoleVisibility visibility)
         {
             currentVisibility = visibility;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
@@ -60,6 +61,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         }
 
         bool IConsoleVariableRepository.TryGetVariable(string name, out IConsoleVariable variable)
+        {
+            return variableRepository.TryGetVariable(name, out variable);
+        }
+
+        bool IConsoleVariableRepository.TryGetVariable<TVariableType>(string name, out FConsoleVariable<TVariableType> variable)
         {
             return variableRepository.TryGetVariable(name, out variable);
         }

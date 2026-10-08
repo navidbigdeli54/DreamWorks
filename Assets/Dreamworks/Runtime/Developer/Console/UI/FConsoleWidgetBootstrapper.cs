@@ -1,8 +1,8 @@
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
-using System.Collections;
-using System.Reflection;
 using UnityEngine;
+using System.Reflection;
+using System.Collections;
 using UnityEngine.UIElements;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 {
@@ -20,8 +20,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
         private static PropertyInfo isPressedProperty;
         private static PropertyInfo touchPressProperty;
         private static PropertyInfo wasPressedThisFrameProperty;
-
-        private EConsoleVisibility visibility = EConsoleVisibility.Hidden;
 
         private UIDocument uiDocument;
 
@@ -195,23 +193,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
         private void CycleVisibility()
         {
-            switch (visibility)
-            {
-                case EConsoleVisibility.Hidden:
-                    visibility = EConsoleVisibility.Mini;
-                    break;
-                case EConsoleVisibility.Mini:
-                    visibility = EConsoleVisibility.Full;
-                    break;
-                default:
-                    visibility = EConsoleVisibility.Hidden;
-                    break;
-            }
-
-            ConsoleWidget.SetVisibility(visibility);
+            ConsoleWidget.CycleVisibility();
         }
-
-        
         #endregion
     }
 }

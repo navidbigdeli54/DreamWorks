@@ -1,3 +1,4 @@
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
 using System.Collections.Generic;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
@@ -49,6 +50,20 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
         /// <returns><see langword="true"/> if a console variable with the specified name exists; otherwise, <see
         /// langword="false"/>.</returns>
         bool TryGetVariable(string name, out IConsoleVariable variable);
+
+        /// <summary>
+        /// Attempts to retrieve a console variable by its name.
+        /// </summary>
+        /// <remarks>Use this method to safely attempt to retrieve a console variable without throwing an
+        /// exception if the variable does not exist.</remarks>
+        /// <typeparam name="TVariableType">The type of the console variable to retrieve.</typeparam>
+        /// <param name="name">The name of the console variable to look up. This value cannot be <see langword="null"/> or empty.</param>
+        /// <param name="variable">When this method returns, contains the console variable of type <typeparamref name="TVariableType"/> if the
+        /// lookup was successful; otherwise, the default value for the type of the <paramref name="variable"/>
+        /// parameter. This parameter is passed uninitialized.</param>
+        /// <returns><see langword="true"/> if the console variable with the specified name was found and successfully retrieved;
+        /// otherwise, <see langword="false"/>.</returns>
+        bool TryGetVariable<TVariableType>(string name, out FConsoleVariable<TVariableType> variable);
 
         /// <summary>
         /// Attempts to retrieve the value of a variable with the specified name and type.

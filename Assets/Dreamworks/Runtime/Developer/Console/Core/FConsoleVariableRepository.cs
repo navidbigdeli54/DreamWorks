@@ -83,6 +83,18 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
             return registeredVariables.TryGetValue(name, out variable);
         }
 
+        bool IConsoleVariableRepository.TryGetVariable<TVariableType>(string name, out FConsoleVariable<TVariableType> variable)
+        {
+            variable = null;
+
+            if (registeredVariables.TryGetValue(name, out IConsoleVariable variableBase))
+            {
+                variable = variableBase as FConsoleVariable<TVariableType>;
+            }
+
+            return variable != null;
+        }
+
         bool IConsoleVariableRepository.TryGetVariableValue<TVariableType>(string name, out TVariableType value)
         {
             value = default;

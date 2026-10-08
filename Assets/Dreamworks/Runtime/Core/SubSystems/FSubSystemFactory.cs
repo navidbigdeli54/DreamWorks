@@ -19,7 +19,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         #region ISubSystemFactory Implementation
         IReadOnlyList<ISubSystem> ISubSystemFactory.CreateSubSystems()
         {
-            List<ISubSystem> result = new List<ISubSystem>();
+            var result = new List<ISubSystem>();
 
             IReadOnlyList<FSubSystemSettings> subsystemSettings = FSubSystemRegisteryProvider.GetSubSystemsOf<TSubSystem>();
 
