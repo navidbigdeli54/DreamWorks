@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions;
-using DreamMachineGameStudio.DreamWorks.LoggProvider;
-using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistence
 {

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.LoggProvider;
-using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 

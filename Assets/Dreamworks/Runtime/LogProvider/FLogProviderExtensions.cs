@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
-namespace DreamMachineGameStudio.DreamWorks.LoggProvider
+namespace DreamMachineGameStudio.DreamWorks.LogProvider
 {
     /// <summary>
     /// Provides extension methods for logging messages with various verbosity levels using an <see cref="ILogProvider"/>.
