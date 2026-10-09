@@ -1,18 +1,15 @@
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
-using DreamMachineGameStudio.DreamWorks.Log;
-using System.Threading.Tasks;
 using UnityEngine;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
     public class FDreamWorksBootstrapper : MonoBehaviour
     {
-        #region Fields
-        private readonly ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(FDreamWorksBootstrapper), ELogVerbosity.Display, Color.blue));
-        #endregion
-
         #region Properties
         public IGame Game { get; private set; }
         #endregion
@@ -20,8 +17,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #region MonoBehaviour Methods
         private async void Awake()
         {
-            logProvider.Log("Awake!");
-
             DontDestroyOnLoad(gameObject);
 
             OverrideSceneManagerAPI();
@@ -62,16 +57,12 @@ namespace DreamMachineGameStudio.DreamWorks.Core
 
         private async Task InitializeAsync()
         {
-            logProvider.Log("Initializing.");
-
             await CreateAndInitializeGameAsync();
         }
 
         private async Task CreateAndInitializeGameAsync()
         {
-            logProvider.Log("Creating Game.");
-
-            ILogProvider gameLogProvider = new FScopedLogger(new FLogCategory(nameof(FGame), ELogVerbosity.Display, Color.blue));
+            ILogProvider gameLogProvider = new FScopedLogProvider(new FLogCategory(nameof(FGame), ELogVerbosity.Display, Color.blue));
 
             Game = new FGame(FDreamWorkSettingsProvider.Settings, gameLogProvider);
 
@@ -86,6 +77,8 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             }
 
             FFrameContext context = new(Time.deltaTime, Time.frameCount);
+
+            FConsoleBootstrapper.Instance.Tick(context);
 
             ((IDreamWorksObject)Game).Tick(context);
         }

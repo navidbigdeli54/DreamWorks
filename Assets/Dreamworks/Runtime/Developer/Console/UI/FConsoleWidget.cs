@@ -1,10 +1,10 @@
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections.Generic;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 {
@@ -89,6 +89,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             SetVisibility(newVisibility);
         }
 
+        public void ToggleFullVisibility()
+        {
+            SetVisibility(currentVisibility == EConsoleVisibility.Full ? EConsoleVisibility.Hidden : EConsoleVisibility.Full);
+        }
+
         public void SetVisibility(EConsoleVisibility visibility)
         {
             currentVisibility = visibility;
@@ -100,6 +105,10 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             {
                 inputField.Focus();
                 inputField.cursorIndex = inputField.value.Length;
+            }
+            else
+            {
+                inputField.Blur();
             }
 
             RefreshSuggestions();
@@ -163,10 +172,25 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             fullPanel.pickingMode = PickingMode.Position;
             root.Add(fullPanel);
 
+            VisualElement titleBar = new() { name = "console-title-bar" };
+            titleBar.style.flexDirection = FlexDirection.Row;
+            titleBar.style.alignItems = Align.Center;
+            titleBar.style.justifyContent = Justify.SpaceBetween;
+            titleBar.style.marginBottom = 5;
+            fullPanel.Add(titleBar);
+
             Label title = CreateLabel("DEVELOPER CONSOLE", 12, MutedColor);
             title.style.unityFontStyleAndWeight = FontStyle.Bold;
-            title.style.marginBottom = 5;
-            fullPanel.Add(title);
+            titleBar.Add(title);
+
+            Button closeButton = new(CloseConsole) { name = "console-close", text = "CLOSE" };
+            closeButton.style.width = 68;
+            closeButton.style.height = 30;
+            closeButton.style.paddingLeft = 5;
+            closeButton.style.paddingRight = 5;
+            closeButton.style.color = ConsoleGreen;
+            closeButton.style.backgroundColor = PromptColor;
+            titleBar.Add(closeButton);
 
             outputList = new ScrollView(ScrollViewMode.Vertical) { name = "console-output" };
             outputList.style.flexGrow = 1;
@@ -228,8 +252,10 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             promptPrefix.style.marginRight = 4;
             prompt.Add(promptPrefix);
 
-            inputField = new TextField { name = "console-command-input", isDelayed = false };
+            inputField = new TextField { name = "console-command-input", isDelayed = false, multiline = false };
             inputField.style.flexGrow = 1;
+            inputField.style.flexShrink = 1;
+            inputField.style.minWidth = 0;
             inputField.style.flexDirection = FlexDirection.Row;
             inputField.style.height = 34;
             inputField.style.marginLeft = 0;
@@ -244,6 +270,23 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             inputField.RegisterValueChangedCallback(HandleInputChanged);
             inputField.RegisterCallback<KeyDownEvent>(HandleInputKeyDown, TrickleDown.TrickleDown);
             prompt.Add(inputField);
+
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
+            Button executeButton = new(ExecuteCurrentCommand) { name = "console-command-execute", text = "OK" };
+            executeButton.style.width = 48;
+            executeButton.style.minWidth = 48;
+            executeButton.style.maxWidth = 48;
+            executeButton.style.flexGrow = 0;
+            executeButton.style.flexShrink = 0;
+            executeButton.style.height = 30;
+            executeButton.style.marginLeft = 6;
+            executeButton.style.paddingLeft = 4;
+            executeButton.style.paddingRight = 4;
+            executeButton.style.color = ConsoleGreen;
+            executeButton.style.backgroundColor = PanelColor;
+            prompt.Add(executeButton);
+#endif
+
             VisualElement inputLabel = inputField.Q<VisualElement>(className: "unity-base-field__label");
 
             if (inputLabel != null)
@@ -315,6 +358,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
         private void HandleInputKeyDown(KeyDownEvent keyEvent)
         {
+            if (keyEvent.keyCode == KeyCode.Return || keyEvent.keyCode == KeyCode.KeypadEnter || keyEvent.character == '\n' || keyEvent.character == '\r')
+            {
+                ExecuteCurrentCommand();
+                ConsumeKeyEvent(keyEvent);
+                return;
+            }
+
             if (keyEvent.keyCode == KeyCode.BackQuote || keyEvent.character == '`')
             {
                 ConsumeKeyEvent(keyEvent);
@@ -323,11 +373,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 
             switch (keyEvent.keyCode)
             {
-                case KeyCode.Return:
-                case KeyCode.KeypadEnter:
-                    ExecuteCurrentCommand();
-                    ConsumeKeyEvent(keyEvent);
-                    break;
                 case KeyCode.Tab:
                     CycleSuggestion(1);
                     ConsumeKeyEvent(keyEvent);
@@ -489,6 +534,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             inputField.cursorIndex = inputField.value.Length;
         }
 
+        private void CloseConsole()
+        {
+            SetVisibility(EConsoleVisibility.Hidden);
+        }
+
         private void ExecuteCurrentCommand()
         {
             string command = inputField.value.Trim();
@@ -504,15 +554,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             historyIndex = -1;
             RefreshHistory();
             RefreshSuggestions();
-
-            if (currentVisibility == EConsoleVisibility.Mini)
-            {
-                SetVisibility(EConsoleVisibility.Hidden);
-            }
-            else
-            {
-                inputField.Focus();
-            }
+            SetVisibility(EConsoleVisibility.Hidden);
         }
 
         private void SetInputValue(string command)

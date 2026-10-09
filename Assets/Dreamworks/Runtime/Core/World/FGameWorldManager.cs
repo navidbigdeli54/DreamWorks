@@ -3,10 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {
@@ -134,7 +135,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
         private IGameWorld CreateNewGameWorld(TSubclassOf<IGameWorld> gameWorldClass)
         {
-            ILogProvider worldLogProvider = new FScopedLogger(new FLogCategory(gameWorldClass.Type.Name, ELogVerbosity.Display));
+            ILogProvider worldLogProvider = new FScopedLogProvider(new FLogCategory(gameWorldClass.Type.Name, ELogVerbosity.Display));
 
             object[] constructorArguments = { worldLogProvider, gameInstance, defaultGameModeSettings };
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
@@ -15,12 +15,18 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         private readonly IConsoleVariableRepository variableRepository;
         #endregion
 
+        #region Properties
+        public static IDeveloperConsole Instance { get; private set; }
+        #endregion
+
         #region Constructors
         /// <summary>
         /// Creates the developer console facade from its method and variable repositories.
         /// </summary>
         public FDeveloperConsole(IConsoleMethodRepository methodRepository, IConsoleVariableRepository variableRepository)
         {
+            Instance = this;
+
             this.methodRepository = methodRepository;
 
             this.variableRepository = variableRepository;

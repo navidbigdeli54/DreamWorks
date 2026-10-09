@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 {

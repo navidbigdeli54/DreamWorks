@@ -6,7 +6,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
     {
         public static FSubSystemSettings GetConsoleSubSystemSetting()
         {
-            return new FSubSystemSettings(typeof(FConsoleSubSystem));
+            return new FSubSystemSettings(typeof(FConsoleBootstrapper));
         }
     }
 }

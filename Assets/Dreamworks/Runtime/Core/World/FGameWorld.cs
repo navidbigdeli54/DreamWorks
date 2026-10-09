@@ -3,13 +3,14 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.World.SubSystems;
 using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {
@@ -261,28 +262,28 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #region Private Methods
         private void CreateTickManager()
         {
-            FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FTickManager), ELogVerbosity.Display));
+            FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory(nameof(FTickManager), ELogVerbosity.Display));
 
             TickManager = new FTickManager(this, scopedLogger);
         }
 
         private void CreateComponentManager(FTickManager tickManager)
         {
-            FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FComponentManager), ELogVerbosity.Display));
+            FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory(nameof(FComponentManager), ELogVerbosity.Display));
 
             ComponentManager = new FComponentManager(this, tickManager, scopedLogger);
         }
 
         private void CreateSpawnManager(FComponentManager componentManager)
         {
-            FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FSpawnManager), ELogVerbosity.Display));
+            FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory(nameof(FSpawnManager), ELogVerbosity.Display));
 
             SpawnManager = new FSpawnManager(this, componentManager, scopedLogger);
         }
 
         private void CreateGameWorldSubSystemCollection()
         {
-            FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory("GameWorldSubSystem", ELogVerbosity.Display));
+            FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory("GameWorldSubSystem", ELogVerbosity.Display));
 
             subSystems = new FGameWorldSubSystemCollection(this, scopedLogger);
         }
@@ -342,7 +343,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 GameInstance,
                 this,
                 gameModeSettings,
-                new FScopedLogger(new FLogCategory(gameModeSettings.GameModeClass.Type.Name, ELogVerbosity.Display))
+                new FScopedLogProvider(new FLogCategory(gameModeSettings.GameModeClass.Type.Name, ELogVerbosity.Display))
             };
 
             return gameModeSettings.GameModeClass.Construct(constructorArguments);

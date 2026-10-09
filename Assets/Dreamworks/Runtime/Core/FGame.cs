@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using Unity.Scripting.LifecycleManagement;
-using DreamMachineGameStudio.DreamWorks.Log;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
@@ -63,7 +64,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             TSubclassOf<IGameInstance> gameInstanceClass = settings.GameInstanceClass;
 
             object[] constructorArguments = {
-                new FScopedLogger(new FLogCategory($"{gameInstanceClass.Type.Name}", ELogVerbosity.Display)),
+                new FScopedLogProvider(new FLogCategory($"{gameInstanceClass.Type.Name}", ELogVerbosity.Display)),
                 settings.GameWorldClass,
                 settings.GameModeSettings
             };

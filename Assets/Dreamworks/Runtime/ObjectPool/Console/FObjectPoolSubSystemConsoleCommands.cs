@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core;
 using DreamMachineGameStudio.DreamWorks.ObjectPool.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 
 namespace DreamMachineGameStudio.DreamWorks.ObjectPool.Console
 {
@@ -24,7 +25,7 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool.Console
                 result += $"Pool: {pool.Prefab.GameObject.name}, Available: {pool.AvailableCount}, Active: {pool.ActiveCount}, Total: {pool.TotalCount} \n";
             }
 
-            ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(IObjectPoolSubSystem), ELogVerbosity.Display));
+            ILogProvider logProvider = new FScopedLogProvider(new FLogCategory(nameof(IObjectPoolSubSystem), ELogVerbosity.Display));
 
             logProvider.Log(result);
 

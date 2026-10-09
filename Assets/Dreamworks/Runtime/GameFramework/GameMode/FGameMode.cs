@@ -9,7 +9,8 @@ using DreamMachineGameStudio.DreamWorks.GameFramework.HUD;
 using DreamMachineGameStudio.DreamWorks.GameFramework.Pawn;
 using DreamMachineGameStudio.DreamWorks.GameFramework.Controller;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
 {
@@ -51,7 +52,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(InitGameAsync)}. exception: {exception}");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(InitGameAsync)}.");
             }
         }
 
@@ -67,7 +68,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(StartPlayAsync)}. exception: {exception}");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(StartPlayAsync)}.");
             }
         }
 
@@ -79,7 +80,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(Tick)}. exception: {exception}");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(Tick)}.");
             }
         }
 
@@ -93,7 +94,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
             catch (Exception exception)
             {
-                LogProvider.LogError($"An exception thrown when calling {GetType().Name}:{nameof(EndPlayAsync)}. exception: {exception}");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(EndPlayAsync)}.");
             }
         }
         #endregion

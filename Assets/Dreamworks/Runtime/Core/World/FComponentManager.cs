@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
 {

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistence
 {
@@ -17,18 +18,14 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistenc
     internal class FConsoleCommandHistoryPersistence : IDeveloperConsoleInitializer
     {
         #region Fields
-        private readonly ILogProvider logProvider;
-
         private readonly FConsoleCommandHistoryRepository repository;
 
         private readonly string filePath;
         #endregion
 
         #region Constructors
-        public FConsoleCommandHistoryPersistence(ILogProvider logProvider, FConsoleCommandHistoryRepository repository, string fileName)
+        public FConsoleCommandHistoryPersistence(FConsoleCommandHistoryRepository repository, string fileName)
         {
-            this.logProvider = logProvider;
-
             this.repository = repository;
 
             this.filePath = Path.Combine(UnityEngine.Application.persistentDataPath, "DreamWorks", "Console", fileName); ;
@@ -55,46 +52,28 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistenc
                 return;
             }
 
-            try
+            string strigifiedJson = File.ReadAllText(filePath);
+
+            if (string.IsNullOrEmpty(strigifiedJson))
             {
-                string strigifiedJson = File.ReadAllText(filePath);
-
-                if (string.IsNullOrEmpty(strigifiedJson))
-                {
-                    return;
-                }
-
-                ((IJsonDeserializable)repository).FromJson(FJsonNode.Parse(strigifiedJson) as FJsonObject);
-
-                logProvider.Log($"Console command history has been loaded.");
+                return;
             }
-            catch (Exception exception)
-            {
-                logProvider.LogError($"Failed to load console command history. {exception}");
-            }
+
+            ((IJsonDeserializable)repository).FromJson(FJsonNode.Parse(strigifiedJson) as FJsonObject);
         }
 
         private void Save()
         {
-            try
+            string directory = Path.GetDirectoryName(filePath);
+
+            if (!string.IsNullOrWhiteSpace(directory))
             {
-                string directory = Path.GetDirectoryName(filePath);
-
-                if (!string.IsNullOrWhiteSpace(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                string jsonString = ((IJsonSerializable)repository).ToJson().ToString();
-
-                File.WriteAllText(filePath, jsonString);
-
-                logProvider.Log($"Console command history has been saved.");
+                Directory.CreateDirectory(directory);
             }
-            catch (Exception exception)
-            {
-                logProvider.LogError($"Failed to save console command history.\n {exception}");
-            }
+
+            string jsonString = ((IJsonSerializable)repository).ToJson().ToString();
+
+            File.WriteAllText(filePath, jsonString);
         }
         #endregion
     }

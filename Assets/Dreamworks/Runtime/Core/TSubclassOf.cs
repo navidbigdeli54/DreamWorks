@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Log;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {

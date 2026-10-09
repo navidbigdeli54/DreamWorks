@@ -1,5 +1,5 @@
 ﻿using System;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.TaskScheduler;
 
 namespace DreamMachineGameStudio.Dreamworks.TaskScheduler

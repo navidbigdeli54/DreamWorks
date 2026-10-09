@@ -1,12 +1,13 @@
 using UnityEngine;
 using System.Threading.Tasks;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.World;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
 {
@@ -80,7 +81,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
         {
             logProvider.Log($"Creating {nameof(FGameInstanceSubSystemCollection)}.");
 
-            FScopedLogger subSystemLogProvider = new FScopedLogger(new FLogCategory("GameInstanceSubSystem", ELogVerbosity.Display));
+            FScopedLogProvider subSystemLogProvider = new FScopedLogProvider(new FLogCategory("GameInstanceSubSystem", ELogVerbosity.Display));
 
             subSystems = new FGameInstanceSubSystemCollection(this, subSystemLogProvider);
         }
@@ -94,7 +95,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
         {
             logProvider.Log($"Creating {nameof(FGameWorldManager)}.");
 
-            ILogProvider worldManagerLogProvider = new FScopedLogger(new FLogCategory($"{nameof(FGameWorldManager)}", ELogVerbosity.Display, Color.green));
+            ILogProvider worldManagerLogProvider = new FScopedLogProvider(new FLogCategory($"{nameof(FGameWorldManager)}", ELogVerbosity.Display, Color.green));
 
             gameWorldManager = new FGameWorldManager(worldManagerLogProvider, this, gameWorldClass, defaultGameModeSettings);
         }

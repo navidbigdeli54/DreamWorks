@@ -82,14 +82,15 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.ConsoleVariables
                 return;
             }
 
-            if (!TryGetDeveloperConsole(out IDeveloperConsole developerConsole))
+            if (FDeveloperConsole.Instance == null)
             {
                 statusLabel.text = "The developer console is not initialized.";
+
                 return;
             }
 
             string searchText = searchField.value;
-            IReadOnlyList<IConsoleVariable> variables = developerConsole.GetRegisteredVariables();
+            IReadOnlyList<IConsoleVariable> variables = FDeveloperConsole.Instance.GetRegisteredVariables();
             for (int index = 0; index < variables.Count; index++)
             {
                 IConsoleVariable variable = variables[index];
@@ -194,7 +195,7 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.ConsoleVariables
                 return;
             }
 
-            if (!TryGetDeveloperConsole(out IDeveloperConsole developerConsole))
+            if (FDeveloperConsole.Instance == null)
             {
                 if (runtimeRows.Count > 0)
                 {
@@ -204,7 +205,7 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.ConsoleVariables
                 return;
             }
 
-            if (runtimeRows.Count == 0 || HasVariableSetChanged(developerConsole))
+            if (runtimeRows.Count == 0 || HasVariableSetChanged(FDeveloperConsole.Instance))
             {
                 RebuildRows();
                 return;
@@ -243,26 +244,6 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.ConsoleVariables
             }
 
             return visibleIndex != runtimeRows.Count;
-        }
-
-        private static bool TryGetDeveloperConsole(out IDeveloperConsole developerConsole)
-        {
-            developerConsole = null;
-            if (FGame.Instance == null || FGame.Instance.GameInstance == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                FConsoleSubSystem consoleSubSystem = FGame.Instance.GameInstance.GetSubSystem<FConsoleSubSystem>();
-                developerConsole = consoleSubSystem?.DeveloperConsole;
-                return developerConsole != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         private static bool MatchesSearch(IConsoleVariable variable, string searchText)

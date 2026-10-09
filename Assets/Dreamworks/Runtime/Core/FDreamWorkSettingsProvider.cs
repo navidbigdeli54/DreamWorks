@@ -1,9 +1,10 @@
 using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Log;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Assets;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
@@ -12,7 +13,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #region Fields
         private static readonly IResourceKey SettingResourceKey = new FResourcesKey<UDreamWorksSettings>("DreamWorks/DA_DreamWorksSettings");
 
-        private static readonly ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(FDreamWorkSettingsProvider), ELogVerbosity.Display, Color.blue));
+        private static readonly ILogProvider logProvider = new FScopedLogProvider(new FLogCategory(nameof(FDreamWorkSettingsProvider), ELogVerbosity.Display, Color.blue));
         #endregion
 
         #region Properties

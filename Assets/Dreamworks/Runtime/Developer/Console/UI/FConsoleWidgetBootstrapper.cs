@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Reflection;
-using System.Collections;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 
@@ -10,17 +9,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
     public sealed class FConsoleWidgetBootstrapper : IDeveloperConsoleInitializer
     {
         #region Fields
-        private static readonly System.Type InputSystemKeyboardType = System.Type.GetType("UnityEngine.InputSystem.Keyboard, Unity.InputSystem");
-        private static readonly PropertyInfo InputSystemKeyboardCurrentProperty = InputSystemKeyboardType?.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
-        private static readonly PropertyInfo InputSystemBackquoteKeyProperty = InputSystemKeyboardType?.GetProperty("backquoteKey", BindingFlags.Public | BindingFlags.Instance);
-        private static readonly System.Type InputSystemTouchscreenType = System.Type.GetType("UnityEngine.InputSystem.Touchscreen, Unity.InputSystem");
-        private static readonly PropertyInfo InputSystemTouchscreenCurrentProperty = InputSystemTouchscreenType?.GetProperty("current", BindingFlags.Public | BindingFlags.Static);
-        private static readonly PropertyInfo InputSystemTouchesProperty = InputSystemTouchscreenType?.GetProperty("touches", BindingFlags.Public | BindingFlags.Instance);
-
-        private static PropertyInfo isPressedProperty;
-        private static PropertyInfo touchPressProperty;
-        private static PropertyInfo wasPressedThisFrameProperty;
-
         private UIDocument uiDocument;
 
         private GameObject documentObject;
@@ -44,12 +32,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
         #region IDeveloperConsoleInitializer Implementation
         void IDeveloperConsoleInitializer.Initialize()
         {
-            runtimePanelSettings = ScriptableObject.CreateInstance<PanelSettings>();
-            runtimePanelSettings.name = "RuntimeDeveloperConsolePanelSettings";
+            runtimePanelSettings = Resources.Load<PanelSettings>("DeveloperConsolePanelSettings");
+            if (runtimePanelSettings == null)
+            {
+                throw new System.InvalidOperationException("DeveloperConsolePanelSettings is missing from a Resources folder.");
+            }
+
             runtimePanelSettings.themeStyleSheet = Resources.Load<ThemeStyleSheet>("DeveloperConsoleTheme");
-            runtimePanelSettings.scaleMode = PanelScaleMode.ConstantPhysicalSize;
-            runtimePanelSettings.referenceDpi = 96f;
-            runtimePanelSettings.fallbackDpi = 96f;
 
             documentObject = new GameObject("DeveloperConsoleUIDocument");
             documentObject.SetActive(false);
@@ -73,10 +62,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
                 Object.Destroy(documentObject);
             }
 
-            if (runtimePanelSettings != null)
-            {
-                Object.Destroy(runtimePanelSettings);
-            }
+            runtimePanelSettings = null;
         }
         #endregion
 
@@ -111,57 +97,23 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
 #if ENABLE_INPUT_SYSTEM
         private bool WasInputSystemBackquotePressed()
         {
-            object keyboard = InputSystemKeyboardCurrentProperty?.GetValue(null);
-
-            if (keyboard == null)
-            {
-                return false;
-            }
-
-            object key = InputSystemBackquoteKeyProperty?.GetValue(keyboard);
-
-            if (key == null)
-            {
-                return false;
-            }
-
-            wasPressedThisFrameProperty ??= key.GetType().GetProperty("wasPressedThisFrame", BindingFlags.Public | BindingFlags.Instance);
-            return wasPressedThisFrameProperty?.GetValue(key) is bool wasPressed && wasPressed;
+            return Keyboard.current != null && Keyboard.current.backquoteKey.wasPressedThisFrame;
         }
 
         private void HandleInputSystemTouch()
         {
-            object touchscreen = InputSystemTouchscreenCurrentProperty?.GetValue(null);
-
+            Touchscreen touchscreen = Touchscreen.current;
             if (touchscreen == null)
             {
-                fourFingerGestureConsumed = false;
-                return;
-            }
-
-            object touchesObject = InputSystemTouchesProperty?.GetValue(touchscreen);
-
-            if (touchesObject is not IEnumerable touches)
-            {
-                fourFingerGestureConsumed = false;
+                HandleFourFingerState(0);
                 return;
             }
 
             int activeTouchCount = 0;
-
-            foreach (object touch in touches)
+            var touchControls = touchscreen.touches;
+            for (int i = 0; i < touchControls.Count; i++)
             {
-                touchPressProperty ??= touch.GetType().GetProperty("press", BindingFlags.Public | BindingFlags.Instance);
-                object press = touchPressProperty?.GetValue(touch);
-
-                if (press == null)
-                {
-                    continue;
-                }
-
-                isPressedProperty ??= press.GetType().GetProperty("isPressed", BindingFlags.Public | BindingFlags.Instance);
-
-                if (isPressedProperty?.GetValue(press) is bool isPressed && isPressed)
+                if (touchControls[i].press.isPressed)
                 {
                     activeTouchCount++;
                 }
@@ -187,7 +139,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.UI
             if (!fourFingerGestureConsumed)
             {
                 fourFingerGestureConsumed = true;
-                CycleVisibility();
+                ConsoleWidget.ToggleFullVisibility();
             }
         }
 

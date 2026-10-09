@@ -2,11 +2,9 @@ using System;
 using System.Linq;
 using System.Globalization;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Definitions;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence;
-using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
@@ -21,8 +19,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
     internal sealed class FConsoleVariableRepository : IConsoleVariableRepository, IDeveloperConsoleInitializer, IConsoleCommandQuery
     {
         #region Fields
-        private readonly ILogProvider logProvider;
-
         private readonly IConsoleVariableDefinitionProvider definitionProvider;
 
         private readonly IConsoleVariablePersistence persistence;
@@ -38,10 +34,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         /// <summary>
         /// Creates the runtime repository with definition and persistence dependencies.
         /// </summary>
-        public FConsoleVariableRepository(ILogProvider logProvider, IConsoleVariableDefinitionProvider definitionProvider, IConsoleVariablePersistence persistence)
+        public FConsoleVariableRepository(IConsoleVariableDefinitionProvider definitionProvider, IConsoleVariablePersistence persistence)
         {
-            this.logProvider = logProvider ?? FDefaultLogger.Instance;
-
             this.definitionProvider = definitionProvider;
 
             this.persistence = persistence;
@@ -74,8 +68,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
             {
                 SavePersistentValues();
             }
-
-            logProvider.Log($"\"{variableName}\" variable has been unregistered.");
         }
 
         bool IConsoleVariableRepository.TryGetVariable(string name, out IConsoleVariable variable)
@@ -124,8 +116,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
             RegisterDefinedVariables();
 
-            RestorePersistentValues();
-
             SubscribeToPersistentVariables();
 
             isInitialized = true;
@@ -171,7 +161,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         {
             if (variable == null || !FConsoleVariableDefinition.IsValidName(variable.Name))
             {
-                logProvider.LogError("Attempted to register a null variable or a variable with an invalid name.");
                 return null;
             }
 
@@ -180,14 +169,17 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
                 UnsubscribeFromVariable(existingVariable);
             }
 
+            if(persistence.TryGetValue(variable.Name, out string existedSavedValue))
+            {
+                variable.TrySetValue(existedSavedValue);
+            }
+
             registeredVariables[variable.Name] = variable;
 
             if (isInitialized)
             {
-                SubscribeToVariable(variable); SavePersistentValues();
+                SubscribeToVariable(variable);
             }
-
-            logProvider.Log($"\"{variable.Name}\" variable has been registered.");
 
             return variable;
         }
@@ -206,15 +198,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
                 FConsoleVariableDefinition definition = definitions[index];
                 if (definition == null || !definition.TryGetDefaultValue(out object defaultValue))
                 {
-                    logProvider.LogError($"Skipped invalid console variable definition at index {index}.");
-
                     continue;
                 }
 
                 if (!definitionNames.Add(definition.Name))
                 {
-                    logProvider.LogError($"Skipped duplicate console variable definition '{definition.Name}'.");
-
                     continue;
                 }
 
@@ -230,19 +218,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
                 case EConsoleVariableType.String: RegisterVariable(new FConsoleVariable<string>(definition.Name, definition.Description, (string)defaultValue, definition.IsPersistent)); break;
                 case EConsoleVariableType.Float: RegisterVariable(new FConsoleVariable<float>(definition.Name, definition.Description, (float)defaultValue, definition.IsPersistent)); break;
                 case EConsoleVariableType.Integer: RegisterVariable(new FConsoleVariable<int>(definition.Name, definition.Description, (int)defaultValue, definition.IsPersistent)); break;
-                default: logProvider.LogError($"Skipped console variable '{definition.Name}' because its type is unsupported."); break;
-            }
-        }
-
-        private void RestorePersistentValues()
-        {
-            if (persistence == null) { return; }
-            foreach (IConsoleVariable variable in registeredVariables.Values)
-            {
-                if (variable.IsPersistent && persistence.TryGetValue(variable.Name, out string savedValue) && !variable.TrySetValue(savedValue))
-                {
-                    logProvider.LogError($"Ignored invalid saved value for console variable '{variable.Name}'.");
-                }
             }
         }
 
@@ -287,6 +262,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
             }
 
             List<FConsoleVariablePersistenceRecord> records = new();
+
             foreach (IConsoleVariable variable in registeredVariables.Values)
             {
                 if (variable.IsPersistent)

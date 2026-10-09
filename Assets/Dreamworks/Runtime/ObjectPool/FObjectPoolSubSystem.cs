@@ -2,12 +2,13 @@ using System;
 using UnityEngine;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.ObjectPool.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 
 namespace DreamMachineGameStudio.DreamWorks.ObjectPool
 {
@@ -24,7 +25,7 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
         #region Fields
         private CObjectPoolSubSystem rootComponent;
 
-        private readonly ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(FObjectPoolSubSystem), ELogVerbosity.Verbose));
+        private readonly ILogProvider logProvider = new FScopedLogProvider(new FLogCategory(nameof(FObjectPoolSubSystem), ELogVerbosity.Verbose));
 
         private readonly Dictionary<string, Transform> categoryParents = new(StringComparer.Ordinal);
         #endregion

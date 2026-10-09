@@ -1,6 +1,7 @@
 ﻿using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UObject = UnityEngine.Object;

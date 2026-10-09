@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
@@ -19,19 +17,13 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
     /// for methods annotated with the appropriate  attributes.</remarks>
     internal sealed class FConsoleMethodRepository : IConsoleMethodRepository, IDeveloperConsoleInitializer, IConsoleCommandQuery
     {
-        #region Fields
-        private readonly ILogProvider logProvider;
-        #endregion
-
         #region Properties
         internal Dictionary<string, IConsoleMethod> RegisteredMethods { get; private set; }
         #endregion
 
         #region Constructors
-        internal FConsoleMethodRepository(ILogProvider logProvider)
+        internal FConsoleMethodRepository()
         {
-            this.logProvider = logProvider ?? FDefaultLogger.Instance;
-
             RegisteredMethods = new Dictionary<string, IConsoleMethod>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
@@ -87,21 +79,15 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         {
             if (method == null)
             {
-                logProvider.LogError("Attempted to register a null command.");
-
                 return;
             }
 
             RegisteredMethods[method.Name] = method;
-
-            logProvider.Log($"\"{method.Name}\" command has been registered.");
         }
 
         private void UnregisterMethod(string name)
         {
             RegisteredMethods.Remove(name);
-
-            logProvider.Log($"\"{name}\" command has been unregistered.");
         }
 
         private void DiscoverStaticCommands()

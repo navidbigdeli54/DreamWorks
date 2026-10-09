@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
-using DreamMachineGameStudio.DreamWorks.Log;
+using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.UI;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Output;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
-using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Definitions;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence;
@@ -21,12 +22,14 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         Experimental = false,
         Advanced = false,
         Keywords = "console cvar command debug runtime shell")]
-    public sealed class FConsoleSubSystem : FGameInstanceSubSystem
+    public sealed class FConsoleBootstrapper
     {
         #region Fields
         private readonly IConsoleMethodRepository methodRepository;
 
         private readonly IConsoleVariableRepository variableRepository;
+
+        private readonly IDeveloperConsole developerConsole;
 
         private readonly IConsoleCommandActivator commandActivator;
 
@@ -40,51 +43,40 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         #endregion
 
         #region Properties
-        /// <summary>
-        /// Gets the gameplay-facing developer console API.
-        /// </summary>
-        public IDeveloperConsole DeveloperConsole { get; }
-
-        /// <summary>
-        /// Indicates that this subsystem receives per-frame updates.
-        /// </summary>
-        public override bool CanTick => true;
+        internal static FConsoleBootstrapper Instance { get; private set; }
         #endregion
 
         #region Constructors
-        /// <summary>
-        /// Creates the console subsystem and its runtime services.
-        /// </summary>
-        public FConsoleSubSystem(IGameInstance gameInstance) : base(gameInstance)
+        public FConsoleBootstrapper()
         {
-            FScopedLogger scopedLogger = new(new FLogCategory(nameof(FConsoleSubSystem), ELogVerbosity.Verbose));
+            Instance = this;
 
-            methodRepository = new FConsoleMethodRepository(scopedLogger);
+            methodRepository = new FConsoleMethodRepository();
 
-            IConsoleVariablePersistence variablePersistence = new FConsoleVariablePersistence(scopedLogger, "variables.bin");
+            IConsoleVariablePersistence variablePersistence = new FConsoleVariablePersistence("variables.bin");
 
             IConsoleVariableDefinitionProvider definitionProvider = new FConsoleVariableDefinitionResourcesProvider();
 
-            variableRepository = new FConsoleVariableRepository(scopedLogger, definitionProvider, variablePersistence);
+            variableRepository = new FConsoleVariableRepository(definitionProvider, variablePersistence);
 
-            DeveloperConsole = new FDeveloperConsole(methodRepository, variableRepository);
+            developerConsole = new FDeveloperConsole(methodRepository, variableRepository);
 
             commandActivator = new FConsoleCommandActivator(methodRepository, variableRepository);
 
             commandQuery = new FConsoleCommandQuery(methodRepository as IConsoleCommandQuery, variableRepository as IConsoleCommandQuery);
 
-            commandHistory = new FConsoleCommandHistory(scopedLogger, commandActivator, 255, "commands.bin");
+            commandHistory = new FConsoleCommandHistory(commandActivator, 255, "commands.bin");
 
-            commandOutputBuffer = new FConsoleCommandOutputBuffer(scopedLogger, commandActivator);
+            commandOutputBuffer = new FConsoleCommandOutputBuffer(commandActivator);
 
             widgetBootstrapper = new FConsoleWidgetBootstrapper(commandQuery, commandOutputBuffer, commandHistory);
         }
         #endregion
 
-        #region Protected Methods
-        protected override Task InitializeAsync()
+        #region IDreamWorksObject Implementation
+        internal void Initialize()
         {
-            if (DeveloperConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
+            if (developerConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
             {
                 developerConsoleInitializer.Initialize();
             }
@@ -105,17 +97,14 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             }
 
             widgetBootstrapper.ConsoleWidget.OnCommandEntered += OnCommandEntered;
-
-            return Task.CompletedTask;
         }
 
-        protected override void Tick(float deltaTime)
+        internal void Tick(FFrameContext frameContext)
         {
-            widgetBootstrapper.Tick(deltaTime);
+            widgetBootstrapper.Tick(frameContext.DeltaTime);
         }
 
-
-        protected override Task ShutDownAsync()
+        internal void ShutDown()
         {
             widgetBootstrapper.ConsoleWidget.OnCommandEntered -= OnCommandEntered;
 
@@ -134,12 +123,10 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
                 commandHistoryInitializer.ShutDown();
             }
 
-            if (DeveloperConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
+            if (developerConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
             {
                 developerConsoleInitializer.ShutDown();
             }
-
-            return Task.CompletedTask;
         }
         #endregion
 

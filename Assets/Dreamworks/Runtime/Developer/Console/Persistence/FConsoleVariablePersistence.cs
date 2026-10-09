@@ -1,9 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Serialization.Json.Abstraction;
 
@@ -15,8 +13,6 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence
     internal sealed class FConsoleVariablePersistence : IConsoleVariablePersistence
     {
         #region Fields
-        private readonly ILogProvider logProvider;
-
         private readonly string filePath;
 
         private readonly FConsoleVariablePersistenceRepository repository;
@@ -26,10 +22,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence
         /// <summary>
         /// Creates persistence backed by a file in Unity's per-user persistent data directory.
         /// </summary>
-        public FConsoleVariablePersistence(ILogProvider logProvider, string fileName)
+        public FConsoleVariablePersistence(string fileName)
         {
-            this.logProvider = logProvider ?? FDefaultLogger.Instance;
-
             filePath = Path.Combine(UnityEngine.Application.persistentDataPath, "DreamWorks", "Console", fileName);
 
             repository = new FConsoleVariablePersistenceRepository();
@@ -44,22 +38,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence
                 return;
             }
 
-            try
+            string json = File.ReadAllText(filePath);
+
+            if (!string.IsNullOrWhiteSpace(json))
             {
-                string json = File.ReadAllText(filePath);
-
-                if (!string.IsNullOrWhiteSpace(json))
-                {
-                    ((IJsonDeserializable)repository).FromJson(FJsonNode.Parse(json) as FJsonObject);
-                }
-
-                logProvider.Log("Console variable values have been loaded.");
-            }
-            catch (Exception exception)
-            {
-                repository.Records.Clear();
-
-                logProvider.LogError($"Failed to load console variable values. {exception}");
+                ((IJsonDeserializable)repository).FromJson(FJsonNode.Parse(json) as FJsonObject);
             }
         }
 
@@ -81,27 +64,20 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence
 
         void IConsoleVariablePersistence.Save(IReadOnlyList<FConsoleVariablePersistenceRecord> records)
         {
-            try
+            repository.Records.Clear();
+
+            for (int index = 0; index < records.Count; index++)
             {
-                repository.Records.Clear();
-
-                for (int index = 0; index < records.Count; index++)
-                {
-                    repository.Records.Add(records[index]);
-                }
-
-                string directory = Path.GetDirectoryName(filePath);
-                if (!string.IsNullOrWhiteSpace(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-
-                File.WriteAllText(filePath, ((IJsonSerializable)repository).ToJson().ToString());
+                repository.Records.Add(records[index]);
             }
-            catch (Exception exception)
+
+            string directory = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrWhiteSpace(directory))
             {
-                logProvider.LogError($"Failed to save console variable values. {exception}");
+                Directory.CreateDirectory(directory);
             }
+
+            File.WriteAllText(filePath, ((IJsonSerializable)repository).ToJson().ToString());
         }
         #endregion
     }

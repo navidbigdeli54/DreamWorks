@@ -1,3 +1,5 @@
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction
 {
     /// <summary>

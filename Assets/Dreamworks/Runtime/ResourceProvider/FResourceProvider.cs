@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.Extensions;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.ResourceProvider
 {

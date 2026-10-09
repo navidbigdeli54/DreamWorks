@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.Dreamworks.TaskScheduler;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.TaskScheduler.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
 
 namespace DreamMachineGameStudio.DreamWorks.TaskScheduler
 {
@@ -25,7 +26,7 @@ namespace DreamMachineGameStudio.DreamWorks.TaskScheduler
 
         private readonly List<FTaskDefinitionBase> scheduledTasks = new List<FTaskDefinitionBase>(50);
 
-        private readonly FScopedLogger scopedLogger = new FScopedLogger(new FLogCategory(nameof(FTaskSchdulerSubSystem), ELogVerbosity.Verbose));
+        private readonly FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory(nameof(FTaskSchdulerSubSystem), ELogVerbosity.Verbose));
         #endregion
 
         #region Properties

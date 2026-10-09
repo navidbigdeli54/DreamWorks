@@ -1,14 +1,14 @@
 using UnityEngine;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Log;
 using DreamMachineGameStudio.DreamWorks.Core.Assets;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LoggProvider;
 using DreamMachineGameStudio.DreamWorks.ResourceProvider;
-using DreamMachineGameStudio.DreamWorks.ResourceProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.Logger;
+using DreamMachineGameStudio.DreamWorks.ResourceProvider.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Core
 {
@@ -17,7 +17,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #region Fields
         private static readonly IResourceKey SettingResourceKey = new FResourcesKey<UDreamWorksSettings>("DreamWorks/DA_SubSystemRegistery");
 
-        private static readonly ILogProvider logProvider = new FScopedLogger(new FLogCategory(nameof(FDreamWorkSettingsProvider), ELogVerbosity.Display, Color.blue));
+        private static readonly ILogProvider logProvider = new FScopedLogProvider(new FLogCategory(nameof(FDreamWorkSettingsProvider), ELogVerbosity.Display, Color.blue));
 
         private static USubSystemRegistery registery;
         #endregion

@@ -53,9 +53,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         #region Private Methods
         private static IDeveloperConsole GetDeveloperConsole()
         {
-            FGame game = FGame.Instance;
-            if (game?.GameInstance == null) { return null; }
-            return game.GameInstance.GetSubSystem<FConsoleSubSystem>()?.DeveloperConsole;
+            return FDeveloperConsole.Instance;
         }
         #endregion
     }
