@@ -48,13 +48,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #endregion
 
         #region IDreamWorksObject Implementation
-        Task IDreamWorksObject.InitializeAsync()
+        void IDreamWorksObject.Initialize()
         {
             logProvider.Log("Initializing.");
 
             SubscribeToSceneManager();
-
-            return Task.CompletedTask;
         }
 
         void IDreamWorksObject.Tick(FFrameContext frameContext)
@@ -62,13 +60,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             TickGameWorlds(frameContext);
         }
 
-        async Task IDreamWorksObject.ShutDownAsync()
+        void IDreamWorksObject.ShutDown()
         {
             logProvider.Log("Shutting Down.");
 
             UnsubscribeToSceneManager();
 
-            await ShutDownGameWorlds();
+            ShutDownGameWorlds();
         }
         #endregion
 
@@ -84,7 +82,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             }
         }
 
-        private async void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
+        private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
         {
             logProvider.Log($"Scene {scene.name} is loaded as {(sceneMode == LoadSceneMode.Single ? "Single" : "Additive")}.");
 
@@ -116,7 +114,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             if (isNewWorld)
             {
-                await ((IDreamWorksObject)gameWorld).InitializeAsync();
+                ((IDreamWorksObject)gameWorld).Initialize();
 
                 OnWorldInitialized?.Invoke(gameWorld);
             }
@@ -150,7 +148,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             return gameWorld;
         }
 
-        private async void OnSceneAboutToUnload(Scene scene)
+        private void OnSceneAboutToUnload(Scene scene)
         {
             logProvider.Log($"Scene {scene.name} is unloaded.");
 
@@ -168,7 +166,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
                 OnWorldShutDown?.Invoke(gameWorld);
 
-                await ((IDreamWorksObject)gameWorld).ShutDownAsync();
+                ((IDreamWorksObject)gameWorld).ShutDown();
             }
         }
 
@@ -193,11 +191,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             }
         }
 
-        private async Task ShutDownGameWorlds()
+        private void ShutDownGameWorlds()
         {
             for (int i = existedGameWorlds.Count - 1; i >= 0; --i)
             {
-                await ((IDreamWorksObject)existedGameWorlds[i]).ShutDownAsync();
+                ((IDreamWorksObject)existedGameWorlds[i]).ShutDown();
             }
 
             existedGameWorlds.Clear();

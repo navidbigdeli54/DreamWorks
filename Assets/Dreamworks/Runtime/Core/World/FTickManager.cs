@@ -88,11 +88,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
                         if (tickable.TickSetting.TickInterval > 0)
                         {
-                            tickable.TickState.AccumulatedTime += tickable.TickSetting.TickInterval;
+                            tickable.TickState.AccumulatedTime += context.DeltaTime;
 
                             while (tickable.TickState.AccumulatedTime >= tickable.TickSetting.TickInterval)
                             {
-                                tickable.TickState.AccumulatedTime -= deltaTime;
+                                tickable.TickState.AccumulatedTime -= tickable.TickSetting.TickInterval;
 
                                 tickable.Tick(deltaTime);
                             }

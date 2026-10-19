@@ -45,7 +45,7 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
         {
             ownerPool = objectPool;
 
-            Initialize();
+            OnInitialize();
         }
 
         void IPoolableObject.OnAcquire()
@@ -80,7 +80,7 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
         #endregion
 
         #region Protected Methods
-        protected void Initialize()
+        protected virtual void OnInitialize()
         {
 
         }

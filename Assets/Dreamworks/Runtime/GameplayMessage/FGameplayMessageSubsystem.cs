@@ -1,10 +1,9 @@
 using System;
-using System.Threading.Tasks;
+using DreamMachineGameStudio.DreamWorks.GameplayTags;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.GameplayMessage.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
-using DreamMachineGameStudio.DreamWorks.GameplayTags;
 
 namespace DreamMachineGameStudio.DreamWorks.GameplayMessage
 {
@@ -34,9 +33,9 @@ namespace DreamMachineGameStudio.DreamWorks.GameplayMessage
         }
         #endregion
 
-        protected override async Task ShutDownAsync()
+        protected override void ShutDown()
         {
-            await base.ShutDownAsync();
+            base.ShutDown();
 
             MessageRouter.Clear();
         }

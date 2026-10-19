@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
@@ -14,8 +13,25 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         public IGame Game { get; private set; }
         #endregion
 
-        #region MonoBehaviour Methods
-        private async void Awake()
+        #region Public Methods
+        public void Initialize()
+        {
+            Internal_Initialize();
+        }
+
+        public void Tick()
+        {
+            Internal_Tick();
+        }
+
+        public void ShutDown()
+        {
+            Internal_ShutDown();
+        }
+        #endregion
+
+        #region Private Methods
+        private void Internal_Initialize()
         {
             DontDestroyOnLoad(gameObject);
 
@@ -25,21 +41,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core
 
             LoadSubSystemRegistry();
 
-            await InitializeAsync();
+            CreateAndInitializeGame();
         }
 
-        private void Update()
-        {
-            Tick();
-        }
-
-        private async void OnDestroy()
-        {
-            await ShutDownAsync();
-        }
-        #endregion
-
-        #region Private Methods
         private void OverrideSceneManagerAPI()
         {
             SceneManagerAPI.overrideAPI = new DreamWorkSceneManagerAPI();
@@ -55,21 +59,16 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             FSubSystemRegisteryProvider.Load();
         }
 
-        private async Task InitializeAsync()
-        {
-            await CreateAndInitializeGameAsync();
-        }
-
-        private async Task CreateAndInitializeGameAsync()
+        private void CreateAndInitializeGame()
         {
             ILogProvider gameLogProvider = new FScopedLogProvider(new FLogCategory(nameof(FGame), ELogVerbosity.Display, Color.blue));
 
             Game = new FGame(FDreamWorkSettingsProvider.Settings, gameLogProvider);
 
-            await ((IDreamWorksObject)Game).InitializeAsync();
+            ((IDreamWorksObject)Game).Initialize();
         }
 
-        private void Tick()
+        private void Internal_Tick()
         {
             if (Game == null)
             {
@@ -83,14 +82,14 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             ((IDreamWorksObject)Game).Tick(context);
         }
 
-        private async Task ShutDownAsync()
+        private void Internal_ShutDown()
         {
             if (Game == null)
             {
                 return;
             }
 
-            await ((IDreamWorksObject)Game).ShutDownAsync();
+            ((IDreamWorksObject)Game).ShutDown();
         }
         #endregion
     }

@@ -14,6 +14,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core
 
         public static event Action<Scene> OnSceneUnloaded;
 
+        protected internal DreamWorkSceneManagerAPI()
+        {
+            SceneManager.sceneLoaded += (scene, loadMode) => OnSceneLoaded?.Invoke(scene, loadMode);
+
+            SceneManager.sceneUnloaded += (scene) => OnSceneUnloaded?.Invoke(scene);
+        }
+
         protected override AsyncOperation LoadSceneAsyncByNameOrIndex(string sceneName, int sceneBuildIndex, LoadSceneParameters parameters, bool mustCompleteNextFrame)
         {
             if (parameters.loadSceneMode == LoadSceneMode.Single)
@@ -27,18 +34,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core
 
             AsyncOperation sceneLoadOperation = base.LoadSceneAsyncByNameOrIndex(sceneName, sceneBuildIndex, parameters, mustCompleteNextFrame);
 
-            void OnSceneLoadCompleted(AsyncOperation operation)
-            {
-                operation.completed-= OnSceneLoadCompleted;
-
-                Scene scene = SceneManager.GetSceneByName(sceneName);
-                LoadSceneMode loadMode = parameters.loadSceneMode;
-
-                OnSceneLoaded?.Invoke(scene, loadMode);
-            }
-
-            sceneLoadOperation.completed += OnSceneLoadCompleted;
-
             return sceneLoadOperation;
         }
 
@@ -49,15 +44,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             OnSceneAboutToUnload?.Invoke(scene);
 
             AsyncOperation sceneUnloadOperation = base.UnloadSceneAsyncByNameOrIndex(sceneName, sceneBuildIndex, immediately, options, out outSuccess);
-
-            void OnSceneUnloadCompleted(AsyncOperation operation)
-            {
-                operation.completed -= OnSceneUnloadCompleted;
-
-                OnSceneUnloaded?.Invoke(scene);
-            }
-
-            sceneUnloadOperation.completed += OnSceneUnloadCompleted;
 
             return sceneUnloadOperation;
         }

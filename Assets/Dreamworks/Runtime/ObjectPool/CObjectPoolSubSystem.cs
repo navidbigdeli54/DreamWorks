@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.GameFramework;
 
 namespace DreamMachineGameStudio.DreamWorks.ObjectPool
@@ -6,9 +5,9 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
     public class CObjectPoolSubSystem : CGameFrameworkComponent
     {
         #region Protected Methods
-        protected override async Task PreInitializeAsync()
+        protected override void PreInitialize()
         {
-            await base.PreInitializeAsync();
+            base.PreInitialize();
 
             DontDestroyOnLoad(this);
         }

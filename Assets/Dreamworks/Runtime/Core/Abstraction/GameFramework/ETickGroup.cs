@@ -2,22 +2,22 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework
 {
     public enum ETickGroup : byte
     {
-        None,
+        None = 0,
 
-        Input,
+        Input = 1,
 
-        PrePhysic,
+        PrePhysic = 2,
 
-        Physic,
+        Physic = 3,
 
-        PostPhysic,
+        PostPhysic = 4,
 
-        Animation,
+        Animation = 5,
 
-        Gameplay,
+        Gameplay = 5,
 
-        PostTick,
+        PostTick = 6,
 
-        Max
+        Max = 7
     }
 }

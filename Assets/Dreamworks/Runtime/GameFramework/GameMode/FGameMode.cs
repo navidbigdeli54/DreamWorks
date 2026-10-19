@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.Extensions;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
@@ -40,7 +39,7 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
         #endregion
 
         #region IGameMode Implementation
-        async Task IGameMode.InitGameAsync(IGameWorld gameWorld, string sceneName)
+        void IGameMode.InitGame(IGameWorld gameWorld, string sceneName)
         {
             LogProvider.Log($"InitGame: {sceneName}");
 
@@ -48,15 +47,15 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
 
             try
             {
-                await InitGameAsync(gameWorld, sceneName);
+                InitGame(gameWorld, sceneName);
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(InitGameAsync)}.");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(InitGame)}.");
             }
         }
 
-        async Task IGameMode.StartPlayAsync()
+        void IGameMode.StartPlay()
         {
             LogProvider.Log("StartPlay");
 
@@ -64,11 +63,11 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
 
             try
             {
-                await StartPlayAsync();
+                StartPlay();
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(StartPlayAsync)}.");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(StartPlay)}.");
             }
         }
 
@@ -84,30 +83,30 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
             }
         }
 
-        async Task IGameMode.EndPlayAsync()
+        void IGameMode.EndPlay()
         {
             LogProvider.Log("EndPlay");
 
             try
             {
-                await EndPlayAsync();
+                EndPlay();
             }
             catch (Exception exception)
             {
-                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(EndPlayAsync)}.");
+                LogProvider.LogError(exception, $"An exception thrown when calling {GetType().Name}:{nameof(EndPlay)}.");
             }
         }
         #endregion
 
         #region Protected Methods
-        protected virtual Task InitGameAsync(IGameWorld gameWorld, string sceneName)
+        protected virtual void InitGame(IGameWorld gameWorld, string sceneName)
         {
-            return Task.CompletedTask;
+
         }
 
-        protected virtual Task StartPlayAsync()
+        protected virtual void StartPlay()
         {
-            return Task.CompletedTask;
+
         }
 
         protected virtual void Tick(float deltaTime)
@@ -115,9 +114,9 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework.GameMode
 
         }
 
-        protected virtual Task EndPlayAsync()
+        protected virtual void EndPlay()
         {
-            return Task.CompletedTask;
+            
         }
 
         protected virtual void CreateLocalPlayer()

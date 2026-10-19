@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
@@ -33,28 +32,28 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #endregion
 
         #region Public Methods
-        public async Task InitializeAsync()
+        public void Initialize()
         {
-            await InternalPreInitializeAsync();
+            InternalPreInitialize();
 
-            await InternalInitializeAsync();
+            InternalInitialize();
 
-            await InternalPostInitializeAsync();
+            InternalPostInitialize();
         }
 
-        public async Task BeginPlayAsync()
+        public void BeginPlay()
         {
-            await InternalBeginPlayAsync();
+            InternalBeginPlay();
         }
 
-        public async Task EndPlayAsync()
+        public void EndPlay()
         {
-            await InternalEndPlayAsync();
+            InternalEndPlay();
         }
 
-        public async Task UninitializeAsync()
+        public void Uninitialize()
         {
-            await InternalUninitializeAsync();
+            InternalUninitialize();
         }
 
         public void RegisterScene(Scene scene)
@@ -154,7 +153,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #endregion
 
         #region Private Methods
-        private async Task InternalPreInitializeAsync()
+        private void InternalPreInitialize()
         {
             foreach (var pair in sceneToComponents)
             {
@@ -164,17 +163,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].PreInitializeAsync();
+                        components[i].PreInitialize();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PreInitializeAsync)}. exception: {exception}");
+                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PreInitialize)}. exception: {exception}");
                     }
                 }
             }
         }
 
-        private async Task InternalInitializeAsync()
+        private void InternalInitialize()
         {
             foreach (var pair in sceneToComponents)
             {
@@ -184,17 +183,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].InitializeAsync();
+                        components[i].Initialize();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.InitializeAsync)}. exception: {exception}");
+                        logProvider.LogError(exception, $"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.Initialize)}.");
                     }
                 }
             }
         }
 
-        private async Task InternalPostInitializeAsync()
+        private void InternalPostInitialize()
         {
             foreach (var pair in sceneToComponents)
             {
@@ -204,17 +203,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].PostInitializeAsync();
+                        components[i].PostInitialize();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PostInitializeAsync)}. exception: {exception}");
+                        logProvider.LogError(exception, $"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.PostInitialize)}.");
                     }
                 }
             }
         }
 
-        private async Task InternalBeginPlayAsync()
+        private void InternalBeginPlay()
         {
             foreach (var pair in sceneToComponents)
             {
@@ -224,19 +223,19 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].BeginPlayAsync();
+                        components[i].BeginPlay();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.BeginPlayAsync)}. exception: {exception}");
+                        logProvider.LogError(exception, $"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.BeginPlay)}.");
                     }
                 }
             }
         }
 
-        private async Task InternalEndPlayAsync()
+        private void InternalEndPlay()
         {
-            foreach (var pair in sceneToComponents)
+            foreach (KeyValuePair<Scene, List<IGameFrameworkComponent>> pair in sceneToComponents)
             {
                 List<IGameFrameworkComponent> components = pair.Value;
 
@@ -244,17 +243,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].EndPlayAsync();
+                        components[i].EndPlay();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.EndPlayAsync)}. exception: {exception}");
+                        logProvider.LogError(exception, $"An exception thrown when calling {nameof(IGameFrameworkInitializable.EndPlay)}.");
                     }
                 }
             }
         }
 
-        private async Task InternalUninitializeAsync()
+        private void InternalUninitialize()
         {
             foreach (var pair in sceneToComponents)
             {
@@ -264,11 +263,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 {
                     try
                     {
-                        await components[i].UninitializeAsync();
+                        components[i].Uninitialize();
                     }
                     catch (Exception exception)
                     {
-                        logProvider.LogError($"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.UninitializeAsync)}. exception: {exception}");
+                        logProvider.LogError(exception, $"An exception thrown when calling {components[i].GameObject.name}:{nameof(IGameFrameworkInitializable.Uninitialize)}.");
                     }
                 }
             }
@@ -299,29 +298,25 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             tickManager.Register(component);
 
-            Task initializatoinTask = InitializeComponentAsync(component, beginPlay);
-            if (!initializatoinTask.IsCompleted)
-            {
-                initializatoinTask.RunSynchronously();
-            }
+            InitializeComponent(component, beginPlay);
         }
 
-        private async Task InitializeComponentAsync(IGameFrameworkComponent component, bool beginPlay)
+        private void InitializeComponent(IGameFrameworkComponent component, bool beginPlay)
         {
             try
             {
-                await component.PreInitializeAsync();
-                await component.InitializeAsync();
-                await component.PostInitializeAsync();
+                component.PreInitialize();
+                component.Initialize();
+                component.PostInitialize();
 
                 if (beginPlay)
                 {
-                    await component.BeginPlayAsync();
+                    component.BeginPlay();
                 }
             }
             catch (Exception exception)
             {
-                logProvider.LogError(exception.ToString());
+                logProvider.LogError(exception);
             }
         }
 
@@ -339,27 +334,23 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             tickManager.Unregister(component);
 
-            Task shutdownTask = ShutdownComponentAsync(component, endPlay);
-            if (!shutdownTask.IsCompleted)
-            {
-                shutdownTask.RunSynchronously();
-            }
+            ShutdownComponent(component, endPlay);
         }
 
-        private async Task ShutdownComponentAsync(IGameFrameworkComponent component, bool endPlay)
+        private void ShutdownComponent(IGameFrameworkComponent component, bool endPlay)
         {
             try
             {
                 if (endPlay)
                 {
-                    await component.EndPlayAsync();
+                    component.EndPlay();
                 }
 
-                await component.UninitializeAsync();
+                component.Uninitialize();
             }
             catch (Exception exception)
             {
-                logProvider.LogError($"An exception thrown when calling {component.GameObject.name}:{nameof(IGameFrameworkInitializable.EndPlayAsync)}. exception: {exception}");
+                logProvider.LogError(exception, $"An exception thrown when calling {component.GameObject.name}:{nameof(IGameFrameworkInitializable.EndPlay)}.");
             }
         }
         #endregion

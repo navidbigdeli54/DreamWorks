@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.Core.World;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
@@ -47,13 +46,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
         #endregion
 
         #region IDreamWorksObject Implementation
-        async Task IDreamWorksObject.InitializeAsync()
+        void IDreamWorksObject.Initialize()
         {
             logProvider.Log($"Initializing.");
 
-            await InitializeSubSystemsAsync();
+            InitializeSubSystems();
 
-            await InitializeWorldManagerAsync();
+            InitializeWorldManager();
         }
 
         void IDreamWorksObject.Tick(FFrameContext frameContext)
@@ -63,13 +62,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
             TickWorldManager(frameContext);
         }
 
-        async Task IDreamWorksObject.ShutDownAsync()
+        void IDreamWorksObject.ShutDown()
         {
             logProvider.Log($"Shutting Down.");
 
-            await ShutDownSubSystemsAsync();
+            ShutDownSubSystems();
 
-            await ShutDownWorldManagerAsync();
+            ShutDownWorldManager();
 
             ClearGameInstanceSubSystemCollection();
         }
@@ -99,14 +98,14 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
             gameWorldManager = new FGameWorldManager(worldManagerLogProvider, this, gameWorldClass, defaultGameModeSettings);
         }
 
-        private async Task InitializeWorldManagerAsync()
+        private void InitializeWorldManager()
         {
-            await gameWorldManager.InitializeAsync();
+            gameWorldManager.Initialize();
         }
 
-        private async Task InitializeSubSystemsAsync()
+        private void InitializeSubSystems()
         {
-            await subSystems.InitializeAsync();
+            subSystems.Initialize();
         }
 
         private void TickSubSystems(FFrameContext frameContext)
@@ -124,19 +123,19 @@ namespace DreamMachineGameStudio.DreamWorks.Core.GameInstance
             gameWorldManager.Tick(frameContext);
         }
 
-        private async Task ShutDownWorldManagerAsync()
+        private void ShutDownWorldManager()
         {
             if (gameWorldManager == null)
             {
                 return;
             }
 
-            await gameWorldManager.ShutDownAsync();
+            gameWorldManager.ShutDown();
         }
 
-        private async Task ShutDownSubSystemsAsync()
+        private void ShutDownSubSystems()
         {
-            await subSystems.ShutDownAsync();
+            subSystems.ShutDown();
         }
         #endregion
     }

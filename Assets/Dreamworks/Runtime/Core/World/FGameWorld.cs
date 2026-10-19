@@ -1,14 +1,11 @@
 using System;
 using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.World.SubSystems;
 using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.World
@@ -25,8 +22,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         private readonly List<Scene> pendingScenes = new();
 
         private TSubclassOf<IGameMode> gameModeOverrideClass;
-
-        private ISubSystemCollection<FGameWorldSubSystem> subSystems;
         #endregion
 
         #region Properties
@@ -63,17 +58,10 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             CreateComponentManager(TickManager);
 
             CreateSpawnManager(ComponentManager);
-
-            CreateGameWorldSubSystemCollection();
         }
         #endregion
 
         #region IGameWorld Implementation
-        TSubSystem IGameWorld.GetSubSystem<TSubSystem>()
-        {
-            return subSystems.GetSubSystem<TSubSystem>();
-        }
-
         GameObject IGameWorld.SpawnGameObject(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             return SpawnManager.SpawnGameObject(prefab, position, rotation);
@@ -110,16 +98,14 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
         #endregion
 
         #region IDreamWorksObject Implementation
-        async Task IDreamWorksObject.InitializeAsync()
+        void IDreamWorksObject.Initialize()
         {
             if (IsInitialized)
             {
                 throw new InvalidOperationException("GameWorld is already initialized.");
             }
 
-            await InitializeSubSystemsAsync();
-
-            await InternalInitializeAsync();
+            InternalInitialize();
         }
 
         void IDreamWorksObject.Tick(FFrameContext frameContext)
@@ -129,19 +115,17 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 return;
             }
 
-            TickSubSystems(frameContext);
-
             InternalTick(frameContext);
         }
 
-        async Task IDreamWorksObject.ShutDownAsync()
+        void IDreamWorksObject.ShutDown()
         {
             if (!IsInitialized)
             {
                 return;
             }
 
-            await InternalShutDownAsync();
+            InternalShutDown();
         }
         #endregion
 
@@ -280,30 +264,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             SpawnManager = new FSpawnManager(this, componentManager, scopedLogger);
         }
 
-        private void CreateGameWorldSubSystemCollection()
-        {
-            FScopedLogProvider scopedLogger = new FScopedLogProvider(new FLogCategory("GameWorldSubSystem", ELogVerbosity.Display));
-
-            subSystems = new FGameWorldSubSystemCollection(this, scopedLogger);
-        }
-
-        private void ClearGameWorldSubSystemCollection()
-        {
-            subSystems.ClearSubSystems();
-        }
-
-        private async Task InitializeSubSystemsAsync()
-        {
-            await subSystems.InitializeAsync();
-        }
-
-        private async Task InternalInitializeAsync()
+        private void InternalInitialize()
         {
             logProvider.Log("Initializing.");
 
-            await SetupGameMode();
+            SetupGameMode();
 
-            await InitializeComponentManagerAsync();
+            InitializeComponentManager();
 
             IsInitialized = true;
 
@@ -311,10 +278,10 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
 
             OnCreated();
 
-            await BeginPlayAsync();
+            BeginPlay();
         }
 
-        private async Task SetupGameMode()
+        private void SetupGameMode()
         {
             GameMode = CreateGameMode();
 
@@ -323,7 +290,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 throw new InvalidOperationException($"Failed to create GameMode");
             }
 
-            await InitializeGameModeAsync();
+            InitializeGameMode();
         }
 
         private IGameMode CreateGameMode()
@@ -389,40 +356,35 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             return null;
         }
 
-        private async Task InitializeGameModeAsync()
+        private void InitializeGameMode()
         {
-            await GameMode.InitGameAsync(this, PrimaryScene.name);
+            GameMode.InitGame(this, PrimaryScene.name);
         }
 
-        private async Task InitializeComponentManagerAsync()
+        private void InitializeComponentManager()
         {
-            await ComponentManager.InitializeAsync();
+            ComponentManager.Initialize();
         }
 
-        private async Task BeginPlayAsync()
+        private void BeginPlay()
         {
             logProvider.Log("BeginPlay.");
 
-            await BeginPlayGameModeAsync();
+            BeginPlayGameMode();
 
-            await BeginPlayComponentManagerAsync();
+            BeginPlayComponentManager();
 
             HasBegunPlay = true;
         }
 
-        private async Task BeginPlayGameModeAsync()
+        private void BeginPlayGameMode()
         {
-            await GameMode.StartPlayAsync();
+            GameMode.StartPlay();
         }
 
-        private async Task BeginPlayComponentManagerAsync()
+        private void BeginPlayComponentManager()
         {
-            await ComponentManager.BeginPlayAsync();
-        }
-
-        private void TickSubSystems(FFrameContext frameContext)
-        {
-            subSystems.Tick(frameContext);
+            ComponentManager.BeginPlay();
         }
 
         private void InternalTick(FFrameContext frameContext)
@@ -432,36 +394,27 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
             TickManager.Tick(frameContext);
         }
 
-        private async Task InternalShutDownAsync()
+        private void InternalShutDown()
         {
             logProvider.Log("Shutdown GameWorld ...");
 
             IsShuttingDown = true;
 
-            await ShutDownSubSystemsAsync();
-
-            await InternalUninitializeAsync();
-
-            ClearGameWorldSubSystemCollection();
+            InternalUninitialize();
 
             IsShuttingDown = false;
         }
 
-        private async Task ShutDownSubSystemsAsync()
-        {
-            await subSystems.ShutDownAsync();
-        }
-
-        private async Task InternalUninitializeAsync()
+        private void InternalUninitialize()
         {
             if (HasBegunPlay)
             {
-                await ComponentManager.EndPlayAsync();
+                ComponentManager.EndPlay();
             }
 
-            await ComponentManager.UninitializeAsync();
+            ComponentManager.Uninitialize();
 
-            await GameMode.EndPlayAsync();
+            GameMode.EndPlay();
 
             OnDestroyed();
 

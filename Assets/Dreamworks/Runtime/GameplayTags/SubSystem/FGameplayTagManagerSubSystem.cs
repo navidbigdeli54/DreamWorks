@@ -39,9 +39,9 @@ namespace DreamMachineGameStudio.DreamWorks.GameplayTags
         #endregion
 
         #region SubSystem Methods
-        protected override async Task InitializeAsync()
+        protected override void Initialize()
         {
-            await base.InitializeAsync();
+            base.Initialize();
 
             IGameplayTagSource source = new FReflectionGameplayTagSource();
 
@@ -51,9 +51,9 @@ namespace DreamMachineGameStudio.DreamWorks.GameplayTags
             }
         }
 
-        protected override async Task ShutDownAsync()
+        protected override void ShutDown()
         {
-            await base.ShutDownAsync();
+            base.ShutDown();
 
             definitions.Clear();
 

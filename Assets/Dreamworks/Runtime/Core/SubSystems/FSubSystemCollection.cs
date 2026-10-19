@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
@@ -31,15 +30,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         #endregion
 
         #region ISubSystemCollection Implementation
-        async Task ISubSystemCollection<T>.InitializeAsync()
+        void ISubSystemCollection<T>.Initialize()
         {
             foreach (KeyValuePair<Type, ISubSystem> pair in registeredSubSystems)
             {
                 ISubSystem subSystem = pair.Value;
-                if (subSystem != null)
-                {
-                    await subSystem.InitializeAsync();
-                }
+
+                subSystem?.Initialize();
             }
         }
 
@@ -58,15 +55,13 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
             }
         }
 
-        async Task ISubSystemCollection<T>.ShutDownAsync()
+        void ISubSystemCollection<T>.ShutDown()
         {
             foreach (KeyValuePair<Type, ISubSystem> pair in registeredSubSystems)
             {
                 ISubSystem subSystem = pair.Value;
-                if (subSystem != null)
-                {
-                    await subSystem.ShutDownAsync();
-                }
+
+                subSystem?.ShutDown();
             }
         }
 

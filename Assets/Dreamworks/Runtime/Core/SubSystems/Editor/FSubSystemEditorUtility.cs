@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.World.SubSystems;
 using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
 
@@ -45,9 +44,6 @@ namespace DreamMachineGameStudio.DreamWorks.Editor.SubSystems
 
             if (typeof(FGameInstanceSubSystem).IsAssignableFrom(type))
                 tags += " | GameInstance";
-
-            if (typeof(FGameWorldSubSystem).IsAssignableFrom(type))
-                tags += " | GameWorld";
 
             return tags;
         }

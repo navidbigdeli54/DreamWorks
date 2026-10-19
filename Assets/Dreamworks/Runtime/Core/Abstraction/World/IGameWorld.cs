@@ -21,10 +21,6 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction
         IGameInstance GameInstance { get; }
         #endregion
 
-        #region SubSystem API
-        TSubSystem GetSubSystem<TSubSystem>();
-        #endregion
-
         #region Object API
         TComponent SpawnGameObject<TComponent>(TComponent prefab, Transform transform) where TComponent : UObject;
 

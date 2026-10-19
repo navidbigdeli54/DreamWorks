@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
 {
@@ -12,11 +11,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
         #endregion
 
         #region Methods
-        Task InitializeAsync();
+        void Initialize();
 
         void Tick(float deltaTime);
 
-        Task ShutDownAsync();
+        void ShutDown();
         #endregion
     }
 }

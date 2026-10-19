@@ -55,7 +55,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             }
             catch (Exception exception)
             {
-                FDefaultLogger.Instance.Log($"Encounter an error creating instance of {Type}: {exception}");
+                FDefaultLogger.Instance.LogError(exception, $"Encounter an error creating instance of {Type}");
 
                 return null;
             }

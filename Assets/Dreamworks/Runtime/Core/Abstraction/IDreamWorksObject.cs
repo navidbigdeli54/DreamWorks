@@ -1,15 +1,13 @@
-using System.Threading.Tasks;
-
 namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction
 {
     public interface IDreamWorksObject
     {
         #region Methods
-        Task InitializeAsync();
+        void Initialize();
 
         public void Tick(FFrameContext frameContext);
 
-        Task ShutDownAsync();
+        void ShutDown();
         #endregion
     }
 }

@@ -1,15 +1,13 @@
-﻿using System.Threading.Tasks;
-
-namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
+﻿namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem
 {
     public interface ISubSystemCollection<T> where T : class, ISubSystem
     {
         #region Methods
-        Task InitializeAsync();
+        void Initialize();
 
         void Tick(FFrameContext context);
 
-        Task ShutDownAsync();
+        void ShutDown();
 
         TSystem GetSubSystem<TSystem>();
 

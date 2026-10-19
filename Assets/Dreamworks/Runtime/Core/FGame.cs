@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Unity.Scripting.LifecycleManagement;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
@@ -35,11 +34,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core
         #endregion
 
         #region IDreamWorksObject Implementation
-        async Task IDreamWorksObject.InitializeAsync()
+        void IDreamWorksObject.Initialize()
         {
             logProvider.Log("Initializing.");
 
-            await InitializeGameInstance();
+            InitializeGameInstance();
         }
 
         void IDreamWorksObject.Tick(FFrameContext frameContext)
@@ -47,11 +46,11 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             TickGameInstnace(frameContext);
         }
 
-        async Task IDreamWorksObject.ShutDownAsync()
+        void IDreamWorksObject.ShutDown()
         {
             logProvider.Log("Shutting Down.");
 
-            await ShutDownGameInstance();
+            ShutDownGameInstance();
         }
         #endregion
 
@@ -76,9 +75,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             }
         }
 
-        private async Task InitializeGameInstance()
+        private void InitializeGameInstance()
         {
-            await ((IDreamWorksObject)GameInstance).InitializeAsync();
+            ((IDreamWorksObject)GameInstance).Initialize();
         }
 
         private void TickGameInstnace(FFrameContext context)
@@ -91,14 +90,14 @@ namespace DreamMachineGameStudio.DreamWorks.Core
             ((IDreamWorksObject)GameInstance).Tick(context);
         }
 
-        private async Task ShutDownGameInstance()
+        private void ShutDownGameInstance()
         {
             if (GameInstance == null)
             {
                 return;
             }
 
-            await ((IDreamWorksObject)GameInstance).ShutDownAsync();
+            ((IDreamWorksObject)GameInstance).ShutDown();
         }
         #endregion
     }

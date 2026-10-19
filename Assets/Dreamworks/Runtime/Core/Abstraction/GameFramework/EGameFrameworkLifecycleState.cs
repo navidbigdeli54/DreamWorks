@@ -2,18 +2,18 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework
 {
     public enum EGameFrameworkLifecycleState : byte
     {
-        None,
+        None = 0,
 
-        PreInitialized,
+        PreInitialized = 1,
 
-        Initialized,
+        Initialized = 2,
 
-        PostInitialized,
+        PostInitialized = 3,
 
-        BegunPlay,
+        BegunPlay = 4,
 
-        EndedPlay,
+        EndedPlay = 5,
 
-        UnInitialized
+        UnInitialized = 6
     }
 }

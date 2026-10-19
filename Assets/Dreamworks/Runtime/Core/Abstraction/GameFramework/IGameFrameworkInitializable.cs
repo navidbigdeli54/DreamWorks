@@ -6,16 +6,16 @@ namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework
     {
         public EGameFrameworkLifecycleState LifecycleState { get; }
 
-        public Task PreInitializeAsync();
+        void PreInitialize();
 
-        public Task InitializeAsync();
+        void Initialize();
 
-        public Task PostInitializeAsync();
+        void PostInitialize();
 
-        public Task BeginPlayAsync();
+        void BeginPlay();
 
-        public Task EndPlayAsync();
+        void EndPlay();
 
-        public Task UninitializeAsync();
+        void Uninitialize();
     }
 }

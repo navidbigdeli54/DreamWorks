@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
@@ -24,11 +24,11 @@ namespace DreamMachineGameStudio.DreamWorks.ResourceProvider.AddressableAssets
         #endregion
 
         #region Protected Methods
-        protected override async Task InitializeAsync()
+        protected override void Initialize()
         {
-            await base.InitializeAsync();
+            base.Initialize();
 
-            await Addressables.InitializeAsync().Task;
+            Addressables.InitializeAsync().WaitForCompletion();
         }
         #endregion
     }

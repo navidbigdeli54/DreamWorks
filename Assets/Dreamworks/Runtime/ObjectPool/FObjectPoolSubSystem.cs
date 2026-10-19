@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
@@ -43,16 +42,16 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
         #endregion
 
         #region Protected Methods
-        protected override async Task InitializeAsync()
+        protected override void Initialize()
         {
-            await base.InitializeAsync();
+            base.Initialize();
 
             GameInstance.WorldManager.OnWorldShutDown += OnWorldShutDown;
 
             rootComponent = new GameObject(nameof(FObjectPoolSubSystem)).AddComponent<CObjectPoolSubSystem>();
         }
 
-        protected override async Task ShutDownAsync()
+        protected override void ShutDown()
         {
             GameInstance.WorldManager.OnWorldShutDown -= OnWorldShutDown;
 
@@ -60,7 +59,7 @@ namespace DreamMachineGameStudio.DreamWorks.ObjectPool
 
             DestoryRootObject();
 
-            await base.ShutDownAsync();
+            base.ShutDown();
         }
         #endregion
 

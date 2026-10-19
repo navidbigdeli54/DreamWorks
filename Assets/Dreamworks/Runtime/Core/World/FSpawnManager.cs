@@ -122,7 +122,7 @@ namespace DreamMachineGameStudio.DreamWorks.Core.World
                 componentManager.UnregisterSpawnedComponent(components[i], gameWorld.PrimaryScene);
             }
 
-            Object.Destroy(gameObject);
+            UObject.Destroy(gameObject);
         }
         #endregion
 

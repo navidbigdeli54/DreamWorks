@@ -1,17 +1,15 @@
-using System.Threading.Tasks;
-
 namespace DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework
 {
     public interface IGameMode
     {
         #region Public Methods
-        Task InitGameAsync(IGameWorld gameWorld, string sceneName);
+        void InitGame(IGameWorld gameWorld, string sceneName);
 
-        Task StartPlayAsync();
+        void StartPlay();
 
         void Tick(float deltaTime);
 
-        Task EndPlayAsync(); 
+        void EndPlay(); 
         #endregion
     }
 }

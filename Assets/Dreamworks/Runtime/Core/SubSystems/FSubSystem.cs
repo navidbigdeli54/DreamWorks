@@ -4,7 +4,6 @@ using DreamMachineGameStudio.DreamWorks.Core.Abstraction.SubSystem;
 
 namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 {
-
     public abstract class FSubSystem : ISubSystem
     {
         #region Properties
@@ -14,9 +13,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
         #endregion
 
         #region ISubSystem Implementation
-        async Task ISubSystem.InitializeAsync()
+        void ISubSystem.Initialize()
         {
-            await InitializeAsync();
+            Initialize();
         }
 
         void ISubSystem.Tick(float delatTime)
@@ -24,16 +23,16 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
             Tick(delatTime);
         }
 
-        async Task ISubSystem.ShutDownAsync()
+        void ISubSystem.ShutDown()
         {
-            await ShutDownAsync();
+            ShutDown();
         }
         #endregion
 
         #region Protected Methods
-        protected virtual Task InitializeAsync()
+        protected virtual void Initialize()
         {
-            return Task.CompletedTask;
+            
         }
 
         protected virtual void Tick(float deltaTime)
@@ -41,9 +40,9 @@ namespace DreamMachineGameStudio.DreamWorks.Core.SubSystems
 
         }
 
-        protected virtual Task ShutDownAsync()
+        protected virtual void ShutDown()
         {
-            return Task.CompletedTask;
+            
         }
         #endregion
     }

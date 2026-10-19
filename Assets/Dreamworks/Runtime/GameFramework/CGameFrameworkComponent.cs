@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Threading.Tasks;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
@@ -49,44 +48,44 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
         #endregion
 
         #region IInitializable Implementation
-        async Task IGameFrameworkInitializable.PreInitializeAsync()
+        void IGameFrameworkInitializable.PreInitialize()
         {
-            await PreInitializeAsync();
+            PreInitialize();
 
             LifecycleState = EGameFrameworkLifecycleState.PreInitialized;
         }
 
-        async Task IGameFrameworkInitializable.InitializeAsync()
+        void IGameFrameworkInitializable.Initialize()
         {
-            await InitializeAsync();
+            Initialize();
 
             LifecycleState = EGameFrameworkLifecycleState.Initialized;
         }
 
-        async Task IGameFrameworkInitializable.PostInitializeAsync()
+        void IGameFrameworkInitializable.PostInitialize()
         {
-            await PostInitializeAsync();
+            PostInitialize();
 
             LifecycleState = EGameFrameworkLifecycleState.PostInitialized;
         }
 
-        async Task IGameFrameworkInitializable.BeginPlayAsync()
+        void IGameFrameworkInitializable.BeginPlay()
         {
-            await BeginPlayAsync();
+            BeginPlay();
 
             LifecycleState = EGameFrameworkLifecycleState.BegunPlay;
         }
 
-        async Task IGameFrameworkInitializable.EndPlayAsync()
+        void IGameFrameworkInitializable.EndPlay()
         {
-            await EndPlayAsync();
+            EndPlay();
 
             LifecycleState = EGameFrameworkLifecycleState.EndedPlay;
         }
 
-        async Task IGameFrameworkInitializable.UninitializeAsync()
+        void IGameFrameworkInitializable.Uninitialize()
         {
-            await UninitializeAsync();
+            Uninitialize();
 
             LifecycleState = EGameFrameworkLifecycleState.UnInitialized;
         }
@@ -100,24 +99,24 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
         #endregion
 
         #region Protected Methods
-        protected virtual Task PreInitializeAsync()
+        protected virtual void PreInitialize()
         {
-            return Task.CompletedTask;
+            
         }
 
-        protected virtual Task InitializeAsync()
+        protected virtual void Initialize()
         {
-            return Task.CompletedTask;
+            
         }
 
-        protected virtual Task PostInitializeAsync()
+        protected virtual void PostInitialize()
         {
-            return Task.CompletedTask;
+
         }
 
-        protected virtual Task BeginPlayAsync()
+        protected virtual void BeginPlay()
         {
-            return Task.CompletedTask;
+
         }
 
         protected virtual void Tick(float deltaTime)
@@ -125,14 +124,14 @@ namespace DreamMachineGameStudio.DreamWorks.GameFramework
 
         }
 
-        protected virtual Task EndPlayAsync()
+        protected virtual void EndPlay()
         {
-            return Task.CompletedTask;
+
         }
 
-        protected virtual Task UninitializeAsync()
+        protected virtual void Uninitialize()
         {
-            return Task.CompletedTask;
+            
         }
 
         protected virtual TGameMode GetGameMode<TGameMode>() where TGameMode : class, IGameMode
