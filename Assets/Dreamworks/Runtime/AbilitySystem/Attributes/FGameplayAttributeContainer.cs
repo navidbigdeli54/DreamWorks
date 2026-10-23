@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 
 namespace DreamMachineGameStudio.DreamWorks.AbilitySystem.Attributes
 {

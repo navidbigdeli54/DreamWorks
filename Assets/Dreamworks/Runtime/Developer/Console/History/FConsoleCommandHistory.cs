@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Definitions;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History.Persistence;
@@ -17,6 +19,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
     internal sealed class FConsoleCommandHistory : IConsoleCommandHistory, IDeveloperConsoleInitializer
     {
         #region Fields
+        private readonly ILogProvider logProvider;
+
         private readonly IConsoleCommandActivator commandActivator;
 
         private readonly FConsoleCommandHistoryRepository repository;
@@ -25,13 +29,15 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
         #endregion
 
         #region Constructors
-        internal FConsoleCommandHistory(IConsoleCommandActivator commandActivator, int maxEntries = 256, string fileName = "commands.bin")
+        internal FConsoleCommandHistory(ILogProvider logProvider, IConsoleCommandActivator commandActivator, int maxEntries = 256, string fileName = "commands.bin")
         {
+            this.logProvider = logProvider;
+
             this.commandActivator = commandActivator;
 
             repository = new FConsoleCommandHistoryRepository(maxEntries);
 
-            fileStream = new FConsoleCommandHistoryPersistence(repository, fileName);
+            fileStream = new FConsoleCommandHistoryPersistence(logProvider, repository, fileName);
         }
         #endregion
 
@@ -65,6 +71,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.History
         private void OnCommandEntered(string command)
         {
             repository.AddRecord(command);
+
+            logProvider.LogVeryVerbose($"Recorded console command \"{command}\" in history ({repository.Records.Count} record(s)).");
         }
         #endregion
     }

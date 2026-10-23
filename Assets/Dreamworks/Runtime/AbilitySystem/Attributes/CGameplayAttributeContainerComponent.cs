@@ -1,6 +1,7 @@
 using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 using DreamMachineGameStudio.DreamWorks.GameFramework;
+using DreamMachineGameStudio.DreamWorks.AbilitySystem.Attributes.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.AbilitySystem.Attributes
 {

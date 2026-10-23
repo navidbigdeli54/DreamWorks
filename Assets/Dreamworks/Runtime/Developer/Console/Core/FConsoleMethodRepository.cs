@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
@@ -17,13 +20,19 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
     /// for methods annotated with the appropriate  attributes.</remarks>
     internal sealed class FConsoleMethodRepository : IConsoleMethodRepository, IDeveloperConsoleInitializer, IConsoleCommandQuery
     {
+        #region Fields
+        private readonly ILogProvider logProvider;
+        #endregion
+
         #region Properties
         internal Dictionary<string, IConsoleMethod> RegisteredMethods { get; private set; }
         #endregion
 
         #region Constructors
-        internal FConsoleMethodRepository()
+        internal FConsoleMethodRepository(ILogProvider logProvider)
         {
+            this.logProvider = logProvider;
+
             RegisteredMethods = new Dictionary<string, IConsoleMethod>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
@@ -53,7 +62,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
         void IDeveloperConsoleInitializer.ShutDown()
         {
-
+            logProvider.LogVerbose($"Console method repository shut down with {RegisteredMethods.Count} registered method(s).");
         }
         #endregion
 
@@ -79,15 +88,29 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         {
             if (method == null)
             {
+                logProvider.LogWarning("Ignored a null console method registration.");
                 return;
             }
 
+            if (RegisteredMethods.TryGetValue(method.Name, out IConsoleMethod existingMethod) && !ReferenceEquals(existingMethod, method))
+            {
+                logProvider.LogWarning($"Console method \"{method.Name}\" is already registered and will be replaced. {DescribeMethod(existingMethod)} -> {DescribeMethod(method)}.");
+            }
+
             RegisteredMethods[method.Name] = method;
+
+            logProvider.LogVeryVerbose($"Registered console method \"{method.Name}\" ({DescribeMethod(method)}).");
         }
 
         private void UnregisterMethod(string name)
         {
-            RegisteredMethods.Remove(name);
+            if (!RegisteredMethods.Remove(name))
+            {
+                logProvider.LogVerbose($"Could not unregister console method \"{name}\" because it is not registered.");
+                return;
+            }
+
+            logProvider.LogVerbose($"Unregistered console method \"{name}\".");
         }
 
         private void DiscoverStaticCommands()
@@ -96,7 +119,7 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
             foreach (Assembly assembly in assemblies)
             {
-                Type[] types = assembly.GetTypes();
+                Type[] types = GetLoadableTypes(assembly);
 
                 foreach (Type type in types)
                 {
@@ -116,6 +139,30 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
                     }
                 }
             }
+
+            logProvider.LogDisplay($"Discovered {RegisteredMethods.Count} console method(s) across {assemblies.Length} loaded assemblies.");
+        }
+
+        private Type[] GetLoadableTypes(Assembly assembly)
+        {
+            try
+            {
+                return assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException exception)
+            {
+                // Some types could not be loaded; keep the ones that did so their commands remain available.
+                logProvider.LogWarning($"Some types in assembly \"{assembly.GetName().Name}\" could not be loaded while discovering console methods. First loader error: {exception.LoaderExceptions.FirstOrDefault(loaderException => loaderException != null)?.Message}");
+
+                return exception.Types.Where(type => type != null).ToArray();
+            }
+        }
+
+        private static string DescribeMethod(IConsoleMethod method)
+        {
+            return method is FConsoleMethod consoleMethod && consoleMethod.MethodInfo != null
+                ? $"{consoleMethod.MethodInfo.DeclaringType?.FullName}.{consoleMethod.MethodInfo.Name}"
+                : method.GetType().Name;
         }
         #endregion
     }

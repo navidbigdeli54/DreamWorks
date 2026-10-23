@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.IMGUI.Controls;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 
 namespace DreamMachineGameStudio.DreamWorks.Editor.PropertyDrawers
 {

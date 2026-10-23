@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 using DreamMachineGameStudio.DreamWorks.GameFramework.HUD;
 using DreamMachineGameStudio.DreamWorks.GameFramework.Pawn;
 using DreamMachineGameStudio.DreamWorks.GameFramework.Controller;

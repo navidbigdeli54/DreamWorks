@@ -1,8 +1,14 @@
 using UnityEngine;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
+using DreamMachineGameStudio.DreamWorks.GameInstance;
+using DreamMachineGameStudio.DreamWorks.World;
+using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode;
+
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction.GameFramework;
+using DreamMachineGameStudio.DreamWorks.GameFramework;
+using DreamMachineGameStudio.DreamWorks.GameFramework.GameMode.Abstraction;
+using DreamMachineGameStudio.DreamWorks.GameInstance.Abstraction;
+using DreamMachineGameStudio.DreamWorks.World.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.GameFramework
 {

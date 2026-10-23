@@ -1,8 +1,9 @@
 using System.Threading.Tasks;
 using UnityEngine.AddressableAssets;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
-using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
+using DreamMachineGameStudio.DreamWorks.GameInstance;
+using DreamMachineGameStudio.DreamWorks.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.SubSystems.Attributes;
+using DreamMachineGameStudio.DreamWorks.GameInstance.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.ResourceProvider.AddressableAssets
 {

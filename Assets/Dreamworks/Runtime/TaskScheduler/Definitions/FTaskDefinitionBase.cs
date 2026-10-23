@@ -2,7 +2,7 @@
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.TaskScheduler;
 
-namespace DreamMachineGameStudio.Dreamworks.TaskScheduler
+namespace DreamMachineGameStudio.DreamWorks.TaskScheduler
 {
     public abstract class FTaskDefinitionBase
     {

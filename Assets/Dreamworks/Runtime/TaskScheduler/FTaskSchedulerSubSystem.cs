@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
-using DreamMachineGameStudio.Dreamworks.TaskScheduler;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
-using DreamMachineGameStudio.DreamWorks.TaskScheduler.Abstraction;
-using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
-using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
-using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.GameInstance;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
+using DreamMachineGameStudio.DreamWorks.TaskScheduler.Abstraction;
+using DreamMachineGameStudio.DreamWorks.SubSystems.Attributes;
+using DreamMachineGameStudio.DreamWorks.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.GameInstance.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.TaskScheduler
 {

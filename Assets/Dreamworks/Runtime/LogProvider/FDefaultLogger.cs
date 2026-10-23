@@ -10,7 +10,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
     /// <remarks>This class is a singleton, and its instance can be accessed via the <see cref="Instance"/>
     /// field. It uses an internal <see cref="FScopedLogProvider"/> to handle logging operations with the default category
     /// "Default" and verbosity level <see cref="ELogVerbosity.Display"/>.</remarks>
-    public sealed class FDefaultLogger : ILogProvider_Internal
+    public sealed class FDefaultLogger : ILogProvider
     {
         #region Fields
         public static readonly ILogProvider Instance = new FDefaultLogger();
@@ -19,19 +19,19 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         #endregion
 
         #region ILogProvider Implementation
-        bool ILogProvider.IsEnable(ELogVerbosity verbosity)
+        bool ILogProvider.IsEnabled(ELogVerbosity verbosity)
         {
-            return scopedLogger.IsEnable(verbosity);
+            return scopedLogger.IsEnabled(verbosity);
         }
 
-        void ILogProvider_Internal.Log(ELogVerbosity verbosity, string message, UnityEngine.Object context)
+        void ILogProvider.Log(ELogVerbosity verbosity, string message, UnityEngine.Object context)
         {
-            ((ILogProvider_Internal)scopedLogger).Log(verbosity, message, context);
+            scopedLogger.Log(verbosity, message, context);
         }
 
-        void ILogProvider_Internal.Log(ELogVerbosity verbosity, Exception exception, string message, UnityEngine.Object context)
+        void ILogProvider.Log(ELogVerbosity verbosity, Exception exception, string message, UnityEngine.Object context)
         {
-            ((ILogProvider_Internal)scopedLogger).Log(verbosity, exception, message, context);
+            scopedLogger.Log(verbosity, exception, message, context);
         }
         #endregion
     }

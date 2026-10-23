@@ -26,7 +26,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogFatal(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Fatal, message, context);
+            provider.Log(ELogVerbosity.Fatal, message, context);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogFatal(this ILogProvider provider, System.Exception exception, string message = null, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Fatal, exception, message, context);
+            provider.Log(ELogVerbosity.Fatal, exception, message, context);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogError(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Error, message, context);
+            provider.Log(ELogVerbosity.Error, message, context);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogError(this ILogProvider provider, System.Exception exception, string message = null, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Error, exception, message, context);
+            provider.Log(ELogVerbosity.Error, exception, message, context);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogWarning(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Warning, message, context);
+            provider.Log(ELogVerbosity.Warning, message, context);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogDisplay(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Display, message, context);
+            provider.Log(ELogVerbosity.Display, message, context);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void Log(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Display, message, context);
+            provider.Log(ELogVerbosity.Display, message, context);
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOGGING")]
         public static void LogMessage(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Log, message, context);
+            provider.Log(ELogVerbosity.Log, message, context);
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOG_VERBOSE")]
         public static void LogVerbose(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.Verbose, message, context);
+            provider.Log(ELogVerbosity.Verbose, message, context);
         }
 
         /// <summary>
@@ -166,7 +166,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("LOG_VERY_VERBOSE")]
         public static void LogVeryVerbose(this ILogProvider provider, string message, UnityEngine.Object context = null)
         {
-            ((ILogProvider_Internal)provider).Log(ELogVerbosity.VeryVerbose, message, context);
+            provider.Log(ELogVerbosity.VeryVerbose, message, context);
         }
         #endregion
     }

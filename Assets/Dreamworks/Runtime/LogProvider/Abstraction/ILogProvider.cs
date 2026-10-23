@@ -10,11 +10,8 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction
         /// <param name="verbosity">The verbosity level to check.</param>
         /// <returns><see langword="true"/> if logging is enabled for the specified verbosity level; otherwise, <see
         /// langword="false"/>.</returns>
-        bool IsEnable(ELogVerbosity verbosity);
-    }
+        bool IsEnabled(ELogVerbosity verbosity);
 
-    internal interface ILogProvider_Internal : ILogProvider
-    {
         /// <summary>
         /// Logs a message with the specified verbosity level and optional context object.
         /// </summary>

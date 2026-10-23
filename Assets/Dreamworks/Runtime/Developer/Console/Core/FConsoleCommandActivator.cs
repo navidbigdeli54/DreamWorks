@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Reflection;
+using DreamMachineGameStudio.DreamWorks.LogProvider;
+using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction.Definitions;
 
@@ -15,6 +18,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
     internal sealed class FConsoleCommandActivator : IConsoleCommandActivator
     {
         #region Fields
+        private readonly ILogProvider logProvider;
+
         private readonly IConsoleMethodRepository methodRepository;
 
         private readonly IConsoleVariableRepository variableRepository;
@@ -27,8 +32,9 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
         #endregion
 
         #region Constructors
-        public FConsoleCommandActivator(IConsoleMethodRepository methodRepository, IConsoleVariableRepository variableRepository)
+        public FConsoleCommandActivator(ILogProvider logProvider, IConsoleMethodRepository methodRepository, IConsoleVariableRepository variableRepository)
         {
+            this.logProvider = logProvider;
             this.methodRepository = methodRepository;
             this.variableRepository = variableRepository;
         }
@@ -38,12 +44,16 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
         FConsoleCommandExecutionResult IConsoleCommandActivator.ExecuteCommand(string commandLine)
         {
+            logProvider.LogVerbose($"Executing command line \"{commandLine}\".");
+
             OnCommandEntered?.Invoke(commandLine);
 
             string[] tokens = FConsoleCommandTokenizer.Tokenize(commandLine);
 
             if (tokens.Length == 0)
             {
+                logProvider.LogWarning("Ignored an empty console command.");
+
                 var emptyCommandResult = new FConsoleCommandExecutionResult(false, "Trying to execute empty command!");
                 OnCommandExecuted?.Invoke(emptyCommandResult);
                 return emptyCommandResult;
@@ -65,6 +75,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
                 return result;
             }
 
+            logProvider.LogWarning($"Unknown console command \"{commandName}\". No method or variable is registered with this name.");
+
             var unknownResult = new FConsoleCommandExecutionResult(false, $"Unknown command \"{commandName}\".");
 
             OnCommandExecuted?.Invoke(unknownResult);
@@ -80,6 +92,8 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
             {
                 object result = method.Execute(arguments);
 
+                logProvider.LogMessage($"Console method \"{method.Name}\" executed with {arguments.Length} argument(s). Result: {result ?? "<null>"}.");
+
                 var executionResult = new FConsoleCommandExecutionResult(true, $"\"{method.Name}\" method has been executed. result: {result}.");
 
                 OnCommandExecuted?.Invoke(executionResult);
@@ -88,8 +102,15 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
             }
             catch (Exception exception)
             {
+                // Reflection wraps the method's own exception; report the original cause.
+                Exception cause = exception is TargetInvocationException { InnerException: not null } ? exception.InnerException : exception;
+
+                logProvider.LogError(cause, $"Console method \"{method.Name}\" failed with arguments [{string.Join(", ", arguments)}].");
+
                 var executionResult = new FConsoleCommandExecutionResult(false, $"An exception thrown when executing \"{method}\" method. exception: {exception}");
+
                 OnCommandExecuted?.Invoke(executionResult);
+
                 return executionResult;
             }
         }
@@ -100,16 +121,24 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Core
 
             if (arguments.Length == 0)
             {
+                logProvider.LogVerbose($"Read console variable \"{variable.Name}\" = \"{variable.GetValue()}\".");
+
                 result = new FConsoleCommandExecutionResult(true, $"\"{variable.Name}\" = \"{variable.GetValue()}\"");
             }
             else
             {
+                object previousValue = variable.GetValue();
+
                 if (variable.TrySetValue(arguments[0]))
                 {
+                    logProvider.LogMessage($"Console variable \"{variable.Name}\" changed from \"{previousValue}\" to \"{variable.GetValue()}\".");
+
                     result = new FConsoleCommandExecutionResult(true, $"\"{variable.Name}\" = \"{variable.GetValue()}\"");
                 }
                 else
                 {
+                    logProvider.LogWarning($"Rejected value \"{arguments[0]}\" for console variable \"{variable.Name}\" of type {variable.ValueType.Name}.");
+
                     result = new FConsoleCommandExecutionResult(false, $"Invalid value for \"{variable.Name}\"'.");
                 }
             }

@@ -1,16 +1,17 @@
 using System.Threading.Tasks;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Application;
 using DreamMachineGameStudio.DreamWorks.LogProvider;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.UI;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Core;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Output;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.History;
-using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
+using DreamMachineGameStudio.DreamWorks.SubSystems.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Definitions;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Persistence;
+using DreamMachineGameStudio.DreamWorks.Foundation.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console
 {
@@ -22,9 +23,11 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         Experimental = false,
         Advanced = false,
         Keywords = "console cvar command debug runtime shell")]
-    public sealed class FConsoleBootstrapper
+    internal sealed class FConsoleBootstrapper : IDreamWorksObject
     {
         #region Fields
+        private readonly ILogProvider logProvider;
+
         private readonly IConsoleMethodRepository methodRepository;
 
         private readonly IConsoleVariableRepository variableRepository;
@@ -47,35 +50,41 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
         #endregion
 
         #region Constructors
-        public FConsoleBootstrapper()
+        public FConsoleBootstrapper(ILogProvider logProvider)
         {
             Instance = this;
 
-            methodRepository = new FConsoleMethodRepository();
+            this.logProvider = logProvider;
 
-            IConsoleVariablePersistence variablePersistence = new FConsoleVariablePersistence("variables.bin");
+            methodRepository = new FConsoleMethodRepository(logProvider);
 
-            IConsoleVariableDefinitionProvider definitionProvider = new FConsoleVariableDefinitionResourcesProvider();
+            IConsoleVariablePersistence variablePersistence = new FConsoleVariablePersistence(logProvider, "variables.bin");
 
-            variableRepository = new FConsoleVariableRepository(definitionProvider, variablePersistence);
+            IConsoleVariableDefinitionProvider definitionProvider = new FConsoleVariableDefinitionResourcesProvider(logProvider);
+
+            variableRepository = new FConsoleVariableRepository(logProvider, definitionProvider, variablePersistence);
 
             developerConsole = new FDeveloperConsole(methodRepository, variableRepository);
 
-            commandActivator = new FConsoleCommandActivator(methodRepository, variableRepository);
+            commandActivator = new FConsoleCommandActivator(logProvider, methodRepository, variableRepository);
 
             commandQuery = new FConsoleCommandQuery(methodRepository as IConsoleCommandQuery, variableRepository as IConsoleCommandQuery);
 
-            commandHistory = new FConsoleCommandHistory(commandActivator, 255, "commands.bin");
+            commandHistory = new FConsoleCommandHistory(logProvider, commandActivator, 255, "commands.bin");
 
             commandOutputBuffer = new FConsoleCommandOutputBuffer(commandActivator);
 
-            widgetBootstrapper = new FConsoleWidgetBootstrapper(commandQuery, commandOutputBuffer, commandHistory);
+            widgetBootstrapper = new FConsoleWidgetBootstrapper(logProvider, commandQuery, commandOutputBuffer, commandHistory);
+
+            logProvider.LogVerbose("Developer console services created.");
         }
         #endregion
 
         #region IDreamWorksObject Implementation
-        internal void Initialize()
+        void IDreamWorksObject.Initialize()
         {
+            logProvider.LogVerbose("Initializing developer console.");
+
             if (developerConsole is IDeveloperConsoleInitializer developerConsoleInitializer)
             {
                 developerConsoleInitializer.Initialize();
@@ -97,15 +106,19 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             }
 
             widgetBootstrapper.ConsoleWidget.OnCommandEntered += OnCommandEntered;
+
+            logProvider.LogDisplay("Developer console initialized.");
         }
 
-        internal void Tick(FFrameContext frameContext)
+        void IDreamWorksObject.Tick(FFrameContext frameContext)
         {
             widgetBootstrapper.Tick(frameContext.DeltaTime);
         }
 
-        internal void ShutDown()
+        void IDreamWorksObject.ShutDown()
         {
+            logProvider.LogVerbose("Shutting down developer console.");
+
             widgetBootstrapper.ConsoleWidget.OnCommandEntered -= OnCommandEntered;
 
             if (widgetBootstrapper is IDeveloperConsoleInitializer widgetBootstrapperInitializer)
@@ -127,12 +140,16 @@ namespace DreamMachineGameStudio.DreamWorks.Developer.Console
             {
                 developerConsoleInitializer.ShutDown();
             }
+
+            logProvider.LogMessage("Developer console shut down.");
         }
         #endregion
 
         #region Private Methods
         private void OnCommandEntered(string command)
         {
+            logProvider.LogVeryVerbose($"Command submitted from console widget: \"{command}\".");
+
             commandActivator.ExecuteCommand(command);
         }
         #endregion

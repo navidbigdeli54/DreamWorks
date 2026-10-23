@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.Assets;
+using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 
 namespace DreamMachineGameStudio.DreamWorks.Developer.Console.Definitions
 {

@@ -2,12 +2,13 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
+using DreamMachineGameStudio.DreamWorks.GameInstance;
 using DreamMachineGameStudio.DreamWorks.GameplayTags.Providers;
 using DreamMachineGameStudio.DreamWorks.GameplayTags.Abstraction;
 using DreamMachineGameStudio.DreamWorks.GameplayTags.Definitions;
-using DreamMachineGameStudio.DreamWorks.Core.SubSystems.Attributes;
-using DreamMachineGameStudio.DreamWorks.Core.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.SubSystems.Attributes;
+using DreamMachineGameStudio.DreamWorks.GameInstance.SubSystems;
+using DreamMachineGameStudio.DreamWorks.GameInstance.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.GameplayTags
 {

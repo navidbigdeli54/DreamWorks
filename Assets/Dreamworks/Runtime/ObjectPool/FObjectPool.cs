@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
-using DreamMachineGameStudio.DreamWorks.Core.Abstraction;
+using DreamMachineGameStudio.DreamWorks.World;
 using DreamMachineGameStudio.DreamWorks.ObjectPool.Abstraction;
+using DreamMachineGameStudio.DreamWorks.World.Abstraction;
 
 namespace DreamMachineGameStudio.DreamWorks.ObjectPool
 {

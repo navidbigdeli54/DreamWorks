@@ -2,7 +2,7 @@
 using DreamMachineGameStudio.DreamWorks.LogProvider;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
 
-namespace DreamMachineGameStudio.Dreamworks.TaskScheduler
+namespace DreamMachineGameStudio.DreamWorks.TaskScheduler
 {
     public sealed class FLoopedTaskDefinition : FTaskDefinitionBase
     {

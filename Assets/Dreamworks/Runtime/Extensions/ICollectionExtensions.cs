@@ -6,17 +6,12 @@ namespace DreamMachineGameStudio.DreamWorks.Extensions
     {
         public static bool IsEmpty<T>(this ICollection<T> collection)
         {
-            if (collection == null)
-            {
-                return true;
-            }
-
-            return collection.Count == 0;
+            return collection == null || collection.Count == 0;
         }
 
         public static bool IsNotEmpty<T>(this ICollection<T> collection)
         {
-            return collection.IsEmpty() == false;
+            return collection != null && collection.Count > 0;
         }
 
         public static bool AddUnique<T>(this ICollection<T> collection, T item)

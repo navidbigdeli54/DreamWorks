@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using DreamMachineGameStudio.DreamWorks.LogProvider.Abstraction;
-using DreamMachineGameStudio.DreamWorks.LogProvider.Definitions;
 
 namespace DreamMachineGameStudio.DreamWorks.LogProvider
 {
@@ -11,7 +10,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
     /// <remarks>This class implements the <see cref="ILogProvider"/> interface and enables logging messages
     /// with a specified verbosity level for a given <see cref="FLogCategory"/>. It ensures that messages are formatted
     /// and routed appropriately based on the category's runtime settings.</remarks>
-    public class FScopedLogProvider : ILogProvider_Internal
+    public class FScopedLogProvider : ILogProvider
     {
         #region Properties
         public FLogCategory Category { get; }
@@ -25,12 +24,12 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         #endregion
 
         #region ILogProvider Implementation
-        bool ILogProvider.IsEnable(ELogVerbosity verbosity)
+        bool ILogProvider.IsEnabled(ELogVerbosity verbosity)
         {
             return IsEnable(verbosity);
         }
 
-        void ILogProvider_Internal.Log(ELogVerbosity verbosity, string message, UnityEngine.Object context)
+        void ILogProvider.Log(ELogVerbosity verbosity, string message, UnityEngine.Object context)
         {
             if (!IsEnable(verbosity))
             {
@@ -40,7 +39,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
             Write(Format(message, verbosity), verbosity, context);
         }
 
-        void ILogProvider_Internal.Log(ELogVerbosity verbosity, Exception exception, string message, UnityEngine.Object context)
+        void ILogProvider.Log(ELogVerbosity verbosity, Exception exception, string message, UnityEngine.Object context)
         {
             if (exception == null)
             {
@@ -61,17 +60,7 @@ namespace DreamMachineGameStudio.DreamWorks.LogProvider
         #region Private Methods
         private bool IsEnable(ELogVerbosity verbosity)
         {
-            if (FLogCategoryRegistry.GlobalVerbositry < verbosity)
-            {
-                return false;
-            }
-
-            if (Category.RuntimeSettings.DefaultVerbositry < verbosity)
-            {
-                return false;
-            }
-
-            return Category.RuntimeSettings.IsEnabled;
+            return FLogCategoryRegistry.IsEnabled(Category.RuntimeSettings, verbosity);
         }
 
         private string Format(string message, ELogVerbosity verbosity)

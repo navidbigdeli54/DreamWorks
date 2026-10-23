@@ -1,4 +1,4 @@
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Attributes;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 

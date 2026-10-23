@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DreamMachineGameStudio.DreamWorks.Core;
+using DreamMachineGameStudio.DreamWorks.Foundation;
 using DreamMachineGameStudio.DreamWorks.Developer.Console;
 using DreamMachineGameStudio.DreamWorks.Developer.Console.Abstraction;
 using UnityEditor;
